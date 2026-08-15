@@ -21,22 +21,25 @@ function renderMenu() {
     section.id = cat.id;
 
     const itemsHtml = (cat.items || [])
-      .map(
-        (it) => `
+      .map((it) => {
+        const subt = mi(it.subt);
+        const desc = mi(it.desc);
+        const aka = it.aka ? ` <span class="aka">"${it.aka}"</span>` : '';
+        return `
       <article class="item-card">
         <div class="item-top">
           <div class="item-info">
-            <h3>${it.nombre}</h3>
-            ${it.subt ? `<span class="subt">${it.subt}</span>` : ''}
+            <h3>${it.nombre}${aka}</h3>
+            ${subt ? `<span class="subt">${subt}</span>` : ''}
           </div>
         </div>
-        ${it.desc ? `<p class="item-desc">${it.desc}</p>` : ''}
+        ${desc ? `<p class="item-desc">${desc}</p>` : ''}
         <div class="item-footer">
           <span class="item-price">${fmt(it.precio)}</span>
-          <button class="add-btn" data-add-sku="${it.sku}" type="button">+ Agregar</button>
+          <button class="add-btn" data-add-sku="${it.sku}" type="button">${I18n.t('addBtn')}</button>
         </div>
-      </article>`
-      )
+      </article>`;
+      })
       .join('');
 
     const extrasHtml = (cat.extras || []).length
@@ -45,8 +48,8 @@ function renderMenu() {
             .map(
               (ex) => `
             <span class="extra-chip">
-              ${ex.nombre} · <span class="price">${fmt(ex.precio)}</span>
-              <button data-add-sku="${ex.sku}" type="button" aria-label="Agregar ${ex.nombre}">+</button>
+              ${ex.nombre}${mi(ex.subt) ? ' (' + mi(ex.subt) + ')' : ''} · <span class="price">${fmt(ex.precio)}</span>
+              <button data-add-sku="${ex.sku}" type="button" aria-label="${I18n.t('addAria')} ${ex.nombre}">+</button>
             </span>`
             )
             .join('')}
@@ -58,10 +61,10 @@ function renderMenu() {
         <div class="cat-icon icon-${cat.icon}" aria-hidden="true"></div>
         <div>
           <h2>${cat.nombre}</h2>
-          <span class="subt">${cat.subt || ''}</span>
+          <span class="subt">${mi(cat.subt)}</span>
         </div>
       </div>
-      ${cat.nota ? `<p class="category-nota">${cat.nota}</p>` : ''}
+      ${cat.nota ? `<p class="category-nota">${mi(cat.nota)}</p>` : ''}
       <div class="item-grid">${itemsHtml}</div>
       ${extrasHtml}
     `;
@@ -74,9 +77,10 @@ document.getElementById('menu-content').addEventListener('click', (e) => {
   if (!btn) return;
   Cart.add(btn.dataset.addSku, 1);
   renderCartBadge();
-  btn.textContent = '✓ Agregado';
+  const original = btn.textContent;
+  btn.textContent = I18n.t('addedBtn');
   setTimeout(() => {
-    btn.textContent = btn.hasAttribute('aria-label') ? '+' : '+ Agregar';
+    btn.textContent = original;
   }, 900);
 });
 
@@ -91,7 +95,7 @@ function renderCartBadge() {
   const bar = document.getElementById('floating-cart-bar');
   const showBar = count > 0 && !document.getElementById('cart-drawer').classList.contains('open');
   bar.classList.toggle('show', showBar);
-  document.getElementById('floating-count').textContent = count + (count === 1 ? ' item' : ' items');
+  document.getElementById('floating-count').textContent = I18n.t('floatingCartText', count);
   document.getElementById('floating-amount').textContent = fmt(Cart.total());
 }
 
@@ -99,13 +103,13 @@ function renderCartBody() {
   const body = document.getElementById('cart-body');
   const items = Cart.detailedItems();
   if (!items.length) {
-    body.innerHTML = '<div class="empty-cart">Tu carrito está vacío.<br>Agrega algo delicioso del menú 🌽</div>';
+    body.innerHTML = `<div class="empty-cart">${I18n.t('cartEmpty')}</div>`;
   } else {
     body.innerHTML = items
       .map(
         (i) => `
       <div class="cart-row">
-        <div class="name">${i.nombre}<small>${fmt(i.precio)} c/u</small></div>
+        <div class="name">${i.nombre}<small>${fmt(i.precio)} ${I18n.t('perUnit')}</small></div>
         <div class="qty-stepper">
           <button data-qty-sku="${i.sku}" data-delta="-1" type="button">−</button>
           <span>${i.cantidad}</span>
@@ -175,14 +179,14 @@ function renderModal() {
   if (Session.isLoggedIn() && modalState.purpose === 'manage') {
     const s = Session.data;
     modalBody.innerHTML = `
-      <h2>Mi cuenta</h2>
-      <p class="subt">Sesión iniciada</p>
+      <h2>${I18n.t('myAccountTitle')}</h2>
+      <p class="subt">${I18n.t('sessionActive')}</p>
       <div class="order-summary">
-        <div class="row"><span>Nombre</span><span>${s.nombre}</span></div>
-        <div class="row"><span>Correo</span><span>${s.email}</span></div>
+        <div class="row"><span>${I18n.t('nameLabel')}</span><span>${s.nombre}</span></div>
+        <div class="row"><span>${I18n.t('emailLabel')}</span><span>${s.email}</span></div>
       </div>
-      <button class="primary-btn" id="modal-logout-btn" type="button">Cerrar sesión</button>
-      <button class="ghost-btn" id="modal-close-btn" type="button" style="margin-top:8px;">Volver al menú</button>
+      <button class="primary-btn" id="modal-logout-btn" type="button">${I18n.t('logoutBtn')}</button>
+      <button class="ghost-btn" id="modal-close-btn" type="button" style="margin-top:8px;">${I18n.t('backToMenuBtn')}</button>
     `;
     document.getElementById('modal-logout-btn').onclick = () => {
       Session.clear();
@@ -194,15 +198,11 @@ function renderModal() {
   }
 
   const tabs = modalState.purpose === 'checkout' ? ['invitado', 'login', 'registro'] : ['login', 'registro'];
-  const tabLabels = { invitado: 'Invitado', login: 'Ya tengo cuenta', registro: 'Crear cuenta' };
+  const tabLabels = { invitado: I18n.t('tabGuest'), login: I18n.t('tabLogin'), registro: I18n.t('tabRegister') };
 
   modalBody.innerHTML = `
-    <h2>${modalState.purpose === 'checkout' ? 'Casi listo para pedir' : 'Mi cuenta'}</h2>
-    <p class="subt">${
-      modalState.purpose === 'checkout'
-        ? 'Dinos quién eres para enviar el pedido'
-        : 'Inicia sesión o crea una cuenta'
-    }</p>
+    <h2>${modalState.purpose === 'checkout' ? I18n.t('almostReadyTitle') : I18n.t('myAccountTitle')}</h2>
+    <p class="subt">${modalState.purpose === 'checkout' ? I18n.t('tellUsWhoSub') : I18n.t('loginOrCreateSub')}</p>
     <div class="tabs" id="modal-tabs">
       ${tabs
         .map((t) => `<button data-tab="${t}" class="${modalState.tab === t ? 'active' : ''}" type="button">${tabLabels[t]}</button>`)
@@ -210,7 +210,7 @@ function renderModal() {
     </div>
     <div class="form-error" id="modal-error"></div>
     <div id="modal-tab-body"></div>
-    ${modalState.purpose === 'manage' ? '<button class="ghost-btn" id="modal-close-btn" type="button">Cancelar</button>' : ''}
+    ${modalState.purpose === 'manage' ? `<button class="ghost-btn" id="modal-close-btn" type="button">${I18n.t('cancelBtn')}</button>` : ''}
   `;
 
   document.getElementById('modal-tabs').addEventListener('click', (e) => {
@@ -236,13 +236,13 @@ function renderTabBody() {
   const el = document.getElementById('modal-tab-body');
   if (modalState.tab === 'invitado') {
     el.innerHTML = `
-      <div class="field"><label>Nombre</label><input id="g-nombre" type="text" placeholder="Tu nombre" /></div>
-      <div class="field"><label>Teléfono (opcional)</label><input id="g-telefono" type="tel" placeholder="090-1234-5678" /></div>
-      <button class="primary-btn" id="g-submit" type="button">Continuar como invitado</button>
+      <div class="field"><label>${I18n.t('nameLabel')}</label><input id="g-nombre" type="text" placeholder="${I18n.t('yourNamePlaceholder')}" /></div>
+      <div class="field"><label>${I18n.t('phoneOptionalLabel')}</label><input id="g-telefono" type="tel" placeholder="${I18n.t('phonePlaceholder')}" /></div>
+      <button class="primary-btn" id="g-submit" type="button">${I18n.t('continueGuestBtn')}</button>
     `;
     document.getElementById('g-submit').onclick = () => {
       const nombre = document.getElementById('g-nombre').value.trim();
-      if (!nombre) return showModalError('Escribe tu nombre para continuar.');
+      if (!nombre) return showModalError(I18n.t('writeNameError'));
       const telefono = document.getElementById('g-telefono').value.trim();
       Session.ensureGuest(nombre, telefono);
       updateAccountPill();
@@ -250,14 +250,14 @@ function renderTabBody() {
     };
   } else if (modalState.tab === 'login') {
     el.innerHTML = `
-      <div class="field"><label>Correo</label><input id="l-email" type="email" placeholder="tucorreo@ejemplo.com" /></div>
-      <div class="field"><label>Clave</label><input id="l-clave" type="password" placeholder="••••••••" /></div>
-      <button class="primary-btn" id="l-submit" type="button">Iniciar sesión</button>
+      <div class="field"><label>${I18n.t('emailLabel')}</label><input id="l-email" type="email" placeholder="${I18n.t('emailPlaceholder')}" /></div>
+      <div class="field"><label>${I18n.t('passwordLabel')}</label><input id="l-clave" type="password" placeholder="••••••••" /></div>
+      <button class="primary-btn" id="l-submit" type="button">${I18n.t('loginBtnText')}</button>
     `;
     document.getElementById('l-submit').onclick = async () => {
       const email = document.getElementById('l-email').value.trim();
       const clave = document.getElementById('l-clave').value;
-      if (!email || !clave) return showModalError('Completa correo y clave.');
+      if (!email || !clave) return showModalError(I18n.t('fillEmailPassError'));
       try {
         const res = await apiCall('loginCliente', { email, clave });
         Session.setCliente(res.cliente);
@@ -269,18 +269,18 @@ function renderTabBody() {
     };
   } else if (modalState.tab === 'registro') {
     el.innerHTML = `
-      <div class="field"><label>Nombre</label><input id="r-nombre" type="text" /></div>
-      <div class="field"><label>Correo</label><input id="r-email" type="email" /></div>
-      <div class="field"><label>Teléfono (opcional)</label><input id="r-telefono" type="tel" /></div>
-      <div class="field"><label>Clave</label><input id="r-clave" type="password" /></div>
-      <button class="primary-btn" id="r-submit" type="button">Crear cuenta</button>
+      <div class="field"><label>${I18n.t('nameLabel')}</label><input id="r-nombre" type="text" /></div>
+      <div class="field"><label>${I18n.t('emailLabel')}</label><input id="r-email" type="email" /></div>
+      <div class="field"><label>${I18n.t('phoneOptionalLabel')}</label><input id="r-telefono" type="tel" /></div>
+      <div class="field"><label>${I18n.t('passwordLabel')}</label><input id="r-clave" type="password" /></div>
+      <button class="primary-btn" id="r-submit" type="button">${I18n.t('createAccountBtn')}</button>
     `;
     document.getElementById('r-submit').onclick = async () => {
       const nombre = document.getElementById('r-nombre').value.trim();
       const email = document.getElementById('r-email').value.trim();
       const telefono = document.getElementById('r-telefono').value.trim();
       const clave = document.getElementById('r-clave').value;
-      if (!nombre || !email || !clave) return showModalError('Completa nombre, correo y clave.');
+      if (!nombre || !email || !clave) return showModalError(I18n.t('fillAllError'));
       try {
         const res = await apiCall('registrarCliente', { nombre, email, telefono, clave });
         Session.setCliente(res.cliente);
@@ -305,15 +305,15 @@ function afterIdentified() {
 function renderConfirmStep() {
   const items = Cart.detailedItems();
   modalBody.innerHTML = `
-    <h2>Confirma tu pedido</h2>
-    <p class="subt">Revisa los items antes de enviarlo a cocina</p>
+    <h2>${I18n.t('confirmOrderTitle')}</h2>
+    <p class="subt">${I18n.t('reviewItemsSub')}</p>
     <div class="order-summary">
       ${items.map((i) => `<div class="row"><span>${i.cantidad}x ${i.nombre}</span><span>${fmt(i.subtotal)}</span></div>`).join('')}
-      <div class="row total"><span>Total</span><span>${fmt(Cart.total())}</span></div>
+      <div class="row total"><span>${I18n.t('totalLabel')}</span><span>${fmt(Cart.total())}</span></div>
     </div>
     <div class="form-error" id="modal-error"></div>
-    <button class="primary-btn" id="confirm-submit" type="button">Enviar pedido</button>
-    <button class="ghost-btn" id="confirm-back" type="button" style="margin-top:8px;">Volver</button>
+    <button class="primary-btn" id="confirm-submit" type="button">${I18n.t('sendOrderBtn')}</button>
+    <button class="ghost-btn" id="confirm-back" type="button" style="margin-top:8px;">${I18n.t('backBtn')}</button>
   `;
   document.getElementById('confirm-back').onclick = () => {
     modalState.step = null;
@@ -334,7 +334,7 @@ function activeTrackedOrderToday() {
 async function submitOrder() {
   const btn = document.getElementById('confirm-submit');
   btn.disabled = true;
-  btn.textContent = 'Enviando...';
+  btn.textContent = I18n.t('sendingBtn');
   try {
     const s = Session.data;
     const cliente =
@@ -365,7 +365,7 @@ async function submitOrder() {
   } catch (err) {
     showModalError(err.message);
     btn.disabled = false;
-    btn.textContent = 'Enviar pedido';
+    btn.textContent = I18n.t('sendOrderBtn');
   }
 }
 
@@ -374,14 +374,14 @@ function renderSuccessStep() {
   modalBody.innerHTML = `
     <div class="form-success">
       <div class="check">✓</div>
-      <h2>${order.combinado ? '¡Agregado a tu pedido!' : '¡Pedido enviado!'}</h2>
+      <h2>${order.combinado ? I18n.t('orderAddedTitle') : I18n.t('orderSentTitle')}</h2>
       <p class="subt">${order.pedidoId}</p>
     </div>
     <div class="order-summary">
       ${order.items.map((i) => `<div class="row"><span>${i.cantidad}x ${i.nombre}</span><span>${fmt(i.subtotal)}</span></div>`).join('')}
-      <div class="row total"><span>Total${order.combinado ? ' del pedido' : ''}</span><span>${fmt(order.total)}</span></div>
+      <div class="row total"><span>${order.combinado ? I18n.t('orderTotalLabel') : I18n.t('totalLabel')}</span><span>${fmt(order.total)}</span></div>
     </div>
-    <button class="primary-btn" id="success-close" type="button">Listo</button>
+    <button class="primary-btn" id="success-close" type="button">${I18n.t('doneBtn')}</button>
   `;
   document.getElementById('success-close').onclick = () => {
     modalState = { purpose: 'manage', tab: 'invitado' };
@@ -411,7 +411,7 @@ document.getElementById('account-pill').addEventListener('click', () => openAcco
 function updateAccountPill() {
   const pill = document.getElementById('account-pill');
   const s = Session.data;
-  pill.textContent = s && s.tipo === 'cliente' ? s.nombre : s && s.nombre ? s.nombre + ' (invitado)' : 'Invitado';
+  pill.textContent = s && s.tipo === 'cliente' ? s.nombre : s && s.nombre ? s.nombre + I18n.t('guestSuffix') : I18n.t('guest');
 }
 
 // ---------------- Mis pedidos (seguimiento hasta que quede Cobrado) ----------------
@@ -448,7 +448,7 @@ ordersModalOverlay.addEventListener('click', (e) => {
 
 document.getElementById('my-orders-btn').addEventListener('click', async () => {
   ordersModalOverlay.classList.add('open');
-  ordersModalBody.innerHTML = '<h2>Mis pedidos</h2><p class="subt">Cargando...</p>';
+  ordersModalBody.innerHTML = `<h2>${I18n.t('myOrdersModalTitle')}</h2><p class="subt">${I18n.t('loadingText')}</p>`;
   await refreshTrackedOrders();
   renderOrdersModal();
 });
@@ -460,31 +460,38 @@ function estadoTagClass(estado) {
   return 'pendiente';
 }
 
+function estadoLabel(estado) {
+  const e = (estado || '').toLowerCase();
+  if (e === 'cobrado') return I18n.t('statusCobrado');
+  if (e === 'entregado') return I18n.t('statusEntregado');
+  return I18n.t('statusPendiente');
+}
+
 function renderOrdersModal() {
   if (!trackedOrdersData.length) {
     ordersModalBody.innerHTML = `
-      <h2>Mis pedidos</h2>
-      <p class="subt">Todavía no tienes pedidos en este dispositivo.</p>
-      <button class="ghost-btn" id="orders-modal-close" type="button">Cerrar</button>
+      <h2>${I18n.t('myOrdersModalTitle')}</h2>
+      <p class="subt">${I18n.t('noOrdersYetText')}</p>
+      <button class="ghost-btn" id="orders-modal-close" type="button">${I18n.t('closeBtn')}</button>
     `;
   } else {
     ordersModalBody.innerHTML = `
-      <h2>Mis pedidos</h2>
-      <p class="subt">Se actualiza automáticamente hasta que quede cobrado</p>
+      <h2>${I18n.t('myOrdersModalTitle')}</h2>
+      <p class="subt">${I18n.t('autoUpdatesText')}</p>
       ${trackedOrdersData
         .map(
           (p) => `
         <div class="order-summary" style="margin-bottom:10px;">
           <div class="row" style="align-items:center;">
             <strong>${p.ID}</strong>
-            <span class="status-tag ${estadoTagClass(p.Estado)}">${p.Estado}</span>
+            <span class="status-tag ${estadoTagClass(p.Estado)}">${estadoLabel(p.Estado)}</span>
           </div>
           ${p.Items.map((i) => `<div class="row"><span>${i.cantidad}x ${i.nombre}${i.entregado ? ' ✓' : ''}</span><span>${fmt(i.subtotal)}</span></div>`).join('')}
-          <div class="row total"><span>Total</span><span>${fmt(p.Total)}</span></div>
+          <div class="row total"><span>${I18n.t('totalLabel')}</span><span>${fmt(p.Total)}</span></div>
         </div>`
         )
         .join('')}
-      <button class="ghost-btn" id="orders-modal-close" type="button">Cerrar</button>
+      <button class="ghost-btn" id="orders-modal-close" type="button">${I18n.t('closeBtn')}</button>
     `;
   }
   document.getElementById('orders-modal-close').onclick = closeOrdersModal;
@@ -511,8 +518,33 @@ async function refreshTrackedOrders() {
   }
 }
 
+// ---------------- Idioma ----------------
+
+function applyStaticI18n() {
+  document.getElementById('brand-tagline').textContent = I18n.t('brandTagline');
+  document.getElementById('my-orders-label').textContent = I18n.t('myOrders');
+  document.getElementById('cart-label').textContent = I18n.t('cart');
+  document.getElementById('site-footer-text').textContent = I18n.t('footerText');
+  document.getElementById('cart-drawer-title').textContent = I18n.t('cartDrawerTitle');
+  document.getElementById('cart-total-label').textContent = I18n.t('totalLabel');
+  document.getElementById('checkout-btn').textContent = I18n.t('continueOrder');
+}
+
+function onLangChange() {
+  applyStaticI18n();
+  renderMenu();
+  renderCartBadge();
+  updateAccountPill();
+  if (document.getElementById('cart-drawer').classList.contains('open')) renderCartBody();
+  if (modalOverlay.classList.contains('open')) renderModal();
+  if (ordersModalOverlay.classList.contains('open')) renderOrdersModal();
+}
+
+renderLangSelect(document.getElementById('lang-select-slot'));
+
 // ---------------- Init ----------------
 
+applyStaticI18n();
 renderMenu();
 renderCartBadge();
 updateAccountPill();

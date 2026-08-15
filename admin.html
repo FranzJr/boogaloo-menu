@@ -11,11 +11,12 @@
 
   <!-- Vista de login -->
   <div class="admin-login-box" id="login-view">
-    <h1>Panel Boogaloo</h1>
-    <p class="subt">Ingresa con tu usuario y clave de administrador</p>
+    <span id="admin-lang-slot" style="float:right;"></span>
+    <h1 id="admin-panel-title">Panel Boogaloo</h1>
+    <p class="subt" id="admin-login-sub">Ingresa con tu usuario y clave de administrador</p>
     <div class="form-error" id="login-error"></div>
-    <div class="field"><label>Usuario</label><input id="login-usuario" type="text" autocomplete="username" /></div>
-    <div class="field"><label>Clave</label><input id="login-clave" type="password" autocomplete="current-password" /></div>
+    <div class="field"><label id="admin-usuario-label">Usuario</label><input id="login-usuario" type="text" autocomplete="username" /></div>
+    <div class="field"><label id="admin-clave-label">Clave</label><input id="login-clave" type="password" autocomplete="current-password" /></div>
     <button class="primary-btn" id="login-btn" type="button" style="width:100%;">Ingresar</button>
   </div>
 
@@ -23,8 +24,9 @@
   <div class="admin-shell" id="panel-view" style="display:none;">
     <div class="admin-sticky-top">
       <div class="admin-topbar">
-        <h1>Pedidos</h1>
+        <h1 id="admin-orders-title">Pedidos</h1>
         <div>
+          <span id="panel-lang-slot"></span>
           <span class="who" id="who-label"></span>
           <button class="link-btn" id="logout-btn" type="button">Cerrar sesión</button>
         </div>
@@ -41,6 +43,7 @@
     <div id="orders-list"></div>
   </div>
 
+  <script src="js/i18n.js"></script>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
   <script src="js/admin.js"></script>

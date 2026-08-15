@@ -159,6 +159,25 @@ button {
   background: var(--co-red);
 }
 
+.lang-select {
+  flex: none;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 7px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.item-info h3 .aka {
+  font-weight: 400;
+  font-size: 0.78em;
+  color: var(--ink-soft);
+}
+
 /* CSS-drawn receipt icon */
 .icon-receipt {
   width: 14px;

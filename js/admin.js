@@ -51,10 +51,10 @@ document.getElementById('login-clave').addEventListener('keydown', (e) => {
 async function doLogin() {
   const usuario = document.getElementById('login-usuario').value.trim();
   const clave = document.getElementById('login-clave').value;
-  if (!usuario || !clave) return showLogin('Completa usuario y clave.');
+  if (!usuario || !clave) return showLogin(I18n.t('fillUserPassError'));
   const btn = document.getElementById('login-btn');
   btn.disabled = true;
-  btn.textContent = 'Ingresando...';
+  btn.textContent = I18n.t('enteringBtn');
   try {
     const res = await apiCall('loginAdmin', { usuario, clave });
     saveAdminSession({ usuario: res.usuario, token: res.token, rol: res.rol });
@@ -64,7 +64,7 @@ async function doLogin() {
     showLogin(err.message);
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Ingresar';
+    btn.textContent = I18n.t('enterBtn');
   }
 }
 
@@ -85,7 +85,7 @@ document.getElementById('filter-row').addEventListener('click', (e) => {
 
 async function fetchOrders() {
   const list = document.getElementById('orders-list');
-  list.innerHTML = '<div class="empty-state">Cargando pedidos...</div>';
+  list.innerHTML = `<div class="empty-state">${I18n.t('loadingOrders')}</div>`;
   try {
     const res = await apiCall('listarPedidos', { usuario: adminSession.usuario, token: adminSession.token });
     ordersCache = res.pedidos;
@@ -93,10 +93,10 @@ async function fetchOrders() {
   } catch (err) {
     if (/no autorizado|expirada/i.test(err.message)) {
       clearAdminSession();
-      showLogin('Tu sesión expiró, ingresa de nuevo.');
+      showLogin(I18n.t('sessionExpiredMsg'));
       return;
     }
-    list.innerHTML = '<div class="empty-state">Error al cargar pedidos: ' + err.message + '</div>';
+    list.innerHTML = `<div class="empty-state">${I18n.t('errorLoadingPrefix')}${err.message}</div>`;
   }
 }
 
@@ -107,6 +107,13 @@ function estadoClass(estado) {
   return 'pendiente';
 }
 
+function estadoLabel(estado) {
+  const e = (estado || '').toLowerCase();
+  if (e === 'cobrado') return I18n.t('statusCobrado');
+  if (e === 'entregado') return I18n.t('statusEntregado');
+  return I18n.t('statusPendiente');
+}
+
 function renderOrders() {
   const list = document.getElementById('orders-list');
   let pedidos = ordersCache;
@@ -114,7 +121,7 @@ function renderOrders() {
   if (currentFilter === 'cobrados') pedidos = pedidos.filter((p) => p.Estado === 'Cobrado');
 
   if (!pedidos.length) {
-    list.innerHTML = '<div class="empty-state">No hay pedidos en esta vista.</div>';
+    list.innerHTML = `<div class="empty-state">${I18n.t('noOrdersView')}</div>`;
     return;
   }
 
@@ -124,7 +131,7 @@ function renderOrders() {
       const itemsHtml = p.Items.map(
         (it) => `
         <div class="order-item-row">
-          <button class="check-toggle ${it.entregado ? 'done' : ''}" data-pedido="${p.ID}" data-sku="${it.sku}" data-entregado="${!it.entregado}" type="button" title="Marcar entregado">${it.entregado ? '✓' : ''}</button>
+          <button class="check-toggle ${it.entregado ? 'done' : ''}" data-pedido="${p.ID}" data-sku="${it.sku}" data-entregado="${!it.entregado}" type="button" title="${I18n.t('markDeliveredTitle')}">${it.entregado ? '✓' : ''}</button>
           <span class="n">${it.cantidad}x ${it.nombre}</span>
           <span class="p">${fmt(it.subtotal)}</span>
         </div>`
@@ -139,16 +146,16 @@ function renderOrders() {
             <div class="id">${p.ID}</div>
             <div class="meta">${fecha} · ${p.Cliente} (${p.Tipo})${p.Telefono ? ' · ' + p.Telefono : ''}</div>
           </div>
-          <span class="status-tag ${estadoClass(p.Estado)}">${p.Estado}</span>
+          <span class="status-tag ${estadoClass(p.Estado)}">${estadoLabel(p.Estado)}</span>
         </div>
         <div class="order-items">${itemsHtml}</div>
         <div class="order-card-footer">
-          <span class="order-total">Total ${fmt(p.Total)}</span>
+          <span class="order-total">${I18n.t('totalPrefix')}${fmt(p.Total)}</span>
           <div class="order-actions">
             <button class="btn-paid ${pagado ? 'done' : ''}" data-pagar="${p.ID}" data-valor="${!pagado}" type="button">
-              ${pagado ? '✓ Cobrado' : 'Marcar cobrado'}
+              ${pagado ? I18n.t('paidDoneBtn') : I18n.t('markPaidBtn')}
             </button>
-            <button class="ghost-btn" data-eliminar="${p.ID}" type="button">Eliminar</button>
+            <button class="ghost-btn" data-eliminar="${p.ID}" type="button">${I18n.t('deleteBtn')}</button>
           </div>
         </div>
       </div>`;
@@ -173,7 +180,7 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
       });
       await fetchOrders();
     } catch (err) {
-      alert('No se pudo actualizar: ' + err.message);
+      alert(I18n.t('couldNotUpdatePrefix') + err.message);
       toggleBtn.disabled = false;
     }
     return;
@@ -190,14 +197,14 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
       });
       await fetchOrders();
     } catch (err) {
-      alert('No se pudo actualizar: ' + err.message);
+      alert(I18n.t('couldNotUpdatePrefix') + err.message);
       pagarBtn.disabled = false;
     }
     return;
   }
 
   if (eliminarBtn) {
-    if (!confirm('¿Eliminar el pedido ' + eliminarBtn.dataset.eliminar + '? Esta acción no se puede deshacer.')) return;
+    if (!confirm(I18n.t('confirmDelete', eliminarBtn.dataset.eliminar))) return;
     eliminarBtn.disabled = true;
     try {
       await apiCall('eliminarPedido', {
@@ -207,14 +214,39 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
       });
       await fetchOrders();
     } catch (err) {
-      alert('No se pudo eliminar: ' + err.message);
+      alert(I18n.t('couldNotDeletePrefix') + err.message);
       eliminarBtn.disabled = false;
     }
   }
 });
 
+// ---------------- Idioma ----------------
+
+function applyStaticI18n() {
+  document.getElementById('admin-panel-title').textContent = I18n.t('adminPanelTitle');
+  document.getElementById('admin-login-sub').textContent = I18n.t('adminLoginSub');
+  document.getElementById('admin-usuario-label').textContent = I18n.t('usuarioLabel');
+  document.getElementById('admin-clave-label').textContent = I18n.t('passwordLabel');
+  document.getElementById('login-btn').textContent = I18n.t('enterBtn');
+  document.getElementById('admin-orders-title').textContent = I18n.t('ordersTitle');
+  document.getElementById('logout-btn').textContent = I18n.t('logoutBtn');
+  document.querySelector('[data-filter="activos"]').textContent = I18n.t('filterActive');
+  document.querySelector('[data-filter="cobrados"]').textContent = I18n.t('filterPaid');
+  document.querySelector('[data-filter="todos"]').textContent = I18n.t('filterAll');
+  document.getElementById('refresh-btn').textContent = I18n.t('refreshBtn');
+}
+
+function onLangChange() {
+  applyStaticI18n();
+  if (document.getElementById('panel-view').style.display !== 'none') renderOrders();
+}
+
+renderLangSelect(document.getElementById('admin-lang-slot'));
+renderLangSelect(document.getElementById('panel-lang-slot'));
+
 // ---------------- Init ----------------
 
+applyStaticI18n();
 loadAdminSession();
 if (adminSession && adminSession.token) {
   showPanel();
