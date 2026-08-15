@@ -21,19 +21,21 @@
 
   <!-- Vista del panel -->
   <div class="admin-shell" id="panel-view" style="display:none;">
-    <div class="admin-topbar">
-      <h1>Pedidos</h1>
-      <div>
-        <span class="who" id="who-label"></span>
-        <button class="link-btn" id="logout-btn" type="button">Cerrar sesión</button>
+    <div class="admin-sticky-top">
+      <div class="admin-topbar">
+        <h1>Pedidos</h1>
+        <div>
+          <span class="who" id="who-label"></span>
+          <button class="link-btn" id="logout-btn" type="button">Cerrar sesión</button>
+        </div>
       </div>
-    </div>
 
-    <div class="filter-row" id="filter-row">
-      <button data-filter="activos" class="active" type="button">En curso</button>
-      <button data-filter="cobrados" type="button">Cobrados</button>
-      <button data-filter="todos" type="button">Todos</button>
-      <button id="refresh-btn" type="button" style="margin-left:auto;">↻ Actualizar</button>
+      <div class="filter-row" id="filter-row">
+        <button data-filter="activos" class="active" type="button">En curso</button>
+        <button data-filter="cobrados" type="button">Cobrados</button>
+        <button data-filter="todos" type="button">Todos</button>
+        <button id="refresh-btn" type="button" style="margin-left:auto;">↻ Actualizar</button>
+      </div>
     </div>
 
     <div id="orders-list"></div>

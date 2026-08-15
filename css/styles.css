@@ -27,6 +27,7 @@ html, body {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -70,7 +71,9 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+  row-gap: 8px;
 }
 
 .brand {
@@ -103,7 +106,9 @@ button {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .account-pill {
@@ -116,6 +121,7 @@ button {
   max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: none;
 }
 
 .cart-btn {
@@ -129,6 +135,8 @@ button {
   color: #fff;
   font-weight: 600;
   font-size: 0.85rem;
+  white-space: nowrap;
+  flex: none;
 }
 
 .cart-btn .badge {
@@ -502,8 +510,22 @@ main {
   padding: 10px 0;
   border-bottom: 1px solid var(--border);
 }
-.cart-row .name { flex: 1; font-size: 0.88rem; }
-.cart-row .name small { display: block; color: var(--ink-soft); font-size: 0.72rem; }
+.cart-row .name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cart-row .name small {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.qty-stepper { flex: none; }
 .qty-stepper {
   display: flex;
   align-items: center;
@@ -521,7 +543,7 @@ main {
   font-weight: 700;
 }
 .qty-stepper span { min-width: 18px; text-align: center; font-size: 0.85rem; }
-.cart-row .subtotal { width: 68px; text-align: right; font-weight: 700; font-size: 0.85rem; }
+.cart-row .subtotal { flex: none; width: 68px; text-align: right; font-weight: 700; font-size: 0.85rem; }
 
 .empty-cart {
   text-align: center;
@@ -683,7 +705,20 @@ main {
 .order-summary .row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 8px;
   padding: 3px 0;
+}
+.order-summary .row > span:first-child,
+.order-summary .row > strong:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.order-summary .row > span:last-child {
+  flex: none;
+  white-space: nowrap;
 }
 .order-summary .row.total {
   border-top: 1px solid var(--border);
@@ -727,10 +762,22 @@ footer.site-footer {
 .admin-login-box h1 { margin-top: 0; font-size: 1.2rem; }
 .admin-login-box .subt { color: var(--ink-soft); font-size: 0.82rem; margin-top: -8px; }
 
+.admin-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  background: var(--bg);
+  margin: -20px -18px 0;
+  padding: 20px 18px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
 .admin-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 8px;
   margin-bottom: 18px;
 }
 .admin-topbar h1 { margin: 0; font-size: 1.2rem; }
@@ -739,7 +786,6 @@ footer.site-footer {
 .filter-row {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
   flex-wrap: wrap;
 }
 .filter-row button {
@@ -766,8 +812,20 @@ footer.site-footer {
   gap: 10px;
   margin-bottom: 10px;
 }
-.order-card-head .id { font-weight: 700; font-size: 0.92rem; }
-.order-card-head .meta { font-size: 0.76rem; color: var(--ink-soft); }
+.order-card-head > div:first-child { min-width: 0; flex: 1; }
+.order-card-head .id {
+  font-weight: 700;
+  font-size: 0.92rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.order-card-head .meta {
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  overflow-wrap: break-word;
+}
+.order-card-head .status-tag { flex: none; }
 
 .status-tag {
   font-size: 0.72rem;
@@ -790,8 +848,14 @@ footer.site-footer {
   font-size: 0.85rem;
 }
 .order-item-row:last-child { border-bottom: none; }
-.order-item-row .n { flex: 1; }
-.order-item-row .p { color: var(--ink-soft); }
+.order-item-row .n {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.order-item-row .p { flex: none; color: var(--ink-soft); }
 .check-toggle {
   width: 22px; height: 22px;
   border-radius: 6px;
@@ -810,12 +874,14 @@ footer.site-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid var(--border);
 }
 .order-total { font-weight: 700; }
-.order-actions { display: flex; gap: 8px; }
+.order-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .order-actions button {
   padding: 8px 12px;
   border-radius: 10px;
@@ -835,4 +901,14 @@ footer.site-footer {
 @media (max-width: 640px) {
   .item-grid { grid-template-columns: 1fr 1fr; }
   .brand-text p { display: none; }
+}
+
+@media (max-width: 420px) {
+  .brand-mark { width: 34px; height: 34px; }
+  .brand-text h1 { font-size: 1.1rem; }
+  .header-inner { padding: 12px 14px 8px; }
+  .cat-nav { padding: 4px 14px 10px; }
+  main { padding: 8px 14px 40px; }
+  .cart-btn { padding: 8px 11px; font-size: 0.78rem; gap: 5px; }
+  .account-pill { font-size: 0.72rem; padding: 6px 10px; max-width: 100px; }
 }
