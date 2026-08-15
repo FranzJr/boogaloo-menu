@@ -322,6 +322,15 @@ function renderConfirmStep() {
   document.getElementById('confirm-submit').onclick = submitOrder;
 }
 
+// Pedido activo (no cobrado) de hoy ya rastreado en este dispositivo: si existe,
+// lo nuevo se suma ahí en vez de crear un pedido aparte (misma mesa/cliente).
+function activeTrackedOrderToday() {
+  const hoy = new Date().toDateString();
+  return trackedOrdersData.find(
+    (p) => p.Estado !== 'Cobrado' && new Date(p.Fecha).toDateString() === hoy
+  );
+}
+
 async function submitOrder() {
   const btn = document.getElementById('confirm-submit');
   btn.disabled = true;
@@ -333,10 +342,20 @@ async function submitOrder() {
         ? { tipo: 'cliente', nombre: s.nombre, telefono: s.telefono, email: s.email }
         : { tipo: 'invitado', nombre: (s && s.nombre) || 'Invitado', telefono: (s && s.telefono) || '' };
 
-    const res = await apiCall('crearPedido', {
-      cliente,
-      items: Cart.items,
-    });
+    await refreshTrackedOrders();
+    const abierto = activeTrackedOrderToday();
+
+    let res;
+    if (abierto) {
+      try {
+        res = await apiCall('agregarItems', { pedidoId: abierto.ID, items: Cart.items });
+      } catch (err) {
+        // el pedido abierto ya no admite items (p.ej. lo acaban de cobrar): crea uno nuevo
+        res = await apiCall('crearPedido', { cliente, items: Cart.items });
+      }
+    } else {
+      res = await apiCall('crearPedido', { cliente, items: Cart.items });
+    }
 
     Cart.clear();
     trackOrder(res.pedidoId);
@@ -355,12 +374,12 @@ function renderSuccessStep() {
   modalBody.innerHTML = `
     <div class="form-success">
       <div class="check">✓</div>
-      <h2>¡Pedido enviado!</h2>
+      <h2>${order.combinado ? '¡Agregado a tu pedido!' : '¡Pedido enviado!'}</h2>
       <p class="subt">${order.pedidoId}</p>
     </div>
     <div class="order-summary">
       ${order.items.map((i) => `<div class="row"><span>${i.cantidad}x ${i.nombre}</span><span>${fmt(i.subtotal)}</span></div>`).join('')}
-      <div class="row total"><span>Total</span><span>${fmt(order.total)}</span></div>
+      <div class="row total"><span>Total${order.combinado ? ' del pedido' : ''}</span><span>${fmt(order.total)}</span></div>
     </div>
     <button class="primary-btn" id="success-close" type="button">Listo</button>
   `;
