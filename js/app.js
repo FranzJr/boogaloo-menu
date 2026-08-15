@@ -397,7 +397,7 @@ modalOverlay.addEventListener('click', (e) => {
 
 document.getElementById('checkout-btn').addEventListener('click', () => {
   if (!Cart.items.length) return;
-  if (Session.isLoggedIn()) {
+  if (Session.hasIdentity()) {
     modalState = { purpose: 'checkout', step: 'confirm' };
     modalOverlay.classList.add('open');
     renderConfirmStep();

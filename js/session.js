@@ -29,6 +29,12 @@ const Session = {
     return !!(this.data && this.data.tipo === 'cliente');
   },
 
+  // true si ya sabemos quién es (cliente con cuenta, o invitado que ya dio su nombre antes).
+  // Sirve para no volver a pedir los datos en cada pedido nuevo del mismo dispositivo.
+  hasIdentity() {
+    return !!(this.data && (this.data.tipo === 'cliente' || this.data.nombre));
+  },
+
   ensureGuest(nombre, telefono) {
     const guestId =
       (this.data && this.data.guestId) || 'INV-' + Math.random().toString(36).slice(2, 10);
