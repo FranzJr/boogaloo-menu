@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Boogaloo — Turnos</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="flag-stripe"></div>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div class="brand-text">
+          <h1>Boogaloo</h1>
+          <p id="tn-page-label">Turnos</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="lang-select-slot"></span>
+        <span class="account-pill" id="tn-who"></span>
+        <a class="cart-btn" href="index.html" id="tn-back-link" style="text-decoration:none;">←</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="tn-wrap" id="tn-wrap">
+    <!-- Acceso denegado -->
+    <div class="tn-denied" id="tn-denied" style="display:none;">
+      <p id="tn-denied-text"></p>
+    </div>
+
+    <!-- Vista principal (colaborador o admin) -->
+    <div id="tn-app" style="display:none;">
+      <div class="tn-month-nav">
+        <button class="ghost-btn" id="tn-prev" type="button">‹</button>
+        <h2 id="tn-month-label"></h2>
+        <button class="ghost-btn" id="tn-next" type="button">›</button>
+      </div>
+
+      <div class="tn-stats" id="tn-stats"></div>
+
+      <!-- Solo admin -->
+      <div id="tn-admin-tools" style="display:none;">
+        <button class="primary-btn" id="tn-new-shift-btn" type="button" style="width:auto; padding:10px 18px;"></button>
+        <div class="tn-panel" id="tn-new-shift-form" style="display:none;"></div>
+
+        <details class="tn-panel">
+          <summary id="tn-tarifas-title"></summary>
+          <div id="tn-tarifas-body"></div>
+        </details>
+
+        <details class="tn-panel">
+          <summary id="tn-colabs-title"></summary>
+          <div id="tn-colabs-body"></div>
+        </details>
+      </div>
+
+      <table class="tn-table" id="tn-table">
+        <thead>
+          <tr id="tn-table-head"></tr>
+        </thead>
+        <tbody id="tn-table-body"></tbody>
+      </table>
+
+      <div class="tn-list" id="tn-list"></div>
+
+      <div class="tn-legend" id="tn-legend"></div>
+    </div>
+  </main>
+
+  <!-- Modal de detalle / acciones de un turno -->
+  <div class="modal-overlay" id="tn-modal">
+    <div class="modal-box">
+      <div id="tn-modal-body"></div>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/turnos.js"></script>
+</body>
+</html>

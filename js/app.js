@@ -22,6 +22,7 @@ function renderMenu() {
 
     const itemsHtml = (cat.items || [])
       .map((it) => {
+        const nombre = mi(it.nombre);
         const subt = mi(it.subt);
         const desc = mi(it.desc);
         const aka = it.aka ? ` <span class="aka">"${it.aka}"</span>` : '';
@@ -29,7 +30,7 @@ function renderMenu() {
       <article class="item-card">
         <div class="item-top">
           <div class="item-info">
-            <h3>${it.nombre}${aka}</h3>
+            <h3>${nombre}${aka}</h3>
             ${subt ? `<span class="subt">${subt}</span>` : ''}
           </div>
         </div>
@@ -45,13 +46,14 @@ function renderMenu() {
     const extrasHtml = (cat.extras || []).length
       ? `<div class="extras-row">
           ${cat.extras
-            .map(
-              (ex) => `
+            .map((ex) => {
+              const exNombre = mi(ex.nombre);
+              return `
             <span class="extra-chip">
-              ${ex.nombre}${mi(ex.subt) ? ' (' + mi(ex.subt) + ')' : ''} · <span class="price">${fmt(ex.precio)}</span>
-              <button data-add-sku="${ex.sku}" type="button" aria-label="${I18n.t('addAria')} ${ex.nombre}">+</button>
-            </span>`
-            )
+              ${exNombre} · <span class="price">${fmt(ex.precio)}</span>
+              <button data-add-sku="${ex.sku}" type="button" aria-label="${I18n.t('addAria')} ${exNombre}">+</button>
+            </span>`;
+            })
             .join('')}
         </div>`
       : '';
@@ -185,6 +187,7 @@ function renderModal() {
         <div class="row"><span>${I18n.t('nameLabel')}</span><span>${s.nombre}</span></div>
         <div class="row"><span>${I18n.t('emailLabel')}</span><span>${s.email}</span></div>
       </div>
+      ${Session.isColaborador() ? `<a class="ghost-btn" href="turnos.html" style="display:block; margin-bottom:8px; text-decoration:none;">${I18n.t('tnPageLabel')}</a>` : ''}
       <button class="primary-btn" id="modal-logout-btn" type="button">${I18n.t('logoutBtn')}</button>
       <button class="ghost-btn" id="modal-close-btn" type="button" style="margin-top:8px;">${I18n.t('backToMenuBtn')}</button>
     `;

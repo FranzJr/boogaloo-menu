@@ -29,6 +29,10 @@ const Session = {
     return !!(this.data && this.data.tipo === 'cliente');
   },
 
+  isColaborador() {
+    return !!(this.data && this.data.tipo === 'cliente' && this.data.rol === 'colaborador');
+  },
+
   // true si ya sabemos quién es (cliente con cuenta, o invitado que ya dio su nombre antes).
   // Sirve para no volver a pedir los datos en cada pedido nuevo del mismo dispositivo.
   hasIdentity() {
@@ -50,6 +54,7 @@ const Session = {
       email: cliente.email,
       telefono: cliente.telefono,
       token: cliente.token,
+      rol: cliente.rol || 'cliente',
     });
   },
 };

@@ -234,6 +234,7 @@ function applyStaticI18n() {
   document.querySelector('[data-filter="cobrados"]').textContent = I18n.t('filterPaid');
   document.querySelector('[data-filter="todos"]').textContent = I18n.t('filterAll');
   document.getElementById('refresh-btn').textContent = I18n.t('refreshBtn');
+  document.getElementById('admin-turnos-link').textContent = I18n.t('tnPageLabel');
 }
 
 function onLangChange() {

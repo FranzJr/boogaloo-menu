@@ -58,7 +58,7 @@ const Cart = {
       .map((i) => {
         const def = MENU_INDEX[i.sku];
         if (!def) return null;
-        return { ...i, nombre: def.nombre, precio: def.precio, subtotal: def.precio * i.cantidad };
+        return { ...i, nombre: mi(def.nombre), precio: def.precio, subtotal: def.precio * i.cantidad };
       })
       .filter(Boolean);
   },

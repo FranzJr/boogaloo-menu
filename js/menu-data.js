@@ -2,10 +2,11 @@
    Cada item tiene un sku único: DEBE coincidir exactamente con MENU en apps-script/Code.gs,
    porque el precio final del pedido se calcula (y se confía) en el backend, no en el navegador.
 
-   Internacionalización: `nombre` (y `aka` si existe) son nombres propios colombianos y se
-   mantienen IGUALES en los 4 idiomas — así como "sushi" o "pizza" no se traducen. Solo `subt`
-   y `desc` cambian por idioma, y ahí es donde se explican los términos regionales (panela,
-   hogao, arequipe, bocadillo...) para quien no habla español. Usa L(es,en,ja,pt) para definirlos. */
+   Internacionalización: `nombre` se traduce en los 4 idiomas, pero conservando adentro las
+   palabras colombianas reconocibles (Arepa, Empanada, Oblea, Arequipe, Bocadillo, Hogao...)
+   igual que "sushi" o "pizza" no se traducen letra por letra. `aka` es un apodo que se muestra
+   IGUAL en los 4 idiomas (ej. "Lemonela"). `subt` y `desc` explican los términos regionales
+   para quien no habla español. Usa L(es,en,ja,pt) para definir cada campo traducible. */
 
 const L = (es, en, ja, pt) => ({ es, en, ja, pt });
 
@@ -23,7 +24,7 @@ const MENU_CATEGORIES = [
     items: [
       {
         sku: 'arepa-cheese',
-        nombre: 'Arepa Cheese',
+        nombre: L('Arepa Cheese', 'Cheese Arepa', 'チーズアレパ', 'Arepa de Queijo'),
         desc: L(
           'Arepa colombiana rellena de queso fundido.',
           'Colombian corn cake filled with melted cheese.',
@@ -34,8 +35,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'arepa-carne',
-        nombre: 'Arepa Carne',
-        subt: L(null, 'Beef arepa', 'ビーフアレパ', 'Arepa de carne'),
+        nombre: L('Arepa Carne', 'Beef Arepa', 'ビーフアレパ', 'Arepa de Carne'),
         desc: L(
           'Arepa colombiana rellena de carne de res deshilachada, cocinada lentamente con cebolla, ajo, tomate y pimentón, cubierta con queso.',
           'Colombian corn cake filled with slow-cooked shredded beef, onion, garlic, tomato and bell pepper, topped with cheese.',
@@ -46,8 +46,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'arepa-pollo',
-        nombre: 'Arepa Pollo',
-        subt: L(null, 'Chicken arepa', 'チキンアレパ', 'Arepa de frango'),
+        nombre: L('Arepa Pollo', 'Chicken Arepa', 'チキンアレパ', 'Arepa de Frango'),
         desc: L(
           'Arepa colombiana rellena de pollo deshilachado, cocinado lentamente con cebolla, ajo, tomate y pimentón, cubierta con queso.',
           'Colombian corn cake filled with slow-cooked shredded chicken, onion, garlic, tomato and bell pepper, topped with cheese.',
@@ -58,8 +57,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'arepa-chorizo',
-        nombre: 'Arepa con Chorizo',
-        subt: L(null, 'Chorizo arepa', 'チョリソーアレパ', 'Arepa com chorizo'),
+        nombre: L('Arepa con Chorizo', 'Chorizo Arepa', 'チョリソーアレパ', 'Arepa com Chorizo'),
         desc: L(
           'Arepa colombiana rellena de queso fundido y chorizo a la parrilla.',
           'Colombian corn cake filled with melted cheese and grilled chorizo sausage.',
@@ -89,8 +87,7 @@ const MENU_CATEGORIES = [
     items: [
       {
         sku: 'empanada-carne',
-        nombre: 'Empanada de Carne',
-        subt: L(null, 'Beef empanada', '牛ひき肉のエンパナーダ', 'Empanada de carne'),
+        nombre: L('Empanada de Carne', 'Beef Empanada', '牛肉のエンパナーダ', 'Empanada de Carne'),
         desc: L(
           'Carne molida cocinada en hogao (tomate, cebolla y cebolla larga).',
           'Ground beef cooked in hogao, a traditional Colombian sauce of tomato, onion and scallion.',
@@ -101,8 +98,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'empanada-pollo-queso',
-        nombre: 'Empanada de Pollo con Queso',
-        subt: L(null, 'Chicken & cheese empanada', '鶏肉とチーズのエンパナーダ', 'Empanada de frango com queijo'),
+        nombre: L('Empanada de Pollo con Queso', 'Chicken & Cheese Empanada', '鶏肉とチーズのエンパナーダ', 'Empanada de Frango com Queijo'),
         desc: L(
           'Pollo desmechado cocinado en hogao colombiano, mezclado con queso mozzarella fundido.',
           'Shredded chicken cooked in hogao (Colombian tomato-onion sauce), blended with melted mozzarella.',
@@ -126,7 +122,7 @@ const MENU_CATEGORIES = [
     items: [
       {
         sku: 'maduro-queso-bocadillo',
-        nombre: 'Maduro con Queso y Bocadillo',
+        nombre: L('Maduro con Queso y Bocadillo', 'Maduro with Cheese & Bocadillo', 'チーズとボカディージョのマドゥーロ', 'Maduro com Queijo e Bocadillo'),
         desc: L(
           'Plátano maduro entero horneado con queso fundido y bocadillo (dulce de guayaba). Perfecto para compartir.',
           'Whole ripe plantain baked with melted cheese and bocadillo (Colombian guava paste). Perfect to share.',
@@ -137,7 +133,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'aborrajado',
-        nombre: 'Aborrajado con Queso y Bocadillo',
+        nombre: L('Aborrajado con Queso y Bocadillo', 'Aborrajado with Cheese & Bocadillo', 'チーズとボカディージョのアボラハード', 'Aborrajado com Queijo e Bocadillo'),
         desc: L(
           'Plátano maduro relleno de queso y bocadillo (dulce de guayaba), cubierto con una ligera masa y frito.',
           'Ripe plantain stuffed with cheese and bocadillo (Colombian guava paste), lightly battered and fried.',
@@ -161,7 +157,7 @@ const MENU_CATEGORIES = [
     items: [
       {
         sku: 'ensalada-frutas',
-        nombre: 'Ensalada de Frutas Premium',
+        nombre: L('Ensalada de Frutas Premium', 'Premium Fruit Salad', 'プレミアムフルーツサラダ', 'Salada de Frutas Premium'),
         desc: L(
           'Frutas de temporada, queso, crema, menta, oblea (galleta de barquillo) y almíbar casero.',
           'Seasonal fruit, cheese, cream, mint, oblea (thin wafer) and homemade syrup.',
@@ -172,8 +168,8 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'oblea-traditional',
-        nombre: 'Oblea Traditional',
-        subt: L(null, 'Wafer with arequipe, cream & cheese', 'アレキペ+生クリーム+チーズのオブレア', 'Bolacha com arequipe, creme e queijo'),
+        nombre: L('Oblea Traditional', 'Traditional Oblea', 'オブレア・トラディショナル', 'Oblea Tradicional'),
+        subt: L(null, 'With arequipe, cream & cheese', 'アレキペ+生クリーム+チーズ', 'Com arequipe, creme e queijo'),
         desc: L(
           'Oblea (galleta fina tipo barquillo) colombiana con arequipe (dulce de leche colombiano), crema fresca y queso.',
           'Colombian oblea (thin wafer) with arequipe (Colombian dulce de leche), fresh cream and cheese.',
@@ -184,8 +180,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'oblea-berry',
-        nombre: 'Berry Oblea',
-        subt: L(null, 'Wafer with berry jam', 'ベリーミックスジャムのオブレア', 'Bolacha com geleia de frutas vermelhas'),
+        nombre: L('Berry Oblea', 'Berry Oblea', 'ベリーオブレア', 'Oblea de Frutas Vermelhas'),
         desc: L(
           'Oblea con arequipe (dulce de leche colombiano), crema fresca, queso y mermelada de frutos rojos.',
           'Oblea (thin wafer) with arequipe (Colombian dulce de leche), fresh cream, cheese and mixed berry jam.',
@@ -196,8 +191,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'oblea-special',
-        nombre: 'Boogaloo Special Oblea',
-        subt: L(null, 'Our signature loaded wafer', 'オブレア・スペシャル', 'Nossa bolacha especial'),
+        nombre: L('Boogaloo Special Oblea', 'Boogaloo Special Oblea', 'ブーガルー・スペシャルオブレア', 'Oblea Especial Boogaloo'),
         desc: L(
           'Arequipe (dulce de leche colombiano), crema fresca, queso, mermelada de frutos rojos y banano o fresa.',
           'Arequipe (Colombian dulce de leche), fresh cream, cheese, mixed berry jam and banana or strawberry.',
@@ -208,7 +202,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'postre-alfajor',
-        nombre: 'Alfajor de Arequipe',
+        nombre: L('Alfajor de Arequipe', 'Arequipe Alfajor', 'アレキペのアルファホール', 'Alfajor de Arequipe'),
         subt: L(
           'Postre ocasional de temporada',
           'Seasonal occasional dessert',
@@ -225,7 +219,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'postre-brownie',
-        nombre: 'Brownie de Arequipe',
+        nombre: L('Brownie de Arequipe', 'Arequipe Brownie', 'アレキペのブラウニー', 'Brownie de Arequipe'),
         subt: L(
           'Postre ocasional de temporada',
           'Seasonal occasional dessert',
@@ -242,7 +236,7 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'postre-milhojas',
-        nombre: 'Milhojas de Arequipe',
+        nombre: L('Milhojas de Arequipe', 'Arequipe Milhojas', 'アレキペのミルオハス', 'Milhojas de Arequipe'),
         subt: L(
           'Postre ocasional de temporada',
           'Seasonal occasional dessert',
@@ -267,61 +261,52 @@ const MENU_CATEGORIES = [
     items: [
       {
         sku: 'jugo-mango-agua-12',
-        nombre: 'Jugo de Mango (Agua) 12oz',
-        subt: L(null, 'Mango juice · water base', 'マンゴージュース（水）', 'Suco de manga · à base de água'),
+        nombre: L('Jugo de Mango (Agua) 12oz', 'Mango Juice (Water) 12oz', 'マンゴージュース（水）12oz', 'Suco de Manga (Água) 12oz'),
         precio: 500,
       },
       {
         sku: 'jugo-mango-agua-16',
-        nombre: 'Jugo de Mango (Agua) 16oz',
-        subt: L(null, 'Mango juice · water base', 'マンゴージュース（水）', 'Suco de manga · à base de água'),
+        nombre: L('Jugo de Mango (Agua) 16oz', 'Mango Juice (Water) 16oz', 'マンゴージュース（水）16oz', 'Suco de Manga (Água) 16oz'),
         precio: 600,
       },
       {
         sku: 'jugo-mango-leche-12',
-        nombre: 'Jugo de Mango (Leche) 12oz',
-        subt: L(null, 'Mango juice · milk base', 'マンゴージュース（ミルク）', 'Suco de manga · à base de leite'),
+        nombre: L('Jugo de Mango (Leche) 12oz', 'Mango Juice (Milk) 12oz', 'マンゴージュース（ミルク）12oz', 'Suco de Manga (Leite) 12oz'),
         precio: 600,
       },
       {
         sku: 'jugo-mango-leche-16',
-        nombre: 'Jugo de Mango (Leche) 16oz',
-        subt: L(null, 'Mango juice · milk base', 'マンゴージュース（ミルク）', 'Suco de manga · à base de leite'),
+        nombre: L('Jugo de Mango (Leche) 16oz', 'Mango Juice (Milk) 16oz', 'マンゴージュース（ミルク）16oz', 'Suco de Manga (Leite) 16oz'),
         precio: 700,
       },
       {
         sku: 'jugo-fresa-agua-12',
-        nombre: 'Jugo de Fresa (Agua) 12oz',
-        subt: L(null, 'Strawberry juice · water base', 'いちごジュース（水）', 'Suco de morango · à base de água'),
+        nombre: L('Jugo de Fresa (Agua) 12oz', 'Strawberry Juice (Water) 12oz', 'いちごジュース（水）12oz', 'Suco de Morango (Água) 12oz'),
         precio: 500,
       },
       {
         sku: 'jugo-fresa-agua-16',
-        nombre: 'Jugo de Fresa (Agua) 16oz',
-        subt: L(null, 'Strawberry juice · water base', 'いちごジュース（水）', 'Suco de morango · à base de água'),
+        nombre: L('Jugo de Fresa (Agua) 16oz', 'Strawberry Juice (Water) 16oz', 'いちごジュース（水）16oz', 'Suco de Morango (Água) 16oz'),
         precio: 600,
       },
       {
         sku: 'jugo-fresa-leche-12',
-        nombre: 'Jugo de Fresa (Leche) 12oz',
-        subt: L(null, 'Strawberry juice · milk base', 'いちごジュース（ミルク）', 'Suco de morango · à base de leite'),
+        nombre: L('Jugo de Fresa (Leche) 12oz', 'Strawberry Juice (Milk) 12oz', 'いちごジュース（ミルク）12oz', 'Suco de Morango (Leite) 12oz'),
         precio: 600,
       },
       {
         sku: 'jugo-fresa-leche-16',
-        nombre: 'Jugo de Fresa (Leche) 16oz',
-        subt: L(null, 'Strawberry juice · milk base', 'いちごジュース（ミルク）', 'Suco de morango · à base de leite'),
+        nombre: L('Jugo de Fresa (Leche) 16oz', 'Strawberry Juice (Milk) 16oz', 'いちごジュース（ミルク）16oz', 'Suco de Morango (Leite) 16oz'),
         precio: 700,
       },
       {
         sku: 'te-frutos-rojos-frio',
-        nombre: 'Iced Berry Tea',
-        subt: L('Té de frutos rojos frío', null, 'アイスベリーティー', 'Chá gelado de frutas vermelhas'),
+        nombre: L('Té Helado de Frutos Rojos', 'Iced Berry Tea', 'アイスベリーティー', 'Chá Gelado de Frutas Vermelhas'),
         precio: 500,
       },
       {
         sku: 'panela-limon',
-        nombre: 'Agua de Panela con Limón',
+        nombre: L('Agua de Panela con Limón', 'Panela Water with Lime', 'パネラ・ライムウォーター', 'Água de Panela com Limão'),
         aka: 'Lemonela',
         desc: L(
           'Bebida fría de panela (bloque de jugo de caña de azúcar sin refinar) con limón. También la conocemos como "Lemonela".',
@@ -339,23 +324,23 @@ const MENU_CATEGORIES = [
     nombre: 'Café y Bebidas Calientes',
     subt: L('Café colombiano y más', 'Colombian coffee & more', 'コロンビア産コーヒーなど', 'Café colombiano e mais'),
     items: [
-      { sku: 'te-frutos-rojos-caliente-8', nombre: 'Hot Berry Tea 8oz', subt: L('Té de frutos rojos caliente', null, 'ホットベリーティー', 'Chá quente de frutas vermelhas'), precio: 400 },
-      { sku: 'te-frutos-rojos-caliente-12', nombre: 'Hot Berry Tea 12oz', subt: L('Té de frutos rojos caliente', null, 'ホットベリーティー', 'Chá quente de frutas vermelhas'), precio: 500 },
-      { sku: 'capuccino-8', nombre: 'Capuccino 8oz', subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 550 },
-      { sku: 'capuccino-12', nombre: 'Capuccino 12oz', subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 650 },
-      { sku: 'mocha-8', nombre: 'Mocha 8oz', subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 600 },
-      { sku: 'mocha-12', nombre: 'Mocha 12oz', subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 700 },
-      { sku: 'latte-8', nombre: 'Café Latte 8oz', subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 550 },
-      { sku: 'latte-12', nombre: 'Café Latte 12oz', subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 650 },
-      { sku: 'tinto-8', nombre: 'Tinto 8oz', subt: L('Café negro colombiano', 'Colombian black coffee', 'コロンビア風ブラックコーヒー', 'Café preto colombiano'), precio: 400 },
-      { sku: 'tinto-12', nombre: 'Tinto 12oz', subt: L('Café negro colombiano', 'Colombian black coffee', 'コロンビア風ブラックコーヒー', 'Café preto colombiano'), precio: 500 },
-      { sku: 'americano-8', nombre: 'Americano 8oz', precio: 450 },
-      { sku: 'americano-12', nombre: 'Americano 12oz', precio: 550 },
+      { sku: 'te-frutos-rojos-caliente-8', nombre: L('Té Caliente de Frutos Rojos 8oz', 'Hot Berry Tea 8oz', 'ホットベリーティー 8oz', 'Chá Quente de Frutas Vermelhas 8oz'), precio: 400 },
+      { sku: 'te-frutos-rojos-caliente-12', nombre: L('Té Caliente de Frutos Rojos 12oz', 'Hot Berry Tea 12oz', 'ホットベリーティー 12oz', 'Chá Quente de Frutas Vermelhas 12oz'), precio: 500 },
+      { sku: 'capuccino-8', nombre: L('Capuccino 8oz', 'Cappuccino 8oz', 'カプチーノ 8oz', 'Capuccino 8oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 550 },
+      { sku: 'capuccino-12', nombre: L('Capuccino 12oz', 'Cappuccino 12oz', 'カプチーノ 12oz', 'Capuccino 12oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 650 },
+      { sku: 'mocha-8', nombre: L('Mocha 8oz', 'Mocha 8oz', 'モカ 8oz', 'Mocha 8oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 600 },
+      { sku: 'mocha-12', nombre: L('Mocha 12oz', 'Mocha 12oz', 'モカ 12oz', 'Mocha 12oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 700 },
+      { sku: 'latte-8', nombre: L('Café Latte 8oz', 'Café Latte 8oz', 'カフェラテ 8oz', 'Café Latte 8oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 550 },
+      { sku: 'latte-12', nombre: L('Café Latte 12oz', 'Café Latte 12oz', 'カフェラテ 12oz', 'Café Latte 12oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 650 },
+      { sku: 'tinto-8', nombre: L('Tinto 8oz', 'Colombian Black Coffee 8oz', 'ティント（コロンビア風ブラックコーヒー）8oz', 'Tinto 8oz'), precio: 400 },
+      { sku: 'tinto-12', nombre: L('Tinto 12oz', 'Colombian Black Coffee 12oz', 'ティント（コロンビア風ブラックコーヒー）12oz', 'Tinto 12oz'), precio: 500 },
+      { sku: 'americano-8', nombre: L('Americano 8oz', 'Americano 8oz', 'アメリカーノ 8oz', 'Americano 8oz'), precio: 450 },
+      { sku: 'americano-12', nombre: L('Americano 12oz', 'Americano 12oz', 'アメリカーノ 12oz', 'Americano 12oz'), precio: 550 },
     ],
     extras: [
-      { sku: 'topping-caramelo', nombre: 'Topping Caramelo', subt: L(null, 'Caramel topping', 'キャラメルトッピング', 'Cobertura de caramelo'), precio: 100 },
-      { sku: 'topping-chocolate', nombre: 'Topping Chocolate', subt: L(null, 'Chocolate topping', 'チョコレートトッピング', 'Cobertura de chocolate'), precio: 100 },
-      { sku: 'topping-helado', nombre: 'Topping Helado', subt: L(null, 'Ice cream topping', 'アイスクリームトッピング', 'Cobertura de sorvete'), precio: 150 },
+      { sku: 'topping-caramelo', nombre: L('Topping Caramelo', 'Caramel Topping', 'キャラメルトッピング', 'Cobertura de Caramelo'), precio: 100 },
+      { sku: 'topping-chocolate', nombre: L('Topping Chocolate', 'Chocolate Topping', 'チョコレートトッピング', 'Cobertura de Chocolate'), precio: 100 },
+      { sku: 'topping-helado', nombre: L('Topping Helado', 'Ice Cream Topping', 'アイスクリームトッピング', 'Cobertura de Sorvete'), precio: 150 },
     ],
   },
   {
@@ -366,8 +351,7 @@ const MENU_CATEGORIES = [
     items: [
       {
         sku: 'ensalada-verde',
-        nombre: 'Ensalada Verde',
-        subt: L(null, 'Green salad', 'グリーンサラダ', 'Salada verde'),
+        nombre: L('Ensalada Verde', 'Green Salad', 'グリーンサラダ', 'Salada Verde'),
         desc: L(
           'Mezcla de lechugas, tomate, cebolla encurtida y vegetales frescos.',
           'Mixed lettuce, tomato, pickled onion and fresh vegetables.',
@@ -378,20 +362,19 @@ const MENU_CATEGORIES = [
       },
       {
         sku: 'guacamole',
-        nombre: 'Guacamole Casero',
-        subt: L(null, 'Homemade guacamole', '自家製ワカモレ', 'Guacamole caseiro'),
+        nombre: L('Guacamole Casero', 'Homemade Guacamole', '自家製ワカモレ', 'Guacamole Caseiro'),
         precio: 300,
       },
       {
         sku: 'caldo-costilla',
-        nombre: 'Caldo de Costilla',
-        subt: L(null, 'Traditional Colombian beef rib soup', 'コロンビア風牛カルビスープ', 'Sopa tradicional colombiana de costela'),
+        nombre: L('Caldo de Costilla', 'Beef Rib Soup', 'コロンビア風牛カルビスープ', 'Sopa de Costela'),
+        subt: L(null, 'Traditional Colombian soup', '伝統的なコロンビア料理', 'Sopa tradicional colombiana'),
         precio: 300,
       },
     ],
     extras: [
-      { sku: 'extra-queso', nombre: 'Extra Queso', subt: L(null, 'Extra cheese', 'チーズ追加', 'Queijo extra'), precio: 100 },
-      { sku: 'extra-helado-vainilla', nombre: 'Extra Helado de Vainilla', subt: L(null, 'Extra vanilla ice cream', 'バニラアイス追加', 'Sorvete de baunilha extra'), precio: 150 },
+      { sku: 'extra-queso', nombre: L('Extra Queso', 'Extra Cheese', 'チーズ追加', 'Queijo Extra'), precio: 100 },
+      { sku: 'extra-helado-vainilla', nombre: L('Extra Helado de Vainilla', 'Extra Vanilla Ice Cream', 'バニラアイス追加', 'Sorvete de Baunilha Extra'), precio: 150 },
     ],
   },
 ];
@@ -407,8 +390,8 @@ const MENU_INDEX = (() => {
 })();
 
 // Devuelve el texto de un campo i18n {es,en,ja,pt} en el idioma actual.
-// Sin fallback entre idiomas: un valor "null" es intencional (p.ej. el nombre del
-// item ya está en ese idioma, así que el subtítulo no hace falta).
+// Sin fallback entre idiomas: un valor "null" es intencional (p.ej. el subtítulo
+// no aporta nada nuevo que el nombre ya traducido no diga).
 function mi(field) {
   if (!field) return '';
   const lang = (typeof I18n !== 'undefined' && I18n.lang) || 'es';
