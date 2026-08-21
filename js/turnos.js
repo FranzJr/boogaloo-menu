@@ -123,41 +123,43 @@ function renderStats() {
     turnosCache.forEach((t) => {
       if (!t.ColaboradorID) return;
       const key = t.ColaboradorID;
-      if (!porPersona[key]) porPersona[key] = { nombre: t.ColaboradorNombre, confirmadas: 0, pendientes: 0, valor: 0 };
-      const h = horasEntre(t.HoraInicio, t.HoraFin);
+      if (!porPersona[key]) {
+        porPersona[key] = { nombre: t.ColaboradorNombre, aprobadas: 0, valorAprobado: 0, previstas: 0, valorPrevisto: 0 };
+      }
       if (t.Estado === 'Confirmado') {
-        porPersona[key].confirmadas += Number(t.Horas) || h;
-        porPersona[key].valor += Number(t.ValorTotal) || 0;
-      } else if (t.Trabajado === 'Si') {
-        porPersona[key].pendientes += h;
+        porPersona[key].aprobadas += Number(t.Horas) || 0;
+        porPersona[key].valorAprobado += Number(t.ValorTotal) || 0;
+      } else {
+        porPersona[key].previstas += Number(t.HorasPrevistas) || 0;
+        porPersona[key].valorPrevisto += Number(t.ValorPrevisto) || 0;
       }
     });
     const cards = Object.values(porPersona)
       .map(
         (p) => `
-      <div class="st"><b>${p.nombre}</b><small>${p.confirmadas.toFixed(1)} ${I18n.t('tnHours')} · ${fmtY(p.valor)}</small></div>`
+      <div class="st"><b>${p.nombre}</b><small>${I18n.t('tnApproved')}: ${p.aprobadas.toFixed(1)}h · ${fmtY(p.valorAprobado)}<br>${I18n.t('tnForecast')}: ${p.previstas.toFixed(1)}h · ${fmtY(p.valorPrevisto)}</small></div>`
       )
       .join('');
     el.innerHTML = cards || `<p class="subt">${I18n.t('tnNoShiftsMonth')}</p>`;
   } else {
-    let confirmadas = 0;
-    let valor = 0;
-    let pendientes = 0;
+    let aprobadas = 0;
+    let valorAprobado = 0;
+    let previstas = 0;
+    let valorPrevisto = 0;
     turnosCache
       .filter((t) => t.esPropio)
       .forEach((t) => {
-        const h = horasEntre(t.HoraInicio, t.HoraFin);
         if (t.Estado === 'Confirmado') {
-          confirmadas += Number(t.Horas) || h;
-          valor += Number(t.ValorTotal) || 0;
-        } else if (t.Trabajado === 'Si') {
-          pendientes += h;
+          aprobadas += Number(t.Horas) || 0;
+          valorAprobado += Number(t.ValorTotal) || 0;
+        } else {
+          previstas += Number(t.HorasPrevistas) || 0;
+          valorPrevisto += Number(t.ValorPrevisto) || 0;
         }
       });
     el.innerHTML = `
-      <div class="st"><b>${confirmadas.toFixed(1)} ${I18n.t('tnHours')}</b><small>${I18n.t('tnConfirmedHoursLabel')}</small></div>
-      <div class="st"><b>${pendientes.toFixed(1)} ${I18n.t('tnHours')}</b><small>${I18n.t('tnPendingHoursLabel')}</small></div>
-      <div class="st"><b>${fmtY(valor)}</b><small>${I18n.t('tnTotalToPay')}</small></div>
+      <div class="st"><b>${aprobadas.toFixed(1)} ${I18n.t('tnHours')}</b><small>${I18n.t('tnApproved')} · ${fmtY(valorAprobado)}</small></div>
+      <div class="st"><b>${previstas.toFixed(1)} ${I18n.t('tnHours')}</b><small>${I18n.t('tnForecast')} · ${fmtY(valorPrevisto)}</small></div>
     `;
   }
 }
@@ -326,9 +328,18 @@ function openTurnoModal(turnoId) {
 
     if (t.Estado === 'Confirmado') {
       body += `<div class="order-summary">
+        <div class="row"><strong>${I18n.t('tnApproved')}</strong></div>
         <div class="row"><span>${I18n.t('tnHours')}</span><span>${Number(t.Horas).toFixed(1)}</span></div>
         <div class="row"><span>${I18n.t('tnValue')}</span><span>${fmtY(t.ValorTotal)}</span></div>
-      </div>`;
+      </div>
+      <p class="subt" style="margin-top:-8px;">${I18n.t('tnApprovedNote')}</p>`;
+    } else if (t.HorasPrevistas !== undefined && t.HorasPrevistas !== '') {
+      body += `<div class="order-summary">
+        <div class="row"><strong>${I18n.t('tnForecast')}</strong></div>
+        <div class="row"><span>${I18n.t('tnHours')}</span><span>${Number(t.HorasPrevistas).toFixed(1)}</span></div>
+        <div class="row"><span>${I18n.t('tnValue')}</span><span>${fmtY(t.ValorPrevisto)}</span></div>
+      </div>
+      <p class="subt" style="margin-top:-8px;">${I18n.t('tnForecastNote')}</p>`;
     }
 
     if (!identity.esAdmin && t.esPropio) {
