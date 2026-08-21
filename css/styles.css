@@ -981,6 +981,8 @@ footer.site-footer {
 .tn-stats .st b { display: block; font-size: 1.1rem; font-weight: 800; }
 .tn-stats .st small { display: block; opacity: 0.85; font-size: 0.75rem; margin-top: 2px; }
 
+#tn-new-shift-btn { margin: 4px 0 14px; }
+
 .tn-panel {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -989,6 +991,19 @@ footer.site-footer {
   margin-bottom: 14px;
 }
 .tn-panel summary { cursor: pointer; font-weight: 700; font-size: 0.92rem; }
+.tn-panel + .tn-panel { margin-top: -4px; }
+
+.tn-mode-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.tn-mode-row:last-child { border-bottom: none; }
+.tn-mode-row .name { flex: 1; min-width: 0; }
+.tn-mode-row .name small { display: block; color: var(--ink-soft); font-weight: 400; font-size: 0.72rem; }
 
 .tn-rate-row {
   display: flex;

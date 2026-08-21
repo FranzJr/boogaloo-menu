@@ -55,6 +55,7 @@ const Session = {
       telefono: cliente.telefono,
       token: cliente.token,
       rol: cliente.rol || 'cliente',
+      modoTurno: cliente.modoTurno || 'elegir',
     });
   },
 };

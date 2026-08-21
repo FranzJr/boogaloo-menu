@@ -10,6 +10,7 @@ currentMonth.setDate(1);
 let turnosCache = [];
 let clientesCache = [];
 let tarifasCache = [];
+let horarioNegocio = { horaInicio: '10:00', horaFin: '19:00', diasHabiles: [1, 2, 3, 4, 5, 6] };
 
 function pad2(n) {
   return String(n).padStart(2, '0');
@@ -32,7 +33,13 @@ function detectIdentity() {
     // ignora
   }
   if (Session.isColaborador()) {
-    return { esAdmin: false, clienteId: Session.data.clienteId, token: Session.data.token, nombre: Session.data.nombre };
+    return {
+      esAdmin: false,
+      clienteId: Session.data.clienteId,
+      token: Session.data.token,
+      nombre: Session.data.nombre,
+      modoTurno: Session.data.modoTurno || 'elegir',
+    };
   }
   return null;
 }
@@ -262,15 +269,23 @@ function renderColaboradores() {
   const el = document.getElementById('tn-colabs-body');
   el.innerHTML = clientesCache.length
     ? clientesCache
-        .map(
-          (c) => `
-      <div class="tn-rate-row">
-        <span>${c.nombre} <small style="color:var(--ink-soft)">${c.email}</small></span>
+        .map((c) => {
+          const modo = c.modoTurno || 'elegir';
+          const modoBtn =
+            c.rol === 'colaborador'
+              ? `<button class="ghost-btn" data-toggle-modo="${c.id}" data-modo="${modo}" type="button" title="${modo === 'libre' ? I18n.t('tnModeLibreDesc') : I18n.t('tnModeElegirDesc')}">
+                  ${I18n.t('tnModeLabel')}: ${modo === 'libre' ? I18n.t('tnModeLibre') : I18n.t('tnModeElegir')}
+                </button>`
+              : '';
+          return `
+      <div class="tn-mode-row">
+        <span class="name">${c.nombre}<small>${c.email}</small></span>
+        ${modoBtn}
         <button class="ghost-btn" data-toggle-rol="${c.id}" data-rol="${c.rol}" type="button">
           ${c.rol === 'colaborador' ? I18n.t('tnMakeClient') : I18n.t('tnMakeColab')}
         </button>
-      </div>`
-        )
+      </div>`;
+        })
         .join('')
     : `<p class="subt">—</p>`;
 }
@@ -422,6 +437,42 @@ function openNewShiftForm(fechaPreset) {
 
 document.getElementById('tn-new-shift-btn').addEventListener('click', () => openNewShiftForm());
 
+// ---------------- Colaborador: registrar mi turno ----------------
+
+function openRegisterForm() {
+  const form = document.getElementById('tn-register-form');
+  form.style.display = 'block';
+  form.innerHTML = `
+    <div class="field"><label>${I18n.t('tnDate')}</label><input type="date" id="tn-rf-fecha" value="${dstr(new Date())}" /></div>
+    <div class="field"><label>${I18n.t('tnStart')}</label><input type="time" id="tn-rf-inicio" value="${horarioNegocio.horaInicio}" min="${horarioNegocio.horaInicio}" max="${horarioNegocio.horaFin}" /></div>
+    <div class="field"><label>${I18n.t('tnEnd')}</label><input type="time" id="tn-rf-fin" value="${horarioNegocio.horaFin}" min="${horarioNegocio.horaInicio}" max="${horarioNegocio.horaFin}" /></div>
+    <p class="subt">${I18n.t('tnBusinessHoursNote', horarioNegocio.horaInicio, horarioNegocio.horaFin)}</p>
+    <div class="form-error" id="tn-rf-error"></div>
+    <button class="primary-btn" id="tn-rf-submit" type="button">${I18n.t('tnCreate')}</button>
+    <button class="ghost-btn" id="tn-rf-cancel" type="button" style="margin-top:8px;">${I18n.t('tnCancel')}</button>
+  `;
+  form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  document.getElementById('tn-rf-cancel').onclick = () => (form.style.display = 'none');
+  document.getElementById('tn-rf-submit').onclick = async () => {
+    const fecha = document.getElementById('tn-rf-fecha').value;
+    const horaInicio = document.getElementById('tn-rf-inicio').value;
+    const horaFin = document.getElementById('tn-rf-fin').value;
+    const btn = document.getElementById('tn-rf-submit');
+    btn.disabled = true;
+    try {
+      await apiCall('registrarMiTurno', { ...authParams(), fecha, horaInicio, horaFin });
+      form.style.display = 'none';
+      await loadMonth();
+    } catch (err) {
+      document.getElementById('tn-rf-error').textContent = err.message;
+      document.getElementById('tn-rf-error').classList.add('show');
+      btn.disabled = false;
+    }
+  };
+}
+
+document.getElementById('tn-register-btn').addEventListener('click', () => openRegisterForm());
+
 document.getElementById('tn-tarifas-body').addEventListener('click', async (e) => {
   const btn = e.target.closest('[data-save-tarifa]');
   if (!btn) return;
@@ -442,17 +493,32 @@ document.getElementById('tn-tarifas-body').addEventListener('click', async (e) =
 });
 
 document.getElementById('tn-colabs-body').addEventListener('click', async (e) => {
-  const btn = e.target.closest('[data-toggle-rol]');
-  if (!btn) return;
-  const nuevoRol = btn.dataset.rol === 'colaborador' ? 'cliente' : 'colaborador';
-  btn.disabled = true;
-  try {
-    await apiCall('cambiarRolCliente', { ...authParams(), clienteId: btn.dataset.toggleRol, rol: nuevoRol });
-    await loadClientesYTarifas();
-  } catch (err) {
-    alert(err.message);
+  const rolBtn = e.target.closest('[data-toggle-rol]');
+  if (rolBtn) {
+    const nuevoRol = rolBtn.dataset.rol === 'colaborador' ? 'cliente' : 'colaborador';
+    rolBtn.disabled = true;
+    try {
+      await apiCall('cambiarRolCliente', { ...authParams(), clienteId: rolBtn.dataset.toggleRol, rol: nuevoRol });
+      await loadClientesYTarifas();
+    } catch (err) {
+      alert(err.message);
+    }
+    rolBtn.disabled = false;
+    return;
   }
-  btn.disabled = false;
+
+  const modoBtn = e.target.closest('[data-toggle-modo]');
+  if (modoBtn) {
+    const nuevoModo = modoBtn.dataset.modo === 'libre' ? 'elegir' : 'libre';
+    modoBtn.disabled = true;
+    try {
+      await apiCall('cambiarModoTurno', { ...authParams(), clienteId: modoBtn.dataset.toggleModo, modo: nuevoModo });
+      await loadClientesYTarifas();
+    } catch (err) {
+      alert(err.message);
+    }
+    modoBtn.disabled = false;
+  }
 });
 
 // ---------------- Navegación de mes ----------------
@@ -474,6 +540,7 @@ function applyStaticI18n() {
   document.getElementById('tn-new-shift-btn').textContent = I18n.t('tnNewShiftBtn');
   document.getElementById('tn-tarifas-title').textContent = I18n.t('tnTarifasTitle');
   document.getElementById('tn-colabs-title').textContent = I18n.t('tnColabsTitle');
+  document.getElementById('tn-register-btn').textContent = I18n.t('tnRegisterShiftBtn');
   document.getElementById('tn-who').textContent = identity ? identity.nombre : '';
 }
 
@@ -489,11 +556,23 @@ renderLangSelect(document.getElementById('lang-select-slot'));
 applyStaticI18n();
 identity = detectIdentity();
 
+apiCall('configTurnos', {})
+  .then((r) => {
+    horarioNegocio = r.horarioNegocio;
+  })
+  .catch(() => {
+    // usa el valor por defecto si el backend no está desplegado todavía
+  });
+
 if (!identity) {
   document.getElementById('tn-denied').style.display = 'block';
 } else {
   document.getElementById('tn-app').style.display = 'block';
   document.getElementById('tn-who').textContent = identity.nombre;
-  if (identity.esAdmin) document.getElementById('tn-admin-tools').style.display = 'block';
+  if (identity.esAdmin) {
+    document.getElementById('tn-admin-tools').style.display = 'block';
+  } else {
+    document.getElementById('tn-colab-tools').style.display = 'block';
+  }
   loadMonth();
 }
