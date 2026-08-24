@@ -342,6 +342,17 @@ function openTurnoModal(turnoId) {
       <p class="subt" style="margin-top:-8px;">${I18n.t('tnForecastNote')}</p>`;
     }
 
+    const almuerzoMin = t.AlmuerzoMin !== undefined && t.AlmuerzoMin !== '' ? Number(t.AlmuerzoMin) : 60;
+    body += `<div class="order-summary"><div class="row"><span>${I18n.t('tnLunchLabel')}</span><span>${almuerzoMin} min</span></div></div>
+      <p class="subt" style="margin-top:-8px;">${I18n.t('tnLunchNote', almuerzoMin)}</p>`;
+    if ((identity.esAdmin || t.esPropio) && t.Estado !== 'Confirmado') {
+      body += `<div class="field">
+        <label>${I18n.t('tnLunchEditLabel')}</label>
+        <input type="number" min="0" step="1" id="tn-modal-almuerzo" value="${almuerzoMin}" />
+        <button class="ghost-btn" id="tn-modal-save-almuerzo" type="button" style="margin-top:8px;">${I18n.t('tnSetRate')}</button>
+      </div>`;
+    }
+
     if (!identity.esAdmin && t.esPropio) {
       if (t.Estado === 'Asignado') {
         body += `<button class="primary-btn" id="tn-modal-worked" type="button">${I18n.t('tnMarkWorked')}</button>`;
@@ -381,6 +392,13 @@ function openTurnoModal(turnoId) {
 
   const confirmBtn = document.getElementById('tn-modal-confirm');
   if (confirmBtn) confirmBtn.onclick = () => doAction('confirmarTurnoAdmin', { turnoId }, confirmBtn);
+
+  const saveAlmuerzoBtn = document.getElementById('tn-modal-save-almuerzo');
+  if (saveAlmuerzoBtn)
+    saveAlmuerzoBtn.onclick = () => {
+      const input = document.getElementById('tn-modal-almuerzo');
+      doAction('actualizarAlmuerzoTurno', { turnoId, almuerzoMin: Number(input.value) || 0 }, saveAlmuerzoBtn);
+    };
 
   const deleteBtn = document.getElementById('tn-modal-delete');
   if (deleteBtn)

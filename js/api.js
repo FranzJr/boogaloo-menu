@@ -15,6 +15,19 @@ async function apiCall(action, payload = {}) {
   });
   if (!res.ok) throw new Error('Error de red: ' + res.status);
   const data = await res.json();
-  if (!data.ok) throw new Error(data.error || 'Ocurrió un error');
+  if (!data.ok) throw new Error(translateApiError(data));
   return data;
+}
+
+// El backend siempre manda 'error' en español; cuando además manda un 'codigo'
+// conocido, lo traducimos al idioma activo. Si no hay traducción, cae al texto
+// en español que mandó el servidor (mismo comportamiento de siempre).
+function translateApiError(data) {
+  if (data && data.codigo && typeof I18n !== 'undefined' && typeof STRINGS !== 'undefined') {
+    const key = 'err' + data.codigo.charAt(0).toUpperCase() + data.codigo.slice(1);
+    if (STRINGS.es[key] !== undefined) {
+      return I18n.t(key, data.horaInicio, data.horaFin);
+    }
+  }
+  return (data && data.error) || 'Ocurrió un error';
 }

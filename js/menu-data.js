@@ -14,7 +14,7 @@ const MENU_CATEGORIES = [
   {
     id: 'arepas',
     icon: 'arepa',
-    nombre: 'Arepas',
+    nombre: L('Arepas', 'Arepas', 'アレパ', 'Arepas'),
     subt: L(
       'Tortas de maíz a la parrilla',
       'Grilled Colombian corn cakes',
@@ -71,7 +71,7 @@ const MENU_CATEGORIES = [
   {
     id: 'empanadas',
     icon: 'empanada',
-    nombre: 'Empanadas',
+    nombre: L('Empanadas', 'Empanadas', 'エンパナーダ', 'Empanadas'),
     subt: L(
       'Pastelitos fritos de maíz rellenos',
       'Fried corn-dough turnovers',
@@ -112,7 +112,7 @@ const MENU_CATEGORIES = [
   {
     id: 'platano',
     icon: 'platano',
-    nombre: 'Plátano Maduro',
+    nombre: L('Plátano Maduro', 'Maduro Plantain', 'マドゥーロ', 'Banana-da-Terra Madura'),
     subt: L(
       'Plátano dulce maduro',
       'Sweet ripe plantain',
@@ -147,7 +147,7 @@ const MENU_CATEGORIES = [
   {
     id: 'postres',
     icon: 'postre',
-    nombre: 'Postres y Obleas',
+    nombre: L('Postres y Obleas', 'Desserts & Obleas', 'デザート＆オブレア', 'Sobremesas e Obleas'),
     subt: L(
       'Dulces colombianos tradicionales',
       'Traditional Colombian sweets',
@@ -256,7 +256,7 @@ const MENU_CATEGORIES = [
   {
     id: 'jugos',
     icon: 'jugo',
-    nombre: 'Jugos Naturales',
+    nombre: L('Jugos Naturales', 'Natural Juices', 'ナチュラルジュース', 'Sucos Naturais'),
     subt: L('Jugos frescos de fruta', 'Fresh fruit juices', 'フレッシュジュース', 'Sucos naturais de fruta'),
     items: [
       {
@@ -321,7 +321,7 @@ const MENU_CATEGORIES = [
   {
     id: 'cafe',
     icon: 'cafe',
-    nombre: 'Café y Bebidas Calientes',
+    nombre: L('Café y Bebidas Calientes', 'Coffee & Hot Drinks', 'コーヒー＆ホットドリンク', 'Café e Bebidas Quentes'),
     subt: L('Café colombiano y más', 'Colombian coffee & more', 'コロンビア産コーヒーなど', 'Café colombiano e mais'),
     items: [
       { sku: 'te-frutos-rojos-caliente-8', nombre: L('Té Caliente de Frutos Rojos 8oz', 'Hot Berry Tea 8oz', 'ホットベリーティー 8oz', 'Chá Quente de Frutas Vermelhas 8oz'), precio: 400 },
@@ -346,7 +346,7 @@ const MENU_CATEGORIES = [
   {
     id: 'otros',
     icon: 'otros',
-    nombre: 'Otros',
+    nombre: L('Otros', 'Others', 'その他', 'Outros'),
     subt: L('Ensaladas y acompañamientos', 'Salads & sides', 'サラダ・その他', 'Saladas e acompanhamentos'),
     items: [
       {

@@ -13,7 +13,7 @@ function renderMenu() {
   MENU_CATEGORIES.forEach((cat) => {
     const link = document.createElement('a');
     link.href = '#' + cat.id;
-    link.textContent = cat.nombre;
+    link.textContent = mi(cat.nombre);
     nav.appendChild(link);
 
     const section = document.createElement('section');
@@ -62,7 +62,7 @@ function renderMenu() {
       <div class="category-heading">
         <div class="cat-icon icon-${cat.icon}" aria-hidden="true"></div>
         <div>
-          <h2>${cat.nombre}</h2>
+          <h2>${mi(cat.nombre)}</h2>
           <span class="subt">${mi(cat.subt)}</span>
         </div>
       </div>
