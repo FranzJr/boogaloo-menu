@@ -20,6 +20,17 @@
     <button class="primary-btn" id="login-btn" type="button" style="width:100%;">Ingresar</button>
   </div>
 
+  <!-- Vista del hub: elegir sección (Pedidos, Turnos...) -->
+  <div class="admin-login-box" id="hub-view" style="display:none;">
+    <span id="hub-lang-slot" style="float:right;"></span>
+    <h1 id="hub-title">Panel Boogaloo</h1>
+    <p class="subt" id="hub-subtitle">Elige una sección</p>
+    <button class="primary-btn" id="hub-pedidos-btn" type="button" style="width:100%; margin-bottom:10px;">Pedidos</button>
+    <button class="primary-btn" id="hub-turnos-btn" type="button" style="width:100%; margin-bottom:10px;">Turnos</button>
+    <span class="who" id="hub-who-label" style="display:block; margin-top:14px;"></span>
+    <button class="link-btn" id="hub-logout-btn" type="button">Cerrar sesión</button>
+  </div>
+
   <!-- Vista del panel -->
   <div class="admin-shell" id="panel-view" style="display:none;">
     <div class="admin-sticky-top">
@@ -27,7 +38,7 @@
         <h1 id="admin-orders-title">Pedidos</h1>
         <div>
           <span id="panel-lang-slot"></span>
-          <a class="link-btn" href="turnos.html" id="admin-turnos-link" style="text-decoration:none;"></a>
+          <button class="link-btn" id="back-to-hub-btn" type="button">← Volver</button>
           <span class="who" id="who-label"></span>
           <button class="link-btn" id="logout-btn" type="button">Cerrar sesión</button>
         </div>
@@ -47,6 +58,7 @@
   <script src="js/i18n.js"></script>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>

@@ -1,31 +1,59 @@
-/* Lógica del panel de administrador: login y gestión de pedidos en curso. */
+/* Lógica del portal de staff: login (admin o colaborador), hub de secciones
+   y gestión de pedidos en curso. */
 
 const ADMIN_SESSION_KEY = 'boogaloo_admin_session_v1';
 const fmt = (n) => '¥' + Number(n || 0).toLocaleString('ja-JP');
 
-let adminSession = null;
+let identity = null; // { esAdmin, usuario|clienteId, nombre, token, rol? }
 let currentFilter = 'activos';
 let ordersCache = [];
 
 function loadAdminSession() {
   try {
-    adminSession = JSON.parse(localStorage.getItem(ADMIN_SESSION_KEY) || 'null');
+    return JSON.parse(localStorage.getItem(ADMIN_SESSION_KEY) || 'null');
   } catch (e) {
-    adminSession = null;
+    return null;
   }
-  return adminSession;
 }
 function saveAdminSession(s) {
-  adminSession = s;
   localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(s));
 }
 function clearAdminSession() {
-  adminSession = null;
   localStorage.removeItem(ADMIN_SESSION_KEY);
 }
 
+// Detecta quién está identificado en este navegador: primero admin (Usuarios),
+// si no, un colaborador ya identificado en Session (misma sesión que usa el
+// sitio de clientes y turnos.html, así no hay que loguearse dos veces).
+function detectIdentity() {
+  const admin = loadAdminSession();
+  if (admin && admin.token) {
+    return { esAdmin: true, usuario: admin.usuario, token: admin.token, rol: admin.rol, nombre: admin.usuario };
+  }
+  if (Session.isColaborador()) {
+    return {
+      esAdmin: false,
+      clienteId: Session.data.clienteId,
+      token: Session.data.token,
+      nombre: Session.data.nombre,
+    };
+  }
+  return null;
+}
+
+function authParams() {
+  return identity.esAdmin ? { usuario: identity.usuario, token: identity.token } : { clienteId: identity.clienteId, token: identity.token };
+}
+
+function identityLabel() {
+  return identity.esAdmin ? identity.usuario + ' · ' + (identity.rol || 'admin') : identity.nombre;
+}
+
+// ---------------- Vistas ----------------
+
 function showLogin(message) {
   document.getElementById('login-view').style.display = 'block';
+  document.getElementById('hub-view').style.display = 'none';
   document.getElementById('panel-view').style.display = 'none';
   const err = document.getElementById('login-error');
   if (message) {
@@ -36,10 +64,18 @@ function showLogin(message) {
   }
 }
 
+function showHub() {
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('panel-view').style.display = 'none';
+  document.getElementById('hub-view').style.display = 'block';
+  document.getElementById('hub-who-label').textContent = identityLabel();
+}
+
 function showPanel() {
   document.getElementById('login-view').style.display = 'none';
+  document.getElementById('hub-view').style.display = 'none';
   document.getElementById('panel-view').style.display = 'block';
-  document.getElementById('who-label').textContent = adminSession.usuario + ' · ' + (adminSession.rol || 'admin');
+  document.getElementById('who-label').textContent = identityLabel();
   fetchOrders();
 }
 
@@ -58,20 +94,50 @@ async function doLogin() {
   try {
     const res = await apiCall('loginAdmin', { usuario, clave });
     saveAdminSession({ usuario: res.usuario, token: res.token, rol: res.rol });
+    identity = { esAdmin: true, usuario: res.usuario, token: res.token, rol: res.rol, nombre: res.usuario };
     showLogin(null);
-    showPanel();
+    showHub();
+    return;
   } catch (err) {
-    showLogin(err.message);
+    // No es admin: intenta como colaborador (mismo campo usado como correo).
+    try {
+      const res = await apiCall('loginCliente', { email: usuario, clave });
+      if (res.cliente.rol !== 'colaborador') {
+        // No revela si la cuenta existe: mismo mensaje que credenciales inválidas.
+        throw new Error(I18n.t('wrongCredentialsError'));
+      }
+      Session.setCliente(res.cliente);
+      identity = { esAdmin: false, clienteId: res.cliente.id, token: res.cliente.token, nombre: res.cliente.nombre };
+      showLogin(null);
+      showHub();
+      return;
+    } catch (err2) {
+      showLogin(I18n.t('wrongCredentialsError'));
+    }
   } finally {
     btn.disabled = false;
     btn.textContent = I18n.t('enterBtn');
   }
 }
 
-document.getElementById('logout-btn').addEventListener('click', () => {
-  clearAdminSession();
+function doLogout() {
+  if (identity && identity.esAdmin) {
+    clearAdminSession();
+  } else {
+    Session.clear();
+  }
+  identity = null;
   showLogin(null);
+}
+
+document.getElementById('hub-logout-btn').addEventListener('click', doLogout);
+document.getElementById('logout-btn').addEventListener('click', doLogout);
+
+document.getElementById('hub-pedidos-btn').addEventListener('click', showPanel);
+document.getElementById('hub-turnos-btn').addEventListener('click', () => {
+  window.location.href = 'turnos.html';
 });
+document.getElementById('back-to-hub-btn').addEventListener('click', showHub);
 
 document.getElementById('refresh-btn').addEventListener('click', fetchOrders);
 
@@ -87,12 +153,14 @@ async function fetchOrders() {
   const list = document.getElementById('orders-list');
   list.innerHTML = `<div class="empty-state">${I18n.t('loadingOrders')}</div>`;
   try {
-    const res = await apiCall('listarPedidos', { usuario: adminSession.usuario, token: adminSession.token });
+    const res = await apiCall('listarPedidos', authParams());
     ordersCache = res.pedidos;
     renderOrders();
   } catch (err) {
-    if (/no autorizado|expirada/i.test(err.message)) {
+    if (err.codigo === 'noAutorizado' || err.codigo === 'sesionExpirada') {
+      identity = null;
       clearAdminSession();
+      Session.clear();
       showLogin(I18n.t('sessionExpiredMsg'));
       return;
     }
@@ -172,8 +240,7 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
     toggleBtn.disabled = true;
     try {
       await apiCall('actualizarPedido', {
-        usuario: adminSession.usuario,
-        token: adminSession.token,
+        ...authParams(),
         pedidoId: toggleBtn.dataset.pedido,
         itemSku: toggleBtn.dataset.sku,
         entregado: toggleBtn.dataset.entregado === 'true',
@@ -190,8 +257,7 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
     pagarBtn.disabled = true;
     try {
       await apiCall('actualizarPedido', {
-        usuario: adminSession.usuario,
-        token: adminSession.token,
+        ...authParams(),
         pedidoId: pagarBtn.dataset.pagar,
         pagado: pagarBtn.dataset.valor === 'true',
       });
@@ -208,8 +274,7 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
     eliminarBtn.disabled = true;
     try {
       await apiCall('eliminarPedido', {
-        usuario: adminSession.usuario,
-        token: adminSession.token,
+        ...authParams(),
         pedidoId: eliminarBtn.dataset.eliminar,
       });
       await fetchOrders();
@@ -228,13 +293,18 @@ function applyStaticI18n() {
   document.getElementById('admin-usuario-label').textContent = I18n.t('usuarioLabel');
   document.getElementById('admin-clave-label').textContent = I18n.t('passwordLabel');
   document.getElementById('login-btn').textContent = I18n.t('enterBtn');
+  document.getElementById('hub-title').textContent = I18n.t('adminPanelTitle');
+  document.getElementById('hub-subtitle').textContent = I18n.t('hubSubtitle');
+  document.getElementById('hub-pedidos-btn').textContent = I18n.t('ordersTitle');
+  document.getElementById('hub-turnos-btn').textContent = I18n.t('hubTurnosBtn');
+  document.getElementById('hub-logout-btn').textContent = I18n.t('logoutBtn');
   document.getElementById('admin-orders-title').textContent = I18n.t('ordersTitle');
   document.getElementById('logout-btn').textContent = I18n.t('logoutBtn');
+  document.getElementById('back-to-hub-btn').textContent = I18n.t('backToHubBtn');
   document.querySelector('[data-filter="activos"]').textContent = I18n.t('filterActive');
   document.querySelector('[data-filter="cobrados"]').textContent = I18n.t('filterPaid');
   document.querySelector('[data-filter="todos"]').textContent = I18n.t('filterAll');
   document.getElementById('refresh-btn').textContent = I18n.t('refreshBtn');
-  document.getElementById('admin-turnos-link').textContent = I18n.t('tnPageLabel');
 }
 
 function onLangChange() {
@@ -243,14 +313,15 @@ function onLangChange() {
 }
 
 renderLangSelect(document.getElementById('admin-lang-slot'));
+renderLangSelect(document.getElementById('hub-lang-slot'));
 renderLangSelect(document.getElementById('panel-lang-slot'));
 
 // ---------------- Init ----------------
 
 applyStaticI18n();
-loadAdminSession();
-if (adminSession && adminSession.token) {
-  showPanel();
+identity = detectIdentity();
+if (identity) {
+  showHub();
 } else {
   showLogin(null);
 }

@@ -15,7 +15,11 @@ async function apiCall(action, payload = {}) {
   });
   if (!res.ok) throw new Error('Error de red: ' + res.status);
   const data = await res.json();
-  if (!data.ok) throw new Error(translateApiError(data));
+  if (!data.ok) {
+    const err = new Error(translateApiError(data));
+    err.codigo = data.codigo || null;
+    throw err;
+  }
   return data;
 }
 
