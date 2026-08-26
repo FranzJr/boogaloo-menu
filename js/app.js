@@ -410,11 +410,15 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
 });
 
 document.getElementById('account-pill').addEventListener('click', () => openAccountModal('manage'));
+document.getElementById('console-btn').addEventListener('click', () => {
+  window.location.href = 'admin.html';
+});
 
 function updateAccountPill() {
   const pill = document.getElementById('account-pill');
   const s = Session.data;
   pill.textContent = s && s.tipo === 'cliente' ? s.nombre : s && s.nombre ? s.nombre + I18n.t('guestSuffix') : I18n.t('guest');
+  document.getElementById('console-btn').style.display = Session.isColaborador() ? 'flex' : 'none';
 }
 
 // ---------------- Mis pedidos (seguimiento hasta que quede Cobrado) ----------------
@@ -526,6 +530,7 @@ async function refreshTrackedOrders() {
 function applyStaticI18n() {
   document.getElementById('brand-tagline').textContent = I18n.t('brandTagline');
   document.getElementById('my-orders-label').textContent = I18n.t('myOrders');
+  document.getElementById('console-label').textContent = I18n.t('consoleBtn');
   document.getElementById('cart-label').textContent = I18n.t('cart');
   document.getElementById('site-footer-text').textContent = I18n.t('footerText');
   document.getElementById('cart-drawer-title').textContent = I18n.t('cartDrawerTitle');

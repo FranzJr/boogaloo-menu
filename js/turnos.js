@@ -571,6 +571,7 @@ function applyStaticI18n() {
   document.getElementById('tn-colabs-title').textContent = I18n.t('tnColabsTitle');
   document.getElementById('tn-register-btn').textContent = I18n.t('tnRegisterShiftBtn');
   document.getElementById('tn-who').textContent = identity ? identity.nombre : '';
+  document.getElementById('tn-console-link').textContent = I18n.t('consoleBtn');
 }
 
 function onLangChange() {
@@ -598,6 +599,7 @@ if (!identity) {
 } else {
   document.getElementById('tn-app').style.display = 'block';
   document.getElementById('tn-who').textContent = identity.nombre;
+  document.getElementById('tn-console-link').style.display = 'flex';
   if (identity.esAdmin) {
     document.getElementById('tn-admin-tools').style.display = 'block';
   } else {
