@@ -2,6 +2,23 @@
 
 const fmt = (n) => '¥' + Number(n || 0).toLocaleString('ja-JP');
 
+// ---------------- Gate de bienvenida (restaurante vs reserva) ----------------
+
+const GATE_KEY = 'boogaloo_entry_choice_v1';
+const gateModal = document.getElementById('gate-modal');
+
+document.getElementById('gate-dine-in-btn').addEventListener('click', () => {
+  sessionStorage.setItem(GATE_KEY, 'restaurante');
+  gateModal.classList.remove('open');
+});
+document.getElementById('gate-reserve-btn').addEventListener('click', () => {
+  sessionStorage.setItem(GATE_KEY, 'reserva');
+  window.location.href = 'reserva.html';
+});
+if (!sessionStorage.getItem(GATE_KEY)) {
+  gateModal.classList.add('open');
+}
+
 // ---------------- Render del menú ----------------
 
 function renderMenu() {
@@ -536,6 +553,10 @@ function applyStaticI18n() {
   document.getElementById('cart-drawer-title').textContent = I18n.t('cartDrawerTitle');
   document.getElementById('cart-total-label').textContent = I18n.t('totalLabel');
   document.getElementById('checkout-btn').textContent = I18n.t('continueOrder');
+  document.getElementById('gate-title').textContent = I18n.t('gateTitle');
+  document.getElementById('gate-subtitle').textContent = I18n.t('gateSubtitle');
+  document.getElementById('gate-dine-in-btn').textContent = I18n.t('gateDineInBtn');
+  document.getElementById('gate-reserve-btn').textContent = I18n.t('gateReserveBtn');
 }
 
 function onLangChange() {

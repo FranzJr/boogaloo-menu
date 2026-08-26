@@ -27,6 +27,7 @@
     <p class="subt" id="hub-subtitle">Elige una sección</p>
     <button class="primary-btn" id="hub-pedidos-btn" type="button" style="width:100%; margin-bottom:10px;">Pedidos</button>
     <button class="primary-btn" id="hub-turnos-btn" type="button" style="width:100%; margin-bottom:10px;">Turnos</button>
+    <button class="primary-btn" id="hub-reservas-btn" type="button" style="width:100%; margin-bottom:10px;">Reservas</button>
     <span class="who" id="hub-who-label" style="display:block; margin-top:14px;"></span>
     <button class="link-btn" id="hub-logout-btn" type="button">Cerrar sesión</button>
   </div>
@@ -53,6 +54,31 @@
     </div>
 
     <div id="orders-list"></div>
+  </div>
+
+  <!-- Vista de reservas -->
+  <div class="admin-shell" id="reservas-view" style="display:none;">
+    <div class="admin-sticky-top">
+      <div class="admin-topbar">
+        <h1 id="admin-reservas-title">Reservas</h1>
+        <div>
+          <span id="reservas-lang-slot"></span>
+          <button class="link-btn" id="reservas-back-to-hub-btn" type="button">← Volver</button>
+          <span class="who" id="reservas-who-label"></span>
+          <button class="link-btn" id="reservas-logout-btn" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <div class="filter-row" id="reservas-filter-row">
+        <button data-rfilter="pendientes" class="active" type="button">Pendientes</button>
+        <button data-rfilter="revision" type="button">Fuera de horario</button>
+        <button data-rfilter="confirmadas" type="button">Confirmadas</button>
+        <button data-rfilter="todas" type="button">Todas</button>
+        <button id="reservas-refresh-btn" type="button" style="margin-left:auto;">↻ Actualizar</button>
+      </div>
+    </div>
+
+    <div id="reservas-list"></div>
   </div>
 
   <script src="js/i18n.js"></script>

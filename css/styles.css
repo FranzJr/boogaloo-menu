@@ -855,7 +855,9 @@ footer.site-footer {
 }
 .status-tag.pendiente { background: #fff2d6; color: #a9660a; }
 .status-tag.entregado { background: #e1efff; color: var(--co-blue); }
-.status-tag.cobrado { background: #e6f6ec; color: #1f9d55; }
+.status-tag.cobrado, .status-tag.confirmada { background: #e6f6ec; color: #1f9d55; }
+.status-tag.cancelada { background: #f1f1f1; color: var(--ink-soft); }
+.status-tag.pendienterevision { background: #fdecec; color: var(--co-red); }
 
 .order-items { margin: 10px 0; }
 .order-item-row {

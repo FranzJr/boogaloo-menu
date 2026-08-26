@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Boogaloo — Reservar</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="flag-stripe"></div>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div class="brand-text">
+          <h1>Boogaloo</h1>
+          <p id="rs-page-label">Reservar</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="lang-select-slot"></span>
+        <a class="cart-btn" href="index.html" id="rs-back-link" style="text-decoration:none;">←</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="tn-wrap" id="rs-wrap">
+    <!-- Vista de formulario -->
+    <div id="rs-form-view">
+      <div class="tn-panel" id="rs-identity-panel"></div>
+
+      <div class="tn-panel">
+        <div class="field"><label id="rs-personas-label">Número de personas</label><input type="number" id="rs-personas" min="1" step="1" value="2" /></div>
+        <div class="field"><label id="rs-fecha-label">Fecha</label><input type="date" id="rs-fecha" /></div>
+        <div class="field"><label id="rs-hora-label">Hora</label><input type="time" id="rs-hora" value="12:00" /></div>
+        <p class="subt" id="rs-horario-note"></p>
+        <label class="tn-mode-row" style="cursor:pointer;">
+          <input type="checkbox" id="rs-extendido" />
+          <span class="name" id="rs-extendido-label">Quiero un horario fuera del habitual</span>
+        </label>
+        <p class="form-error" id="rs-extendido-note" style="display:none;"></p>
+      </div>
+
+      <details class="tn-panel">
+        <summary id="rs-menu-title">¿Qué les gustaría comer? (opcional)</summary>
+        <div id="rs-menu-picker" style="margin-top:10px;"></div>
+      </details>
+
+      <div class="tn-panel">
+        <div class="field"><label id="rs-notas-label">Notas (alergias, ocasión especial...)</label><textarea id="rs-notas" rows="3"></textarea></div>
+      </div>
+
+      <div class="form-error" id="rs-error"></div>
+      <button class="primary-btn" id="rs-submit-btn" type="button" style="width:100%;">Enviar reserva</button>
+    </div>
+
+    <!-- Vista de confirmación -->
+    <div id="rs-success-view" style="display:none;">
+      <div class="tn-panel" id="rs-success-body"></div>
+    </div>
+  </main>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/menu-data.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/reserva.js"></script>
+</body>
+</html>
