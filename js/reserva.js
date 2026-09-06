@@ -3,7 +3,7 @@
 
 let identityState = { tab: 'invitado' };
 let reservaItems = {}; // sku -> cantidad
-let horarioNegocio = { horaInicio: '10:00', horaFin: '19:00', diasHabiles: [1, 2, 3, 4, 5, 6] };
+let horarioNegocio = { horaInicio: '10:00', horaFin: '19:00', diasHabiles: [0, 1, 2, 3, 4, 5, 6] };
 
 function dstrToday() {
   const d = new Date();

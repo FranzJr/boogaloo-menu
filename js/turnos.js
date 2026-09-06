@@ -10,7 +10,7 @@ currentMonth.setDate(1);
 let turnosCache = [];
 let clientesCache = [];
 let tarifasCache = [];
-let horarioNegocio = { horaInicio: '10:00', horaFin: '19:00', diasHabiles: [1, 2, 3, 4, 5, 6] };
+let horarioNegocio = { horaInicio: '10:00', horaFin: '19:00', diasHabiles: [0, 1, 2, 3, 4, 5, 6] };
 
 function pad2(n) {
   return String(n).padStart(2, '0');
