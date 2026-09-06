@@ -88,6 +88,7 @@ function showReservas() {
   document.getElementById('reservas-view').style.display = 'block';
   document.getElementById('reservas-who-label').textContent = identityLabel();
   fetchReservas();
+  fetchHorarioSemanal();
 }
 
 document.getElementById('login-btn').addEventListener('click', doLogin);
@@ -419,6 +420,58 @@ document.getElementById('reservas-list').addEventListener('click', async (e) => 
   }
 });
 
+// ---------------- Horario del negocio ----------------
+
+let horarioSemanalCache = {};
+
+// Público (no requiere login): la misma acción que usan turnos.html/reserva.html.
+async function fetchHorarioSemanal() {
+  try {
+    const res = await apiCall('configTurnos', {});
+    horarioSemanalCache = res.horarioSemanal || {};
+    renderHorarioSemanal();
+  } catch (err) {
+    document.getElementById('horario-body').innerHTML = `<p class="subt">—</p>`;
+  }
+}
+
+function renderHorarioSemanal() {
+  const el = document.getElementById('horario-body');
+  const weekdays = I18n.t('tnWeekdays');
+  el.innerHTML = [0, 1, 2, 3, 4, 5, 6]
+    .map((dia) => {
+      const d = horarioSemanalCache[dia] || { abierto: false, horaInicio: '', horaFin: '' };
+      return `
+      <div class="tn-mode-row">
+        <span class="name">${weekdays[dia]}</span>
+        <label style="display:flex; align-items:center; gap:4px; font-size:0.8rem; white-space:nowrap;">
+          <input type="checkbox" data-horario-abierto="${dia}" ${d.abierto ? 'checked' : ''} /> ${I18n.t('horarioAbiertoLabel')}
+        </label>
+        <input type="time" data-horario-inicio="${dia}" value="${d.horaInicio || ''}" style="width:100px; padding:6px 8px; border-radius:8px; border:1px solid var(--border); font:inherit;" />
+        <input type="time" data-horario-fin="${dia}" value="${d.horaFin || ''}" style="width:100px; padding:6px 8px; border-radius:8px; border:1px solid var(--border); font:inherit;" />
+        <button class="ghost-btn" data-save-horario="${dia}" type="button">${I18n.t('tnSetRate')}</button>
+      </div>`;
+    })
+    .join('');
+}
+
+document.getElementById('horario-body').addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-save-horario]');
+  if (!btn) return;
+  const dia = btn.dataset.saveHorario;
+  const abierto = document.querySelector(`[data-horario-abierto="${dia}"]`).checked;
+  const horaInicio = document.querySelector(`[data-horario-inicio="${dia}"]`).value;
+  const horaFin = document.querySelector(`[data-horario-fin="${dia}"]`).value;
+  btn.disabled = true;
+  try {
+    await apiCall('actualizarHorarioSemanal', { ...authParams(), diaSemana: Number(dia), abierto, horaInicio, horaFin });
+    await fetchHorarioSemanal();
+  } catch (err) {
+    alert(I18n.t('couldNotUpdatePrefix') + err.message);
+  }
+  btn.disabled = false;
+});
+
 // ---------------- Idioma ----------------
 
 function applyStaticI18n() {
@@ -448,12 +501,16 @@ function applyStaticI18n() {
   document.querySelector('[data-rfilter="confirmadas"]').textContent = I18n.t('rsFilterConfirmadas');
   document.querySelector('[data-rfilter="todas"]').textContent = I18n.t('rsFilterTodas');
   document.getElementById('reservas-refresh-btn').textContent = I18n.t('refreshBtn');
+  document.getElementById('horario-title').textContent = I18n.t('horarioTitle');
 }
 
 function onLangChange() {
   applyStaticI18n();
   if (document.getElementById('panel-view').style.display !== 'none') renderOrders();
-  if (document.getElementById('reservas-view').style.display !== 'none') renderReservas();
+  if (document.getElementById('reservas-view').style.display !== 'none') {
+    renderReservas();
+    renderHorarioSemanal();
+  }
 }
 
 renderLangSelect(document.getElementById('admin-lang-slot'));

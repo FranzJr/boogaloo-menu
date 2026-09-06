@@ -3,11 +3,27 @@
 
 let identityState = { tab: 'invitado' };
 let reservaItems = {}; // sku -> cantidad
-let horarioNegocio = { horaInicio: '10:00', horaFin: '19:00', diasHabiles: [0, 1, 2, 3, 4, 5, 6] };
+// horarioSemanal: 0=domingo ... 6=sábado. Cada día abre en un rango distinto (o está
+// cerrado); lo carga configTurnos, este es solo el valor de respaldo antes de esa carga.
+let horarioSemanal = {
+  0: { abierto: true, horaInicio: '11:00', horaFin: '16:00' },
+  1: { abierto: false, horaInicio: '', horaFin: '' },
+  2: { abierto: true, horaInicio: '11:00', horaFin: '18:00' },
+  3: { abierto: true, horaInicio: '11:00', horaFin: '18:00' },
+  4: { abierto: false, horaInicio: '', horaFin: '' },
+  5: { abierto: true, horaInicio: '11:00', horaFin: '18:00' },
+  6: { abierto: true, horaInicio: '11:00', horaFin: '18:00' },
+};
 
 function dstrToday() {
   const d = new Date();
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function horarioDelDia(fechaStr) {
+  if (!fechaStr) return null;
+  const dia = new Date(fechaStr + 'T12:00:00').getDay();
+  return horarioSemanal[dia] || { abierto: false, horaInicio: '', horaFin: '' };
 }
 
 function showRsError(msg) {
@@ -131,19 +147,35 @@ function getClienteInfo() {
 function updateHorarioUI() {
   const extendido = document.getElementById('rs-extendido').checked;
   const horaInput = document.getElementById('rs-hora');
-  const note = document.getElementById('rs-extendido-note');
+  const extNote = document.getElementById('rs-extendido-note');
+  const horarioNote = document.getElementById('rs-horario-note');
+  const dia = horarioDelDia(document.getElementById('rs-fecha').value);
+
   if (extendido) {
     horaInput.removeAttribute('min');
     horaInput.removeAttribute('max');
-    note.textContent = I18n.t('rsExtendedNote');
-    note.style.display = 'block';
+    extNote.textContent = I18n.t('rsExtendedNote');
+    extNote.style.display = 'block';
+    horarioNote.className = 'subt';
+    horarioNote.textContent = '';
+    return;
+  }
+  extNote.style.display = 'none';
+
+  if (dia && dia.abierto) {
+    horaInput.min = dia.horaInicio;
+    horaInput.max = dia.horaFin;
+    horarioNote.className = 'subt';
+    horarioNote.textContent = I18n.t('tnBusinessHoursNote', dia.horaInicio, dia.horaFin);
   } else {
-    horaInput.min = horarioNegocio.horaInicio;
-    horaInput.max = horarioNegocio.horaFin;
-    note.style.display = 'none';
+    horaInput.removeAttribute('min');
+    horaInput.removeAttribute('max');
+    horarioNote.className = 'form-error show';
+    horarioNote.textContent = I18n.t('rsClosedDayNote');
   }
 }
 document.getElementById('rs-extendido').addEventListener('change', updateHorarioUI);
+document.getElementById('rs-fecha').addEventListener('change', updateHorarioUI);
 
 // ---------------- Selector de menú ----------------
 
@@ -188,6 +220,12 @@ document.getElementById('rs-submit-btn').addEventListener('click', async () => {
   if (!personas || personas < 1) return showRsError(I18n.t('rsPersonasError'));
   if (!fecha || !hora) return showRsError(I18n.t('rsFechaHoraError'));
 
+  const extendido = document.getElementById('rs-extendido').checked;
+  const dia = horarioDelDia(fecha);
+  if (!extendido && (!dia || !dia.abierto || hora < dia.horaInicio || hora > dia.horaFin)) {
+    return showRsError(I18n.t('rsClosedDayNote'));
+  }
+
   const items = Object.keys(reservaItems)
     .filter((sku) => reservaItems[sku] > 0)
     .map((sku) => ({ sku, cantidad: reservaItems[sku] }));
@@ -224,7 +262,6 @@ function applyStaticI18n() {
   document.getElementById('rs-personas-label').textContent = I18n.t('rsPersonasLabel');
   document.getElementById('rs-fecha-label').textContent = I18n.t('tnDate');
   document.getElementById('rs-hora-label').textContent = I18n.t('rsHoraLabel');
-  document.getElementById('rs-horario-note').textContent = I18n.t('tnBusinessHoursNote', horarioNegocio.horaInicio, horarioNegocio.horaFin);
   document.getElementById('rs-extendido-label').textContent = I18n.t('rsExtendedToggleLabel');
   document.getElementById('rs-menu-title').textContent = I18n.t('rsMenuPickerTitle');
   document.getElementById('rs-notas-label').textContent = I18n.t('rsNotasLabel');
@@ -247,7 +284,9 @@ document.getElementById('rs-fecha').value = dstrToday();
 
 apiCall('configTurnos', {})
   .then((r) => {
-    horarioNegocio = r.horarioNegocio;
+    // Si el backend todavía no tiene el redeploy con horarioSemanal, mantiene el
+    // valor por defecto en vez de sobrescribirlo con undefined.
+    if (r.horarioSemanal) horarioSemanal = r.horarioSemanal;
     applyStaticI18n();
   })
   .catch(() => {
