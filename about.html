@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Boogaloo — Nuestra historia</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="site-header-mount"></div>
+
+  <main class="ab-wrap">
+    <section class="ab-section ab-hero" data-reveal>
+      <div class="ab-hero-main">
+        <div class="ab-hero-text">
+          <h2 id="ab-hero-title"></h2>
+          <p class="ab-tagline" id="ab-hero-subtitle"></p>
+        </div>
+        <img class="ab-bear ab-bear-hero" src="img/oso/oso-saludando.png" alt="Oso Boogaloo saludando" />
+      </div>
+      <div class="ab-proof">
+        <div class="ab-proof-frame">
+          <img src="img/platos/proof-costilla.jpg" alt="Arepa de costilla servida en Boogaloo" />
+        </div>
+        <p class="ab-proof-caption" id="ab-proof-caption"></p>
+      </div>
+    </section>
+
+    <section class="ab-section ab-block ab-block-blue" data-reveal>
+      <img class="ab-bear" src="img/oso/oso-pintando.png" alt="Oso Boogaloo pintando un mural" />
+      <div class="ab-block-text">
+        <h2 id="ab-historia-title"></h2>
+        <p id="ab-historia-p1"></p>
+        <p id="ab-historia-p2"></p>
+        <p id="ab-historia-p3"></p>
+      </div>
+    </section>
+
+    <section class="ab-section ab-block ab-block-yellow ab-block-reverse" data-reveal>
+      <img class="ab-bear" src="img/oso/oso-bailando.png" alt="Oso Boogaloo bailando" />
+      <div class="ab-block-text">
+        <h2 id="ab-nombre-title"></h2>
+        <p id="ab-nombre-text"></p>
+      </div>
+    </section>
+
+    <section class="ab-section ab-arte" data-reveal style="background-image:url('img/arte/fondo-tropical.jpg');">
+      <div class="ab-arte-text">
+        <h2 id="ab-arte-title"></h2>
+        <p id="ab-arte-text"></p>
+      </div>
+    </section>
+
+    <section class="ab-section ab-stats" data-reveal>
+      <div class="ab-stat"><b id="ab-stat1-value"></b><span id="ab-stat1-label"></span></div>
+      <div class="ab-stat"><b id="ab-stat2-value"></b><span id="ab-stat2-label"></span></div>
+      <div class="ab-stat"><b id="ab-stat3-value"></b><span id="ab-stat3-label"></span></div>
+    </section>
+
+    <section class="ab-section ab-platos" data-reveal>
+      <h2 id="ab-platos-title"></h2>
+      <div class="ab-platos-grid">
+        <div class="ab-plato-card">
+          <img src="img/platos/arepa-pollo.jpg" alt="" />
+          <h3 data-sku="arepa-pollo"></h3>
+        </div>
+        <div class="ab-plato-card">
+          <img src="img/platos/empanada.jpg" alt="" />
+          <h3 data-sku="empanada-carne"></h3>
+        </div>
+        <div class="ab-plato-card">
+          <img src="img/platos/arepa-chorizo.jpg" alt="" />
+          <h3 data-sku="arepa-chorizo"></h3>
+        </div>
+        <div class="ab-plato-card">
+          <img src="img/platos/arepa-costilla.jpg" alt="" />
+          <h3 id="ab-plato-costilla"></h3>
+        </div>
+      </div>
+    </section>
+
+    <section class="ab-section ab-resenas" data-reveal>
+      <h2 id="ab-resenas-title"></h2>
+      <div class="ab-resenas-grid">
+        <blockquote class="ab-resena"><p id="ab-resena1"></p><cite id="ab-resena1-autor"></cite></blockquote>
+        <blockquote class="ab-resena"><p id="ab-resena2"></p><cite id="ab-resena2-autor"></cite></blockquote>
+        <blockquote class="ab-resena"><p id="ab-resena3"></p><cite id="ab-resena3-autor"></cite></blockquote>
+      </div>
+    </section>
+
+    <section class="ab-section ab-cta" data-reveal>
+      <span class="ab-steam-wrap">
+        <img class="ab-bear" src="img/oso/oso-arepa.png" alt="Oso Boogaloo invitando a comer" />
+        <span class="ab-steam" aria-hidden="true"></span>
+        <span class="ab-steam" aria-hidden="true"></span>
+        <span class="ab-steam" aria-hidden="true"></span>
+      </span>
+      <div>
+        <h2 id="ab-cta-title"></h2>
+        <p id="ab-cta-subtitle"></p>
+        <div class="ab-cta-buttons">
+          <a class="primary-btn" href="index.html" id="ab-cta-menu-btn" style="text-decoration:none;"></a>
+          <a class="ghost-btn" href="reserva.html" id="ab-cta-reserve-btn" style="text-decoration:none;"></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-mount"></div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/menu-data.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/about.js"></script>
+</body>
+</html>

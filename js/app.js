@@ -1,5 +1,21 @@
 /* Lógica de la página del cliente: renderizar menú, carrito, cuenta y checkout. */
 
+renderSiteHeader(`
+  <span id="lang-select-slot"></span>
+  <button class="account-pill" id="account-pill" type="button">Invitado</button>
+  <button class="cart-btn my-orders-btn" id="my-orders-btn" type="button" style="display:none;">
+    <span class="icon-receipt" aria-hidden="true"></span>
+    <span id="my-orders-label">Mis pedidos</span>
+    <span class="badge" id="my-orders-badge" style="display:none;">0</span>
+  </button>
+  <button class="cart-btn" id="open-cart-btn" type="button">
+    <span class="icon-cart" aria-hidden="true"></span>
+    <span id="cart-label">Carrito</span>
+    <span class="badge" id="cart-badge" style="display:none;">0</span>
+  </button>
+`, `<nav class="cat-nav" id="cat-nav"></nav>`);
+renderSiteFooter();
+
 const fmt = (n) => '¥' + Number(n || 0).toLocaleString('ja-JP');
 
 // ---------------- Gate de bienvenida (restaurante vs reserva) ----------------
@@ -427,15 +443,11 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
 });
 
 document.getElementById('account-pill').addEventListener('click', () => openAccountModal('manage'));
-document.getElementById('console-btn').addEventListener('click', () => {
-  window.location.href = 'admin.html';
-});
 
 function updateAccountPill() {
   const pill = document.getElementById('account-pill');
   const s = Session.data;
   pill.textContent = s && s.tipo === 'cliente' ? s.nombre : s && s.nombre ? s.nombre + I18n.t('guestSuffix') : I18n.t('guest');
-  document.getElementById('console-btn').style.display = Session.isColaborador() ? 'flex' : 'none';
 }
 
 // ---------------- Mis pedidos (seguimiento hasta que quede Cobrado) ----------------
@@ -545,11 +557,10 @@ async function refreshTrackedOrders() {
 // ---------------- Idioma ----------------
 
 function applyStaticI18n() {
-  document.getElementById('brand-tagline').textContent = I18n.t('brandTagline');
+  applyLayoutI18n();
+  document.getElementById('page-subtitle').textContent = I18n.t('brandTagline');
   document.getElementById('my-orders-label').textContent = I18n.t('myOrders');
-  document.getElementById('console-label').textContent = I18n.t('consoleBtn');
   document.getElementById('cart-label').textContent = I18n.t('cart');
-  document.getElementById('site-footer-text').textContent = I18n.t('footerText');
   document.getElementById('cart-drawer-title').textContent = I18n.t('cartDrawerTitle');
   document.getElementById('cart-total-label').textContent = I18n.t('totalLabel');
   document.getElementById('checkout-btn').textContent = I18n.t('continueOrder');

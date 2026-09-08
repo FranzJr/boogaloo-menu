@@ -258,7 +258,8 @@ function showSuccessView(res) {
 // ---------------- Idioma ----------------
 
 function applyStaticI18n() {
-  document.getElementById('rs-page-label').textContent = I18n.t('rsPageLabel');
+  applyLayoutI18n();
+  document.getElementById('page-subtitle').textContent = I18n.t('rsPageLabel');
   document.getElementById('rs-personas-label').textContent = I18n.t('rsPersonasLabel');
   document.getElementById('rs-fecha-label').textContent = I18n.t('tnDate');
   document.getElementById('rs-hora-label').textContent = I18n.t('rsHoraLabel');
@@ -275,6 +276,11 @@ function onLangChange() {
   renderMenuPicker();
 }
 
+renderSiteHeader(`
+  <span id="lang-select-slot"></span>
+  <a class="cart-btn" href="index.html" id="rs-back-link" style="text-decoration:none;">←</a>
+`);
+renderSiteFooter();
 renderLangSelect(document.getElementById('lang-select-slot'));
 
 // ---------------- Init ----------------

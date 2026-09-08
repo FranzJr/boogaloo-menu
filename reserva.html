@@ -7,22 +7,7 @@
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <div class="flag-stripe"></div>
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true"></div>
-        <div class="brand-text">
-          <h1>Boogaloo</h1>
-          <p id="rs-page-label">Reservar</p>
-        </div>
-      </div>
-      <div class="header-actions">
-        <span id="lang-select-slot"></span>
-        <a class="cart-btn" href="index.html" id="rs-back-link" style="text-decoration:none;">←</a>
-      </div>
-    </div>
-  </header>
+  <div id="site-header-mount"></div>
 
   <main class="tn-wrap" id="rs-wrap">
     <!-- Vista de formulario -->
@@ -60,11 +45,14 @@
     </div>
   </main>
 
+  <div id="site-footer-mount"></div>
+
   <script src="js/i18n.js"></script>
   <script src="js/menu-data.js"></script>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
   <script src="js/session.js"></script>
+  <script src="js/layout.js"></script>
   <script src="js/reserva.js"></script>
 </body>
 </html>

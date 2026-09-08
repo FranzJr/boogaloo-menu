@@ -564,14 +564,14 @@ document.getElementById('tn-next').addEventListener('click', () => {
 // ---------------- Idioma ----------------
 
 function applyStaticI18n() {
-  document.getElementById('tn-page-label').textContent = I18n.t('tnPageLabel');
+  applyLayoutI18n();
+  document.getElementById('page-subtitle').textContent = I18n.t('tnPageLabel');
   document.getElementById('tn-denied-text').textContent = I18n.t('tnDeniedText');
   document.getElementById('tn-new-shift-btn').textContent = I18n.t('tnNewShiftBtn');
   document.getElementById('tn-tarifas-title').textContent = I18n.t('tnTarifasTitle');
   document.getElementById('tn-colabs-title').textContent = I18n.t('tnColabsTitle');
   document.getElementById('tn-register-btn').textContent = I18n.t('tnRegisterShiftBtn');
   document.getElementById('tn-who').textContent = identity ? identity.nombre : '';
-  document.getElementById('tn-console-link').textContent = I18n.t('consoleBtn');
 }
 
 function onLangChange() {
@@ -579,6 +579,12 @@ function onLangChange() {
   if (identity) loadMonth();
 }
 
+renderSiteHeader(`
+  <span id="lang-select-slot"></span>
+  <span class="account-pill" id="tn-who"></span>
+  <a class="cart-btn" href="index.html" id="tn-back-link" style="text-decoration:none;">←</a>
+`);
+renderSiteFooter();
 renderLangSelect(document.getElementById('lang-select-slot'));
 
 // ---------------- Init ----------------
@@ -599,7 +605,6 @@ if (!identity) {
 } else {
   document.getElementById('tn-app').style.display = 'block';
   document.getElementById('tn-who').textContent = identity.nombre;
-  document.getElementById('tn-console-link').style.display = 'flex';
   if (identity.esAdmin) {
     document.getElementById('tn-admin-tools').style.display = 'block';
   } else {
