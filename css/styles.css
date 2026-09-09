@@ -1252,6 +1252,7 @@ body.js-ready .ab-section.ab-visible {
 }
 .blog-article-blue { background: #e8f1fb; }
 .blog-article-yellow { background: #fff6df; }
+.blog-article-green { background: #eaf7ec; }
 .blog-kicker {
   text-transform: uppercase;
   letter-spacing: 0.08em;

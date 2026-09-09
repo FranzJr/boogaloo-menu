@@ -90,6 +90,46 @@ const STORY2_PARRAFOS = {
   ],
 };
 
+const STORY3_PARRAFOS = {
+  es: [
+    'En los pueblos paneleros de Santander y Boyacá, la molienda todavía empieza antes de que salga el sol. El trapiche machaca la caña, el jugo verde se cuela, y durante horas alguien tiene que quedarse removiendo la miel en las pailas de cobre para que no se pegue ni se queme, mientras el vapor dulce se mete por toda la casa y por toda la ropa de quien está removiendo. Al final del día, esa miel se vierte en moldes de madera y se deja enfriar hasta volverse un bloque sólido, oscuro, con la forma exacta del molde que la recibió: panela.',
+    'Colombia es uno de los mayores consumidores de panela per cápita del mundo, y en no pocas veredas sigue siendo, después del café, el segundo motivo por el que existe un pueblo. La panela no es azúcar a medio hacer: es una decisión deliberada de no refinarla, de dejarle todos los minerales y la melaza que el proceso industrial normalmente separa. Se disuelve en agua caliente para el resfriado, se usa para curar carnes, se le da a los trabajadores del campo como fuente rápida de energía, y hasta hoy sigue produciéndose casi exactamente como se producía hace dos siglos: fuego directo, pailas de cobre, y alguien que no se despega de la miel mientras hierve.',
+    'A más de 13.000 kilómetros de distancia, en las islas de Okinawa, existe un azúcar que sigue el mismo principio exacto: el kokuto. Hecho de la misma manera -- caña molida, jugo hervido en pailas grandes, sin refinar, vertido en moldes y dejado enfriar hasta endurecer en bloques oscuros -- el kokuto sobrevive como una especie de excepción dentro de un país que, como el resto del mundo industrializado, migró casi por completo al azúcar blanco refinado. En Okinawa se usa en el awamori (licor local) y en dulces tradicionales, y se vende todavía en los mismos bloques irregulares con los que salió de la paila, exactamente como la panela.',
+    'Ni Colombia ni Okinawa se pusieron de acuerdo para seguir haciendo las cosas de la manera más lenta. Lo que tienen en común es algo más simple: en ambos lugares, alguien decidió que un azúcar con sabor a la tierra de donde salió valía más que uno más blanco, más fino, más fácil de producir en masa. Esa terquedad -- llamémosla así -- es la misma que mantiene viva una receta de generación en generación cuando ya existe una versión más rápida y más barata.',
+    'En Boogaloo esa panela no es solo un ingrediente de fondo: es la base de la Lemonela, agua de panela con limón, la misma bebida que se toma en cualquier tienda de pueblo colombiano un día de calor. La próxima vez que la pida, sabrá que ese color oscuro y ese sabor que no es azúcar normal vienen de una decisión que se sigue tomando, todos los días, en un trapiche en algún pueblo de Colombia -- y que, del otro lado del mundo, alguien en Okinawa está tomando exactamente la misma decisión.',
+  ],
+  en: [
+    "In the panela-producing towns of Santander and Boyacá, Colombia, the cane pressing starts before sunrise. The trapiche crushes the cane, the green juice gets filtered, and for hours someone has to keep stirring the syrup in copper pans so it doesn't stick or burn, while sweet steam fills the whole house and everyone's clothes. By the end of the day, that syrup gets poured into wooden molds and left to cool into a solid, dark block shaped exactly like the mold that held it: panela.",
+    "Colombia is one of the world's highest per-capita consumers of panela, and in more than a few hamlets it's still, after coffee, the second reason a town exists at all. Panela isn't sugar that never finished being made -- it's a deliberate decision not to refine it, to leave in all the minerals and molasses that industrial processing normally strips out. It's dissolved in hot water for a cold, used to cure meat, handed to farm workers as a quick source of energy, and to this day it's still produced almost exactly as it was two centuries ago: open flame, copper pans, and someone who never steps away from the boiling syrup.",
+    "Over 13,000 kilometers away, on the islands of Okinawa, there's a sugar that follows the exact same principle: kokuto. Made the same way -- crushed cane, juice boiled down in large pans, left unrefined, poured into molds and left to harden into dark blocks -- kokuto survives as a kind of exception inside a country that, like most of the industrialized world, moved almost entirely to refined white sugar. In Okinawa it goes into awamori (the local liquor) and traditional sweets, and it's still sold in the same irregular blocks it came out of the pan in, exactly like panela.",
+    "Colombia and Okinawa never compared notes on staying slow. What they share is simpler than that: in both places, someone decided that a sugar which still tastes like the land it came from was worth more than one that's whiter, finer, easier to mass-produce. That stubbornness -- call it that -- is the same thing that keeps a recipe alive generation after generation, even once a faster, cheaper version already exists.",
+    "At Boogaloo, that panela isn't just a background ingredient -- it's the base of Lemonela, panela water with lime, the same drink people order at any small-town tienda in Colombia on a hot day. Next time you order it, you'll know that dark color and that not-quite-sugar flavor come from a decision that's still being made, every day, at some trapiche in a Colombian town -- and that, on the other side of the world, someone in Okinawa is making that exact same decision.",
+  ],
+  ja: [
+    'コロンビアのサンタンデール県やボヤカ県にあるパネラ（未精製の固形サトウキビ糖）の産地では、日が昇る前からサトウキビ搾りが始まる。トラピチェ（製糖機）がサトウキビを砕き、緑がかった搾り汁が濾され、何時間も誰かが銅製の大鍋の前を離れずに、焦げ付かないよう蜜をかき混ぜ続ける。甘い湯気が家中に、そして作業する人の服にまで染み込む。一日の終わりには、その蜜を木型に流し込み、型の形そのままに固まるまで冷ます。それがパネラだ。',
+    'コロンビアは一人当たりのパネラ消費量が世界でも指折りの国で、多くの集落ではコーヒーに次いで、その村が存在する二番目の理由になっている。パネラは「作りかけの砂糖」ではない。工業的な精製過程で普通取り除かれるミネラルや糖蜜を、あえて残すという意図的な選択なのだ。風邪をひいたときにお湯に溶かして飲み、肉の保存に使い、農作業をする人にすばやいエネルギー源として渡す。そして今も二百年前とほとんど変わらない方法 ―― 直火、銅の大鍋、そして煮立つ蜜のそばを離れない誰か ―― で作られ続けている。',
+    '1万3千キロ以上離れた沖縄の島々にも、まったく同じ原理に基づく砂糖がある。黒糖だ。作り方も同じ ―― サトウキビを搾り、大きな鍋で汁を煮詰め、精製せずに型に流し込み、固まるまで冷まして黒っぽい塊にする。世界の工業化した国々の多くと同様、ほぼ完全に精製された白砂糖に移行した日本の中で、黒糖はある種の例外として生き残っている。沖縄では泡盛（地元の酒）や伝統的な菓子に使われ、今も鍋から出てきたときと同じ不揃いな塊のまま、パネラとまったく同じように売られている。',
+    'コロンビアと沖縄が示し合わせてゆっくりしたやり方を続けてきたわけではない。両者に共通しているのはもっと単純なことだ ―― どちらの土地でも、誰かが「生まれた土地の味がする砂糖」の方が、より白く、より精製されていて、大量生産しやすい砂糖よりも価値があると判断した、ということ。その頑固さこそが、もっと速くて安いやり方がすでに存在していても、レシピを世代を超えて生かし続けているものなのだ。',
+    'Boogalooでは、そのパネラは単なる裏方の材料ではない。「レモネラ」、パネラとライムの水、コロンビアのどんな田舎町の商店でも暑い日に頼まれる、あの飲み物のベースになっている。次に頼むときは、あの濃い色と、ただの砂糖とは違う味が、コロンビアのどこかの町のトラピチェで今日も下されている決断からきていることを、そして地球の反対側の沖縄でも、誰かが今まさに同じ決断を下していることを、知っておいてほしい。',
+  ],
+  pt: [
+    'Nas cidades produtoras de panela de Santander e Boyacá, na Colômbia, a moagem da cana começa antes do amanhecer. O trapiche esmaga a cana, o caldo verde é coado, e por horas alguém precisa ficar mexendo o mel nas tachas de cobre para não grudar nem queimar, enquanto o vapor doce toma conta da casa inteira e da roupa de quem está mexendo. No fim do dia, esse mel é despejado em formas de madeira e deixado esfriar até virar um bloco sólido e escuro, com o formato exato da forma que o recebeu: a panela.',
+    'A Colômbia é uma das maiores consumidoras de panela per capita do mundo, e em muitas veredas ela ainda é, depois do café, o segundo motivo pelo qual uma cidade existe. Panela não é açúcar que ficou pela metade -- é uma decisão deliberada de não refiná-la, de deixar nela todos os minerais e o melaço que o processo industrial normalmente separa. É dissolvida em água quente para resfriados, usada para curar carnes, dada a trabalhadores rurais como fonte rápida de energia, e até hoje continua sendo produzida quase exatamente como há dois séculos: fogo direto, tachas de cobre, e alguém que não sai de perto do mel fervendo.',
+    'A mais de 13.000 quilômetros de distância, nas ilhas de Okinawa, existe um açúcar que segue exatamente o mesmo princípio: o kokuto. Feito da mesma forma -- cana moída, caldo fervido em tachas grandes, sem refinar, despejado em formas e deixado endurecer em blocos escuros -- o kokuto sobrevive como uma espécie de exceção dentro de um país que, como quase todo o mundo industrializado, migrou quase totalmente para o açúcar branco refinado. Em Okinawa ele vai no awamori (a bebida local) e em doces tradicionais, e ainda é vendido nos mesmos blocos irregulares com que saiu da tacha, exatamente como a panela.',
+    'Colômbia e Okinawa nunca combinaram continuar fazendo as coisas do jeito mais lento. O que os dois lugares têm em comum é mais simples que isso: em ambos, alguém decidiu que um açúcar com gosto da terra de onde veio valia mais do que um mais branco, mais fino, mais fácil de produzir em massa. Essa teimosia -- vamos chamar assim -- é a mesma coisa que mantém uma receita viva de geração em geração, mesmo quando já existe uma versão mais rápida e mais barata.',
+    'No Boogaloo, essa panela não é só um ingrediente de fundo -- é a base da Lemonela, água de panela com limão, a mesma bebida que se pede em qualquer vendinha de cidade pequena na Colômbia num dia quente. Na próxima vez que pedir, saberá que aquela cor escura e aquele sabor que não é bem açúcar vêm de uma decisão que continua sendo tomada, todos os dias, em algum trapiche de uma cidade colombiana -- e que, do outro lado do mundo, alguém em Okinawa está tomando exatamente essa mesma decisão.',
+  ],
+};
+
+// Cada nueva entrada del blog solo necesita: un bloque STORYn_PARRAFOS arriba,
+// las claves blogStoryNTitle en i18n.js, su <article id="blog-storyN-..."> en
+// blog.html, y una línea aquí. Así la rutina diaria solo agrega, no reescribe.
+const STORIES = [
+  { key: 'story1', parrafos: STORY1_PARRAFOS, titleKey: 'blogStory1Title' },
+  { key: 'story2', parrafos: STORY2_PARRAFOS, titleKey: 'blogStory2Title' },
+  { key: 'story3', parrafos: STORY3_PARRAFOS, titleKey: 'blogStory3Title' },
+];
+
 function ctaRowHtml(idPrefix) {
   return `
     <div class="blog-cta-row">
@@ -101,14 +141,14 @@ function ctaRowHtml(idPrefix) {
 
 function renderHistorias() {
   const lang = STORY1_PARRAFOS[I18n.lang] ? I18n.lang : 'es';
-  document.getElementById('blog-story1-body').innerHTML =
-    STORY1_PARRAFOS[lang].map((p) => `<p>${p}</p>`).join('') + ctaRowHtml('blog-story1');
-  document.getElementById('blog-story2-body').innerHTML =
-    STORY2_PARRAFOS[lang].map((p) => `<p>${p}</p>`).join('') + ctaRowHtml('blog-story2');
-  document.getElementById('blog-story1-cta-reserve').textContent = I18n.t('gateReserveBtn');
-  document.getElementById('blog-story1-cta-menu').textContent = I18n.t('abVerMenuBtn');
-  document.getElementById('blog-story2-cta-reserve').textContent = I18n.t('gateReserveBtn');
-  document.getElementById('blog-story2-cta-menu').textContent = I18n.t('abVerMenuBtn');
+  STORIES.forEach(({ key, parrafos }) => {
+    const idPrefix = `blog-${key}`;
+    const body = document.getElementById(`${idPrefix}-body`);
+    if (!body) return;
+    body.innerHTML = parrafos[lang].map((p) => `<p>${p}</p>`).join('') + ctaRowHtml(idPrefix);
+    document.getElementById(`${idPrefix}-cta-reserve`).textContent = I18n.t('gateReserveBtn');
+    document.getElementById(`${idPrefix}-cta-menu`).textContent = I18n.t('abVerMenuBtn');
+  });
 }
 
 // ---------------- Idioma ----------------
@@ -117,8 +157,10 @@ function applyStaticI18n() {
   applyLayoutI18n();
   document.getElementById('page-subtitle').textContent = I18n.t('blogPageLabel');
   document.getElementById('blog-hero-title').textContent = I18n.t('blogHeroTitle');
-  document.getElementById('blog-story1-title').textContent = I18n.t('blogStory1Title');
-  document.getElementById('blog-story2-title').textContent = I18n.t('blogStory2Title');
+  STORIES.forEach(({ key, titleKey }) => {
+    const el = document.getElementById(`blog-${key}-title`);
+    if (el) el.textContent = I18n.t(titleKey);
+  });
   document.getElementById('blog-menu-link').textContent = I18n.t('abVerMenuBtn');
   renderHistorias();
 }
