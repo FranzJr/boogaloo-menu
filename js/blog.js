@@ -158,8 +158,10 @@ function applyStaticI18n() {
   document.getElementById('page-subtitle').textContent = I18n.t('blogPageLabel');
   document.getElementById('blog-hero-title').textContent = I18n.t('blogHeroTitle');
   STORIES.forEach(({ key, titleKey }) => {
-    const el = document.getElementById(`blog-${key}-title`);
-    if (el) el.textContent = I18n.t(titleKey);
+    const titleEl = document.getElementById(`blog-${key}-title`);
+    if (titleEl) titleEl.textContent = I18n.t(titleKey);
+    const bylineEl = document.getElementById(`blog-${key}-byline`);
+    if (bylineEl) bylineEl.textContent = '— Boogaloo';
   });
   document.getElementById('blog-menu-link').textContent = I18n.t('abVerMenuBtn');
   renderHistorias();
