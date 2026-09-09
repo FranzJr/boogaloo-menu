@@ -1229,7 +1229,7 @@ body.js-ready .ab-section.ab-visible {
 
 .blog-hero { text-align: center; padding: 40px 24px 16px; }
 .blog-hero h2 { font-size: clamp(2rem, 5vw, 2.6rem); font-weight: 800; margin: 0 0 24px; }
-.blog-hero-figure { margin: 0; }
+.blog-hero-figure { margin: 0 0 20px; }
 .blog-hero-figure img {
   width: 100%;
   max-height: 420px;
