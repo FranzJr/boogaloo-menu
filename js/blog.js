@@ -8,22 +8,25 @@
 
 document.body.classList.add('js-ready');
 
-const revealTargets = document.querySelectorAll('[data-reveal]');
-if ('IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('ab-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.15 }
-  );
-  revealTargets.forEach((el) => observer.observe(el));
-} else {
-  revealTargets.forEach((el) => el.classList.add('ab-visible'));
+function setupReveal() {
+  const revealTargets = document.querySelectorAll('[data-reveal]:not([data-reveal-bound])');
+  revealTargets.forEach((el) => el.setAttribute('data-reveal-bound', '1'));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('ab-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    revealTargets.forEach((el) => observer.observe(el));
+  } else {
+    revealTargets.forEach((el) => el.classList.add('ab-visible'));
+  }
 }
 
 // ---------------- Historias (reportaje) ----------------
@@ -121,13 +124,79 @@ const STORY3_PARRAFOS = {
   ],
 };
 
+const STORY4_PARRAFOS = {
+  es: [
+    'En los mismos municipios del norte del Tolima donde antes solo se hablaba de café -- Herveo, Casabianca, el propio Líbano -- en las últimas dos décadas empezó a aparecer otro cultivo en las laderas: el aguacate Hass. Fincas que durante generaciones solo conocieron cafetales o potreros de ganado hoy tienen hileras de árboles cargados de esa fruta oscura y rugosa que hace apenas veinte años casi nadie sembraba allí en serio.',
+    'Colombia se convirtió, casi sin proponérselo al principio, en uno de los grandes exportadores de aguacate Hass del mundo. El clima de la cordillera -- la misma altura y la misma tierra que sirvieron para el café -- resultó ser, con algunos ajustes, igual de generoso con el aguacate. Familias enteras que vivían de la cosecha cafetera empezaron a diversificar, o directamente a cambiar de cultivo, siguiendo una fruta que de pronto el mundo entero quería comprar.',
+    'En Japón el aguacate tiene una historia distinta pero igual de reciente: no es un ingrediente tradicional de la cocina japonesa, y durante buena parte del siglo veinte casi no se consumía. Fue ganando terreno poco a poco, primero como curiosidad importada, hasta que alguien le puso un nombre que se quedó: 森のバター, mori no batā, "la mantequilla del bosque". El apodo describe exactamente lo que la fruta le pareció a un país que no la conocía -- algo untuoso, rico, que crece en un árbol en vez de salir de una vaca -- y hoy el aguacate es un ingrediente habitual en supermercados y restaurantes japoneses, sin que nadie recuerde ya que hace pocas décadas era una rareza.',
+    'Tolima y Japón adoptaron el aguacate casi al mismo tiempo, por razones opuestas: allá porque de repente había un cultivo nuevo que la tierra recibía bien, acá porque una fruta extranjera encontró, contra todo pronóstico, un lugar permanente en la mesa. Ninguno de los dos lugares creció con el aguacate como herencia -- los dos lo aprendieron a querer ya de grandes, y en ambos casos terminó quedándose.',
+    'En Boogaloo esa fruta llega en forma de guacamole casero, hecho el mismo día, para acompañar las arepas y las empanadas como se acostumbra en cualquier mesa colombiana. Si quiere probar esa misma mantequilla del bosque que ahora crece en las laderas del Tolima, lo esperamos en Boogaloo.',
+  ],
+  en: [
+    "In the same northern Tolima towns that used to talk about nothing but coffee -- Herveo, Casabianca, Líbano itself -- a different crop started showing up on the hillsides over the last two decades: Hass avocado. Farms that for generations knew only coffee groves or cattle pasture now have rows of trees loaded with that dark, rough-skinned fruit that almost nobody planted seriously there twenty years ago.",
+    "Colombia became, almost without setting out to, one of the world's major Hass avocado exporters. The mountain climate -- the same altitude and soil that had always served coffee -- turned out, with some adjustment, to be just as generous to avocado. Whole families who had lived off the coffee harvest started diversifying, or switching crops outright, following a fruit the whole world suddenly wanted to buy.",
+    'In Japan, the avocado has a different but equally recent story: it isn\'t a traditional ingredient in Japanese cooking, and for most of the twentieth century it was barely eaten at all. It gained ground slowly, first as an imported curiosity, until someone gave it a name that stuck: 森のバター, mori no batā, "butter of the forest." The nickname captures exactly what the fruit looked like to a country that didn\'t grow up with it -- something rich and buttery that comes off a tree instead of out of a cow -- and today avocado is a routine ingredient in Japanese supermarkets and restaurants, with barely anyone remembering it was a rarity just a few decades ago.',
+    "Tolima and Japan adopted the avocado at almost the same time, for opposite reasons: there, because a new crop suddenly took to the land; here, because a foreign fruit found, against the odds, a permanent place at the table. Neither place grew up with avocado as an inheritance -- both learned to love it as adults, and in both cases it stayed.",
+    "At Boogaloo, that fruit arrives as homemade guacamole, made fresh the same day, to go with arepas and empanadas the way it would at any Colombian table. If you want to taste that same butter of the forest now growing on the hillsides of Tolima, we're waiting for you at Boogaloo.",
+  ],
+  ja: [
+    'かつてはコーヒーの話しか出てこなかったトリマ県北部の町々 ―― エルベオ、カサビアンカ、リバノそのもの ―― では、ここ二十年ほどで山の斜面に別の作物が現れ始めた。ハス種のアボカドだ。何世代にもわたってコーヒー畑か牧草地しか知らなかった農園に、二十年前にはほとんど誰も本気で植えていなかった、あの黒くごつごつした果実がなる木が、今では何列も並んでいる。',
+    'コロンビアは、最初はそうなるつもりもなかったのに、世界有数のハス種アボカド輸出国になった。コーヒーをずっと支えてきたのと同じ標高、同じ土壌のアンデスの気候が、多少の工夫を加えるだけでアボカドにも同じくらい適していることが分かったのだ。コーヒー収穫で生計を立てていた家族が、世界中が急に欲しがるようになったこの果物を追いかけて、栽培を多角化したり、思い切って作物を切り替えたりし始めた。',
+    '日本におけるアボカドの歴史はまったく違うが、同じくらい新しい。日本料理の伝統的な食材ではなく、二十世紀の大半、ほとんど食べられていなかった。最初は輸入の珍しい食べ物として少しずつ広まり、やがて定着する呼び名がついた ―― 森のバター。この呼び名は、育った経験のない国にとってこの果物がどう見えたかを的確に表している ―― 牛からではなく木から採れる、濃厚でクリーミーなもの。今では日本のスーパーやレストランでアボカドはごく普通の食材となり、数十年前まで珍しかったことを覚えている人はほとんどいない。',
+    'トリマと日本は、ほぼ同時期に、正反対の理由でアボカドを受け入れた。トリマでは、新しい作物が突然その土地に合ったから。日本では、外国の果物が思いがけず食卓に定着したから。どちらの土地も、アボカドを受け継いだわけではない ―― どちらも大人になってから好きになり、そしてどちらの場合も、それが根付いた。',
+    'Boogalooでは、その果物は自家製ワカモレとして、その日のうちに作られ、コロンビアのどんな食卓でもそうするようにアレパやエンパナーダに添えられる。今トリマの山の斜面で育っているのと同じ「森のバター」を味わってみたい方は、ぜひBoogalooへ。',
+  ],
+  pt: [
+    'Nas mesmas cidades do norte do Tolima onde antes só se falava de café -- Herveo, Casabianca, o próprio Líbano -- nas últimas duas décadas começou a aparecer outra cultura nas encostas: o abacate Hass. Fazendas que por gerações só conheceram cafezais ou pastos de gado hoje têm fileiras de árvores carregadas dessa fruta escura e de casca áspera que, há apenas vinte anos, quase ninguém plantava a sério ali.',
+    'A Colômbia se tornou, quase sem se propor a isso no início, uma das grandes exportadoras de abacate Hass do mundo. O clima da cordilheira -- a mesma altitude e a mesma terra que sempre serviram ao café -- mostrou-se, com alguns ajustes, igualmente generoso com o abacate. Famílias inteiras que viviam da colheita do café começaram a diversificar, ou simplesmente a trocar de cultura, seguindo uma fruta que, de repente, o mundo inteiro queria comprar.',
+    'No Japão, o abacate tem uma história diferente, mas igualmente recente: não é um ingrediente tradicional da culinária japonesa, e durante boa parte do século vinte quase não era consumido. Foi ganhando espaço aos poucos, primeiro como uma curiosidade importada, até que alguém lhe deu um nome que pegou: 森のバター, mori no batā, "a manteiga da floresta". O apelido descreve exatamente o que a fruta pareceu ser para um país que não a conhecia -- algo untuoso e rico, que cresce numa árvore em vez de vir de uma vaca -- e hoje o abacate é um ingrediente comum em supermercados e restaurantes japoneses, sem que quase ninguém lembre que, poucas décadas atrás, era uma raridade.',
+    'Tolima e Japão adotaram o abacate quase ao mesmo tempo, por razões opostas: lá, porque uma nova cultura de repente se adaptou bem à terra; aqui, porque uma fruta estrangeira encontrou, contra todas as expectativas, um lugar permanente à mesa. Nenhum dos dois lugares cresceu com o abacate como herança -- os dois aprenderam a gostar dele já adultos, e em ambos os casos ele ficou.',
+    'No Boogaloo, essa fruta chega em forma de guacamole caseiro, feito no mesmo dia, para acompanhar as arepas e os pastéis como se costuma fazer em qualquer mesa colombiana. Se quiser provar essa mesma manteiga da floresta que agora cresce nas encostas do Tolima, esperamos por você no Boogaloo.',
+  ],
+};
+
 // Cada nueva entrada del blog solo necesita: un bloque STORYn_PARRAFOS arriba,
-// las claves blogStoryNTitle en i18n.js, su <article id="blog-storyN-..."> en
-// blog.html, y una línea aquí. Así la rutina diaria solo agrega, no reescribe.
+// la clave blogStoryNTitle en i18n.js, y un objeto nuevo aquí (color rota entre
+// red/blue/gold; credit es null para fotos propias, o {name,url,source} para
+// una foto de banco externa). No hace falta tocar blog.html: el <article> de
+// cada entrada se genera solo, y siempre se muestra la más nueva primero.
 const STORIES = [
-  { key: 'story1', parrafos: STORY1_PARRAFOS, titleKey: 'blogStory1Title' },
-  { key: 'story2', parrafos: STORY2_PARRAFOS, titleKey: 'blogStory2Title' },
-  { key: 'story3', parrafos: STORY3_PARRAFOS, titleKey: 'blogStory3Title' },
+  {
+    key: 'story1',
+    parrafos: STORY1_PARRAFOS,
+    titleKey: 'blogStory1Title',
+    color: 'red',
+    image: 'img/blog/tolima-valle.jpg',
+    imageAlt: 'Valle visto desde una montaña del Tolima, Colombia',
+    credit: null,
+  },
+  {
+    key: 'story2',
+    parrafos: STORY2_PARRAFOS,
+    titleKey: 'blogStory2Title',
+    color: 'blue',
+    image: 'img/blog/tolima-mirador.jpg',
+    imageAlt: 'Mirador con mesa y sillas en las montañas del Tolima, Colombia',
+    credit: null,
+  },
+  {
+    key: 'story3',
+    parrafos: STORY3_PARRAFOS,
+    titleKey: 'blogStory3Title',
+    color: 'gold',
+    image: 'img/blog/tolima-arcoiris.jpg',
+    imageAlt: 'Arcoíris sobre las montañas verdes del Tolima, Colombia',
+    credit: null,
+  },
+  {
+    key: 'story4',
+    parrafos: STORY4_PARRAFOS,
+    titleKey: 'blogStory4Title',
+    color: 'red',
+    image: 'img/blog/tolima-aguacates.jpg',
+    imageAlt: 'Cosecha de aguacates apilados en un almacén, Tolima, Colombia',
+    credit: null,
+  },
 ];
 
 function ctaRowHtml(idPrefix) {
@@ -139,10 +208,44 @@ function ctaRowHtml(idPrefix) {
   `;
 }
 
+function creditHtml(credit) {
+  if (!credit) return '';
+  return `<figcaption>Foto: <a href="${credit.url}" target="_blank" rel="noopener">${credit.name}</a> / ${credit.source}</figcaption>`;
+}
+
+// Crea el <article> de cada entrada (una sola vez) y lo inserta en el mount,
+// de la más nueva a la más vieja -- STORIES.slice().reverse() -- para que la
+// última publicada quede siempre de primera.
+function renderPostsSkeleton() {
+  const mount = document.getElementById('blog-posts-mount');
+  if (!mount) return;
+  const order = STORIES.slice().reverse();
+  mount.innerHTML = order
+    .map(({ key, color, image, imageAlt, credit }) => {
+      const idPrefix = `blog-${key}`;
+      return `
+        <article class="ab-section blog-post blog-post-${color}" data-reveal>
+          <h2 id="${idPrefix}-title" class="blog-post-title"></h2>
+          <p class="blog-byline" id="${idPrefix}-byline"></p>
+          <figure class="blog-post-figure">
+            <img src="${image}" alt="${imageAlt}" />
+            ${creditHtml(credit)}
+          </figure>
+          <div class="blog-post-body" id="${idPrefix}-body"></div>
+        </article>
+      `;
+    })
+    .join('');
+}
+
 function renderHistorias() {
   const lang = STORY1_PARRAFOS[I18n.lang] ? I18n.lang : 'es';
-  STORIES.forEach(({ key, parrafos }) => {
+  STORIES.forEach(({ key, parrafos, titleKey }) => {
     const idPrefix = `blog-${key}`;
+    const titleEl = document.getElementById(`${idPrefix}-title`);
+    if (titleEl) titleEl.textContent = I18n.t(titleKey);
+    const bylineEl = document.getElementById(`${idPrefix}-byline`);
+    if (bylineEl) bylineEl.textContent = '— Boogaloo';
     const body = document.getElementById(`${idPrefix}-body`);
     if (!body) return;
     body.innerHTML = parrafos[lang].map((p) => `<p>${p}</p>`).join('') + ctaRowHtml(idPrefix);
@@ -157,12 +260,6 @@ function applyStaticI18n() {
   applyLayoutI18n();
   document.getElementById('page-subtitle').textContent = I18n.t('blogPageLabel');
   document.getElementById('blog-hero-title').textContent = I18n.t('blogHeroTitle');
-  STORIES.forEach(({ key, titleKey }) => {
-    const titleEl = document.getElementById(`blog-${key}-title`);
-    if (titleEl) titleEl.textContent = I18n.t(titleKey);
-    const bylineEl = document.getElementById(`blog-${key}-byline`);
-    if (bylineEl) bylineEl.textContent = '— Boogaloo';
-  });
   document.getElementById('blog-menu-link').textContent = I18n.t('abVerMenuBtn');
   renderHistorias();
 }
@@ -178,4 +275,6 @@ renderSiteHeader(`
 renderSiteFooter();
 renderLangSelect(document.getElementById('lang-select-slot'));
 
+renderPostsSkeleton();
 applyStaticI18n();
+setupReveal();
