@@ -155,6 +155,37 @@ const STORY4_PARRAFOS = {
   ],
 };
 
+const STORY5_PARRAFOS = {
+  es: [
+    'En Falan, en las estribaciones del norte del Tolima, hay una reserva natural que se anuncia con un letrero rústico a la entrada del pueblo: senderismo, torrentismo, zona de camping. Ciudad Perdida de Falan no tiene nada que ver con la famosa Ciudad Perdida de la Sierra Nevada de Santa Marta -- es un nombre local, más humilde, para un bosque de niebla al que la gente sube porque sabe, sin necesidad de que se lo explique nadie, que hace bien.',
+    'En los últimos años, reservas como esta se han multiplicado en las zonas rurales de Colombia: bosques privados o comunitarios que alguien decidió no talar ni sembrar, sino abrir para que la gente camine entre los árboles. No hace falta un objetivo deportivo ni una meta que cumplir -- basta con entrar, seguir el sendero, y dejar que el ruido de la ciudad se quede atrás.',
+    'Japón le puso nombre a esa misma costumbre hace más de cuarenta años: shinrin-yoku, 森林浴, literalmente "baño de bosque". El término lo acuñó el gobierno japonés en 1982, como parte de una campaña para animar a la gente a caminar entre árboles sin ningún propósito más que estar ahí. Con el tiempo, universidades japonesas empezaron a medir lo que ya se sospechaba: caminar despacio en un bosque baja la presión arterial y el cortisol, de forma medible, sin que haga falta ni un remedio ni una receta.',
+    'Colombia nunca necesitó ponerle un nombre en japonés a la costumbre de subir al monte a despejarse -- siempre se hizo, en cualquier finca, en cualquier vereda con un camino hacia arriba. Pero los dos países, cada uno a su manera, llegaron a la misma conclusión: que caminar entre árboles, sin apuro y sin agenda, es una de las pocas medicinas que no se compran en ninguna farmacia.',
+    'El café que se sirve en Boogaloo, de hecho, crece exactamente en ese tipo de bosque: bajo sombra, entre otros árboles, en las mismas laderas donde la gente sube a caminar. Si alguna vez sube a un sendero como el de Falan, o simplemente necesita un rato sin apuro, en Boogaloo lo esperamos con un café que también salió de ahí.',
+  ],
+  en: [
+    'In Falan, on the northern foothills of Tolima, there\'s a nature reserve advertised with a rustic sign at the edge of town: hiking, canyoning, camping grounds. Ciudad Perdida de Falan has nothing to do with the famous Ciudad Perdida in the Sierra Nevada de Santa Marta -- it\'s a local, humbler name for a cloud forest that people climb up to because they already know, without anyone needing to explain it, that it does them good.',
+    "In recent years, reserves like this one have multiplied across rural Colombia: private or community-owned forests that someone decided not to cut down or plant over, but to open up so people can walk among the trees. There's no athletic goal required, no box to check -- you just walk in, follow the trail, and let the noise of the city fall behind.",
+    'Japan gave that same habit a name more than forty years ago: shinrin-yoku, 森林浴, literally "forest bathing." The term was coined by the Japanese government in 1982, part of a campaign to encourage people to walk among trees with no purpose other than being there. Over time, Japanese universities began measuring what people already suspected: walking slowly through a forest measurably lowers blood pressure and cortisol, with no prescription required.',
+    "Colombia never needed a Japanese name for the habit of heading up into the hills to clear your head -- it was always just something people did, on any farm, on any hamlet road that led uphill. But both countries, each in their own way, arrived at the same conclusion: that walking among trees, unhurried and without an agenda, is one of the few medicines that can't be bought at a pharmacy.",
+    "The coffee served at Boogaloo, in fact, grows in exactly that kind of forest: shade-grown, among other trees, on the same hillsides where people climb up to walk. If you ever hike a trail like the one in Falan, or simply need some unhurried time, at Boogaloo we're waiting with a coffee that came from there too.",
+  ],
+  ja: [
+    'トリマ県北部の麓、ファランという町には、町はずれに素朴な看板を掲げた自然保護区がある ―― ハイキング、キャニオニング、キャンプ場。「シウダー・ペルディーダ・デ・ファラン」は、シエラ・ネバダ・デ・サンタマルタにある有名な「シウダー・ペルディーダ」とは何の関係もない。誰かに説明されなくても、そこに登れば体にいいと分かっている雲霧林につけられた、もっと素朴な地元の名前だ。',
+    '近年、コロンビアの農村部ではこうした保護区が次々と生まれている ―― 誰かが伐採も植林もせず、そのままにしておくことを選び、人々が木々の間を歩けるように開放した私有地や共同体所有の森だ。達成すべきスポーツの目標も、こなすべきノルマもいらない。ただ入って、道をたどり、都市の喧騒を後ろに置いていくだけでいい。',
+    '日本は四十年以上前、まさに同じ習慣に名前をつけた ―― 森林浴だ。この言葉は1982年に日本政府が作った造語で、人々に、ただそこにいる以外に目的を持たずに木々の間を歩くことを勧めるキャンペーンの一部だった。やがて日本の大学は、すでに多くの人が感じていたことを測定し始めた ―― 森の中をゆっくり歩くと、処方箋も薬も要らずに、血圧とコルチゾールが測定可能なレベルで下がる、ということを。',
+    'コロンビアは、頭を整理するために山に登るという習慣に、日本語の名前をつける必要など一度もなかった ―― どんな農園でも、上へ続く道のあるどんな集落でも、昔からずっとやってきたことだからだ。しかし両国は、それぞれ違う道を通りながら、同じ結論にたどり着いた ―― 急がず、予定も立てずに木々の間を歩くことは、どんな薬局でも買えない数少ない薬の一つだ、という結論に。',
+    '実はBoogalooで出しているコーヒーも、まさにそうした森 ―― 他の木々の陰で育つシェードグロウン・コーヒー ―― で、人々が歩きに登るのと同じ山の斜面で栽培されている。ファランのような山道を歩いた後も、ただ急がない時間が必要なときも、Boogalooでは、そこから生まれたコーヒーと一緒にお待ちしている。',
+  ],
+  pt: [
+    'Em Falan, no sopé norte do Tolima, há uma reserva natural anunciada por uma placa rústica na entrada da cidade: trilhas, canyoning, área de camping. Ciudad Perdida de Falan não tem nada a ver com a famosa Ciudad Perdida da Sierra Nevada de Santa Marta -- é um nome local, mais humilde, para uma floresta de neblina para onde as pessoas sobem porque já sabem, sem que ninguém precise explicar, que faz bem.',
+    'Nos últimos anos, reservas como essa se multiplicaram pelo interior da Colômbia: florestas privadas ou comunitárias que alguém decidiu não derrubar nem plantar, mas abrir para que as pessoas caminhem entre as árvores. Não é preciso nenhuma meta esportiva nem objetivo a cumprir -- basta entrar, seguir a trilha e deixar o barulho da cidade para trás.',
+    'O Japão deu nome a esse mesmo hábito há mais de quarenta anos: shinrin-yoku, 森林浴, literalmente "banho de floresta". O termo foi criado pelo governo japonês em 1982, parte de uma campanha para incentivar as pessoas a caminhar entre árvores sem outro propósito além de estar ali. Com o tempo, universidades japonesas começaram a medir o que já se suspeitava: caminhar devagar numa floresta baixa a pressão arterial e o cortisol de forma mensurável, sem receita nem remédio.',
+    'A Colômbia nunca precisou de um nome em japonês para o hábito de subir ao mato para clarear a cabeça -- sempre foi algo que se fazia, em qualquer fazenda, em qualquer vereda com um caminho subindo. Mas os dois países, cada um à sua maneira, chegaram à mesma conclusão: que caminhar entre árvores, sem pressa e sem agenda, é um dos poucos remédios que não se compram em nenhuma farmácia.',
+    'O café servido no Boogaloo, aliás, cresce exatamente nesse tipo de floresta: cultivado à sombra, entre outras árvores, nas mesmas encostas onde as pessoas sobem para caminhar. Se um dia você fizer uma trilha como a de Falan, ou simplesmente precisar de um tempo sem pressa, no Boogaloo esperamos por você com um café que também veio de lá.',
+  ],
+};
+
 // Cada nueva entrada del blog solo necesita: un bloque STORYn_PARRAFOS arriba,
 // la clave blogStoryNTitle en i18n.js, y un objeto nuevo aquí (color rota entre
 // red/blue/gold; credit es null para fotos propias, o {name,url,source} para
@@ -195,6 +226,15 @@ const STORIES = [
     color: 'red',
     image: 'img/blog/tolima-aguacates.jpg',
     imageAlt: 'Cosecha de aguacates apilados en un almacén, Tolima, Colombia',
+    credit: null,
+  },
+  {
+    key: 'story5',
+    parrafos: STORY5_PARRAFOS,
+    titleKey: 'blogStory5Title',
+    color: 'blue',
+    image: 'img/blog/tolima-reserva-falan.jpg',
+    imageAlt: 'Letrero de entrada de la Reserva Natural Ciudad Perdida de Falan, Tolima, Colombia',
     credit: null,
   },
 ];
