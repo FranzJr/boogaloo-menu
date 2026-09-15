@@ -186,6 +186,37 @@ const STORY5_PARRAFOS = {
   ],
 };
 
+const STORY6_PARRAFOS = {
+  es: [
+    'En casi cualquier plaza principal de un pueblo o ciudad colombiana hay una catedral o una iglesia con dos torres, y en esas torres hay campanas que llevan sonando desde antes de que la mayoría de la gente del pueblo naciera. No hace falta reloj ni altavoz: durante décadas, las misas, los entierros, las fiestas patronales y hasta las alarmas de incendio se anunciaron con un patrón de campanadas que todo el mundo en el pueblo sabía interpretar sin que se lo explicaran.',
+    'Cada ocasión tenía su propio toque: no sonaba igual la campana que llamaba a misa de ocho que la que anunciaba una muerte, y todavía en Nochebuena, a la medianoche, las campanas repican distinto para marcar la Misa de Gallo. El campanario no solo daba la hora -- daba el motivo.',
+    'Japón tiene su propia versión de esto, aunque limitada a una sola noche del año: joya no kane, el repique de las campanas de los templos budistas la noche del 31 de diciembre. Se tocan exactamente 108 veces -- un número que, según la tradición budista, representa los 108 deseos o apegos terrenales que atormentan a una persona -- y cada campanada busca disolver uno de ellos antes de que empiece el año nuevo. La costumbre no viene de una sola ciudad ni de un solo templo: se repite, cada 31 de diciembre, en templos de todo el país, y mucha gente se queda despierta hasta la medianoche solo para escucharla.',
+    'Colombia nunca contó sus campanadas ni les puso un número exacto -- pero en ambos países una campana grande, de metal, colgada en lo alto de un edificio religioso, sigue cumpliendo la misma función que cumplía antes de que existiera cualquier reloj o altavoz: marcarle a todo un pueblo, al mismo tiempo, que algo importante está pasando.',
+    'En Boogaloo el sonido también importa -- el nombre del restaurante es, de hecho, un género musical, y la música seleccionada suena todo el tiempo como parte de la experiencia. No hay campanas, pero sí hay una idea parecida: un sonido que anuncia que es momento de sentarse, comer despacio y compartir la mesa. Si quiere escucharlo, lo esperamos en Boogaloo.',
+  ],
+  en: [
+    "In almost any main square of a Colombian town or city there's a cathedral or church with two towers, and in those towers there are bells that have been ringing since before most of the town's residents were born. No clock or loudspeaker was needed: for decades, masses, funerals, patron saint festivals, and even fire alarms were announced through a pattern of bell tolls that everyone in town knew how to read without anyone explaining it.",
+    "Each occasion had its own ring: the bell that called people to eight o'clock mass didn't sound the same as the one announcing a death, and to this day, at midnight on Christmas Eve, the bells ring differently to mark Misa de Gallo, the midnight mass. The bell tower didn't just tell the time -- it told the reason.",
+    "Japan has its own version of this, though limited to a single night of the year: joya no kane, the ringing of Buddhist temple bells on the night of December 31st. They're rung exactly 108 times -- a number that, in Buddhist tradition, represents the 108 earthly desires or attachments that torment a person -- and each toll is meant to dissolve one of them before the new year begins. The custom isn't tied to one city or one temple: it repeats, every December 31st, at temples all across the country, and many people stay up until midnight just to hear it.",
+    "Colombia never counted its bell tolls or gave them an exact number -- but in both countries, a large metal bell hung high on a religious building still does the same job it did before any clock or loudspeaker existed: letting an entire town know, all at once, that something important is happening.",
+    "Sound matters at Boogaloo too -- the restaurant's name is, in fact, a music genre, and curated music plays throughout as part of the experience. There are no bells, but there's a similar idea: a sound that announces it's time to sit down, eat slowly, and share the table. If you want to hear it, we're waiting for you at Boogaloo.",
+  ],
+  ja: [
+    'コロンビアの町や都市の中心広場には、たいてい二つの塔を持つ大聖堂か教会があり、その塔には、町の住民の多くが生まれるずっと前から鳴り続けてきた鐘がある。時計もスピーカーも要らなかった ―― 何十年もの間、ミサも、葬式も、守護聖人の祭りも、さらには火事の警報までも、誰に説明されなくても町の誰もが読み取れる鐘の鳴らし方のパターンで知らされてきた。',
+    'それぞれの機会には、それぞれの鳴らし方があった。八時のミサを知らせる鐘と、誰かの死を知らせる鐘は同じ音ではなく、今でもクリスマスイブの真夜中には、深夜ミサ「ミサ・デ・ガジョ」を告げるために鐘は違う鳴り方をする。鐘楼は時刻を告げるだけでなく、理由も告げていたのだ。',
+    '日本にも、一年のうち一晩だけに限られた、同じような習慣がある ―― 除夜の鐘、12月31日の夜に仏教寺院の鐘を鳴らす行事だ。ちょうど108回鳴らされる ―― この数字は仏教の伝統で、人を苦しめる108の煩悩を表すとされ、鐘を一つ鳴らすごとに、新年が始まる前にその一つを消し去ろうとする。この習慣は特定の一つの都市や寺院に限られたものではなく、毎年12月31日、日本全国の寺院で繰り返され、多くの人がそれを聞くためだけに真夜中まで起きている。',
+    'コロンビアは鐘の音を数えたことも、正確な回数を決めたこともない ―― しかし両国とも、宗教建築の高いところに吊るされた大きな金属の鐘は、時計もスピーカーもなかった時代に果たしていたのと同じ役割を今も果たしている ―― 町全体に、同時に、何か大事なことが起きていると知らせる役割だ。',
+    'Boogalooでも音は大切にされている ―― この店の名前は実は音楽のジャンルの名前で、選び抜かれた音楽が常に流れ、体験の一部になっている。鐘はないが、似た考えはある ―― 座って、ゆっくり食べて、テーブルを囲む時間だと知らせる音だ。それを聞きに、ぜひBoogalooへ。',
+  ],
+  pt: [
+    'Em quase qualquer praça principal de uma cidade colombiana há uma catedral ou igreja com duas torres, e nessas torres há sinos que tocam desde antes de a maioria dos moradores da cidade nascer. Não era preciso relógio nem alto-falante: durante décadas, missas, funerais, festas do padroeiro e até alarmes de incêndio eram anunciados por um padrão de badaladas que todo mundo na cidade sabia interpretar sem que ninguém precisasse explicar.',
+    'Cada ocasião tinha seu próprio toque: o sino que chamava para a missa das oito não soava igual ao que anunciava uma morte, e até hoje, na meia-noite da véspera de Natal, os sinos tocam diferente para marcar a Missa do Galo. O campanário não dizia só a hora -- dizia o motivo.',
+    'O Japão tem sua própria versão disso, embora limitada a uma única noite do ano: joya no kane, o toque dos sinos dos templos budistas na noite de 31 de dezembro. Tocam exatamente 108 vezes -- um número que, na tradição budista, representa os 108 desejos ou apegos terrenos que atormentam uma pessoa -- e cada badalada busca dissolver um deles antes que o ano novo comece. O costume não pertence a uma única cidade ou templo: se repete, todo 31 de dezembro, em templos por todo o país, e muita gente fica acordada até a meia-noite só para ouvi-lo.',
+    'A Colômbia nunca contou suas badaladas nem lhes deu um número exato -- mas nos dois países um sino grande, de metal, pendurado no alto de um prédio religioso, ainda cumpre a mesma função que cumpria antes de existir qualquer relógio ou alto-falante: avisar a uma cidade inteira, ao mesmo tempo, que algo importante está acontecendo.',
+    'O som também importa no Boogaloo -- o nome do restaurante é, na verdade, um gênero musical, e a música selecionada toca o tempo todo como parte da experiência. Não há sinos, mas há uma ideia parecida: um som que anuncia que é hora de sentar, comer devagar e compartilhar a mesa. Se quiser ouvi-lo, esperamos por você no Boogaloo.',
+  ],
+};
+
 // Cada nueva entrada del blog solo necesita: un bloque STORYn_PARRAFOS arriba,
 // la clave blogStoryNTitle en i18n.js, y un objeto nuevo aquí (color rota entre
 // red/blue/gold; credit es null para fotos propias, o {name,url,source} para
@@ -237,6 +268,15 @@ const STORIES = [
     imageAlt: 'Letrero de entrada de la Reserva Natural Ciudad Perdida de Falan, Tolima, Colombia',
     credit: null,
   },
+  {
+    key: 'story6',
+    parrafos: STORY6_PARRAFOS,
+    titleKey: 'blogStory6Title',
+    color: 'gold',
+    image: 'img/blog/catedral-plaza.jpg',
+    imageAlt: 'Catedral con dos torres en una plaza principal de Colombia',
+    credit: null,
+  },
 ];
 
 function ctaRowHtml(idPrefix) {
@@ -253,48 +293,122 @@ function creditHtml(credit) {
   return `<figcaption>Foto: <a href="${credit.url}" target="_blank" rel="noopener">${credit.name}</a> / ${credit.source}</figcaption>`;
 }
 
-// Crea el <article> de cada entrada (una sola vez) y lo inserta en el mount,
-// de la más nueva a la más vieja -- STORIES.slice().reverse() -- para que la
-// última publicada quede siempre de primera.
-function renderPostsSkeleton() {
-  const mount = document.getElementById('blog-posts-mount');
-  if (!mount) return;
-  const order = STORIES.slice().reverse();
-  mount.innerHTML = order
-    .map(({ key, color, image, imageAlt, credit }) => {
-      const idPrefix = `blog-${key}`;
-      return `
-        <article class="ab-section blog-post blog-post-${color}" data-reveal>
-          <h2 id="${idPrefix}-title" class="blog-post-title"></h2>
-          <p class="blog-byline" id="${idPrefix}-byline"></p>
-          <figure class="blog-post-figure">
-            <img src="${image}" alt="${imageAlt}" />
-            ${creditHtml(credit)}
-          </figure>
-          <div class="blog-post-body" id="${idPrefix}-body"></div>
-        </article>
-      `;
-    })
-    .join('');
+// ---------------- Render con URL por post + carga perezosa ----------------
+// El blog completo se sigue viendo en blog.html, pero cada post tiene su
+// propia URL para compartir (blog.html#storyN): al abrirla se garantiza que
+// ese post esté renderizado (aunque sea viejo y aún no le tocara cargar) y la
+// página baja directo a él. Sin ancla, solo se renderiza un primer lote y el
+// resto entra solo, en lotes, a medida que se hace scroll.
+const PAGE_SIZE = 3;
+const ORDERED_STORIES = STORIES.slice().reverse(); // más nueva primero, orden fijo
+let renderedCount = 0;
+let loadMoreObserver = null;
+
+function hashStoryKey() {
+  const raw = (location.hash || '').replace('#', '');
+  return ORDERED_STORIES.some((s) => s.key === raw) ? raw : null;
 }
 
-function renderHistorias() {
+function postHtml(story) {
+  const idPrefix = `blog-${story.key}`;
+  return `
+    <article class="ab-section blog-post blog-post-${story.color}" data-reveal id="${idPrefix}">
+      <h2 id="${idPrefix}-title" class="blog-post-title"></h2>
+      <p class="blog-byline" id="${idPrefix}-byline"></p>
+      <button type="button" class="blog-share-btn" id="${idPrefix}-share" data-key="${story.key}"></button>
+      <figure class="blog-post-figure">
+        <img src="${story.image}" alt="${story.imageAlt}" loading="lazy" />
+        ${creditHtml(story.credit)}
+      </figure>
+      <div class="blog-post-body" id="${idPrefix}-body"></div>
+    </article>
+  `;
+}
+
+function applyStaticI18nToStory({ key, parrafos, titleKey }) {
   const lang = STORY1_PARRAFOS[I18n.lang] ? I18n.lang : 'es';
-  STORIES.forEach(({ key, parrafos, titleKey }) => {
-    const idPrefix = `blog-${key}`;
-    const titleEl = document.getElementById(`${idPrefix}-title`);
-    if (titleEl) titleEl.textContent = I18n.t(titleKey);
-    const bylineEl = document.getElementById(`${idPrefix}-byline`);
-    if (bylineEl) bylineEl.textContent = '— Boogaloo';
-    const body = document.getElementById(`${idPrefix}-body`);
-    if (!body) return;
-    body.innerHTML = parrafos[lang].map((p) => `<p>${p}</p>`).join('') + ctaRowHtml(idPrefix);
-    document.getElementById(`${idPrefix}-cta-reserve`).textContent = I18n.t('gateReserveBtn');
-    document.getElementById(`${idPrefix}-cta-menu`).textContent = I18n.t('abVerMenuBtn');
+  const idPrefix = `blog-${key}`;
+  const titleEl = document.getElementById(`${idPrefix}-title`);
+  if (titleEl) titleEl.textContent = I18n.t(titleKey);
+  const bylineEl = document.getElementById(`${idPrefix}-byline`);
+  if (bylineEl) bylineEl.textContent = '— Joseph de Boogaloo';
+  const shareBtn = document.getElementById(`${idPrefix}-share`);
+  if (shareBtn) shareBtn.textContent = I18n.t('blogShareLabel');
+  const body = document.getElementById(`${idPrefix}-body`);
+  if (!body) return;
+  body.innerHTML = parrafos[lang].map((p) => `<p>${p}</p>`).join('') + ctaRowHtml(idPrefix);
+  document.getElementById(`${idPrefix}-cta-reserve`).textContent = I18n.t('gateReserveBtn');
+  document.getElementById(`${idPrefix}-cta-menu`).textContent = I18n.t('abVerMenuBtn');
+}
+
+function setupShareButtons(stories) {
+  stories.forEach(({ key }) => {
+    const btn = document.getElementById(`blog-${key}-share`);
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const url = `${location.origin}${location.pathname}#${key}`;
+      const done = () => {
+        btn.textContent = I18n.t('blogShareCopied');
+        setTimeout(() => {
+          btn.textContent = I18n.t('blogShareLabel');
+        }, 1800);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(() => window.prompt(I18n.t('blogShareLabel'), url));
+      } else {
+        window.prompt(I18n.t('blogShareLabel'), url);
+      }
+    });
   });
 }
 
+function updateSentinel() {
+  const sentinel = document.getElementById('blog-load-sentinel');
+  if (!sentinel) return;
+  if (renderedCount >= ORDERED_STORIES.length) {
+    if (loadMoreObserver) loadMoreObserver.disconnect();
+    sentinel.style.display = 'none';
+  }
+}
+
+function renderMore(count) {
+  const mount = document.getElementById('blog-posts-mount');
+  if (!mount) return;
+  const next = ORDERED_STORIES.slice(renderedCount, renderedCount + count);
+  if (!next.length) return;
+  mount.insertAdjacentHTML('beforeend', next.map(postHtml).join(''));
+  renderedCount += next.length;
+  next.forEach(applyStaticI18nToStory);
+  setupReveal();
+  setupShareButtons(next);
+  updateSentinel();
+}
+
+function setupLazyLoad() {
+  const sentinel = document.getElementById('blog-load-sentinel');
+  if (!sentinel || !('IntersectionObserver' in window)) {
+    // Sin soporte: no tiene sentido paginar, se muestra todo de una vez.
+    renderMore(ORDERED_STORIES.length);
+    return;
+  }
+  loadMoreObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) renderMore(PAGE_SIZE);
+      });
+    },
+    { rootMargin: '400px' }
+  );
+  loadMoreObserver.observe(sentinel);
+}
+
 // ---------------- Idioma ----------------
+
+function renderHistorias() {
+  // Solo actualiza los posts ya renderizados -- no vuelve a crear el DOM,
+  // para no perder el estado ab-visible de los que ya se revelaron.
+  ORDERED_STORIES.slice(0, renderedCount).forEach(applyStaticI18nToStory);
+}
 
 function applyStaticI18n() {
   applyLayoutI18n();
@@ -315,6 +429,16 @@ renderSiteHeader(`
 renderSiteFooter();
 renderLangSelect(document.getElementById('lang-select-slot'));
 
-renderPostsSkeleton();
+// Si la URL trae #storyN, ese post entra sí o sí en el primer lote (aunque
+// sea viejo), y la página baja directo a él.
+const targetKey = hashStoryKey();
+const targetIndex = targetKey ? ORDERED_STORIES.findIndex((s) => s.key === targetKey) : -1;
+const firstBatch = targetIndex === -1 ? PAGE_SIZE : Math.max(PAGE_SIZE, targetIndex + 1);
+renderMore(firstBatch);
 applyStaticI18n();
+setupLazyLoad();
 setupReveal();
+if (targetKey) {
+  const el = document.getElementById(`blog-${targetKey}`);
+  if (el) el.scrollIntoView({ block: 'start' });
+}

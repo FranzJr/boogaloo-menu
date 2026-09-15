@@ -1264,8 +1264,19 @@ body.js-ready .ab-section.ab-visible {
 .blog-byline {
   font-style: italic;
   color: var(--ink-soft);
+  margin: 0 0 10px;
+}
+.blog-share-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
   margin: 0 0 24px;
 }
+.blog-share-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
 .blog-post-figure { margin: 0 0 28px; }
 .blog-post-figure img {
   width: 100%;
@@ -1277,6 +1288,7 @@ body.js-ready .ab-section.ab-visible {
 .blog-post-body { text-align: left; max-width: 720px; margin: 0 auto; }
 .blog-post-body p { line-height: 1.75; margin: 0 0 16px; }
 .blog-cta-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+#blog-load-sentinel { height: 10px; }
 
 @media (max-width: 640px) {
   .blog-post { padding: 36px 16px; }

@@ -8,3 +8,4 @@ Cada entrada: fecha de publicación, slug interno (`STORYn` en js/blog.js), tema
 - 2026-09-09 — `story3` — Panela colombiana y kokuto de Okinawa — azúcar sin refinar que sobrevivió a la industrialización, ligado al ingrediente real de la Lemonela del menú.
 - 2026-09-11 — `story4` — Aguacate Hass del Tolima y el "mori no batā" (森のバター) japonés — dos lugares que adoptaron el aguacate como adultos, no como herencia, ligado al guacamole casero del menú.
 - 2026-09-14 — `story5` — Reserva Ciudad Perdida de Falan (Tolima) y el shinrin-yoku (森林浴) japonés — caminar entre árboles sin agenda, ligado al café de sombra que se sirve en Boogaloo.
+- 2026-09-16 — `story6` — Campanas de iglesias colombianas y el joya no kane (除夜の鐘) japonés — un sonido que marca ocasiones sin necesidad de reloj, ligado al origen musical del nombre Boogaloo.
