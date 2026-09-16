@@ -59,8 +59,10 @@ function renderMenu() {
         const subt = mi(it.subt);
         const desc = mi(it.desc);
         const aka = it.aka ? ` <span class="aka">"${it.aka}"</span>` : '';
+        const photo = it.img ? `<img class="item-photo" src="${it.img}" alt="" loading="lazy" />` : '';
         return `
-      <article class="item-card">
+      <article class="item-card${it.img ? ' has-photo' : ''}">
+        ${photo}
         <div class="item-top">
           <div class="item-info">
             <h3>${nombre}${aka}</h3>

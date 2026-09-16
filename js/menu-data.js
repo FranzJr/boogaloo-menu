@@ -36,6 +36,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'arepa-carne',
         nombre: L('Arepa Carne', 'Beef Arepa', 'ビーフアレパ', 'Arepa de Carne'),
+        img: 'img/platos/arepa-carne.jpg',
         desc: L(
           'Arepa colombiana rellena de carne de res deshilachada, cocinada lentamente con cebolla, ajo, tomate y pimentón, cubierta con queso.',
           'Colombian corn cake filled with slow-cooked shredded beef, onion, garlic, tomato and bell pepper, topped with cheese.',
@@ -47,6 +48,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'arepa-pollo',
         nombre: L('Arepa Pollo', 'Chicken Arepa', 'チキンアレパ', 'Arepa de Frango'),
+        img: 'img/platos/arepa-pollo.jpg',
         desc: L(
           'Arepa colombiana rellena de pollo deshilachado, cocinado lentamente con cebolla, ajo, tomate y pimentón, cubierta con queso.',
           'Colombian corn cake filled with slow-cooked shredded chicken, onion, garlic, tomato and bell pepper, topped with cheese.',
@@ -58,6 +60,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'arepa-chorizo',
         nombre: L('Arepa con Chorizo', 'Chorizo Arepa', 'チョリソーアレパ', 'Arepa com Chorizo'),
+        img: 'img/platos/arepa-chorizo.jpg',
         desc: L(
           'Arepa colombiana rellena de queso fundido y chorizo a la parrilla.',
           'Colombian corn cake filled with melted cheese and grilled chorizo sausage.',
@@ -88,6 +91,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'empanada-carne',
         nombre: L('Empanada de Carne', 'Beef Empanada', '牛肉のエンパナーダ', 'Empanada de Carne'),
+        img: 'img/platos/empanada-carne.jpg',
         desc: L(
           'Carne molida cocinada en hogao (tomate, cebolla y cebolla larga).',
           'Ground beef cooked in hogao, a traditional Colombian sauce of tomato, onion and scallion.',
@@ -99,6 +103,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'empanada-pollo-queso',
         nombre: L('Empanada de Pollo con Queso', 'Chicken & Cheese Empanada', '鶏肉とチーズのエンパナーダ', 'Empanada de Frango com Queijo'),
+        img: 'img/platos/empanada-pollo-queso.jpg',
         desc: L(
           'Pollo desmechado cocinado en hogao colombiano, mezclado con queso mozzarella fundido.',
           'Shredded chicken cooked in hogao (Colombian tomato-onion sauce), blended with melted mozzarella.',
@@ -123,6 +128,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'maduro-queso-bocadillo',
         nombre: L('Maduro con Queso y Bocadillo', 'Maduro with Cheese & Bocadillo', 'チーズとボカディージョのマドゥーロ', 'Maduro com Queijo e Bocadillo'),
+        img: 'img/platos/maduro.jpg',
         desc: L(
           'Plátano maduro entero horneado con queso fundido y bocadillo (dulce de guayaba). Perfecto para compartir.',
           'Whole ripe plantain baked with melted cheese and bocadillo (Colombian guava paste). Perfect to share.',
@@ -134,6 +140,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'aborrajado',
         nombre: L('Aborrajado con Queso y Bocadillo', 'Aborrajado with Cheese & Bocadillo', 'チーズとボカディージョのアボラハード', 'Aborrajado com Queijo e Bocadillo'),
+        img: 'img/platos/aborrajado.jpg',
         desc: L(
           'Plátano maduro relleno de queso y bocadillo (dulce de guayaba), cubierto con una ligera masa y frito.',
           'Ripe plantain stuffed with cheese and bocadillo (Colombian guava paste), lightly battered and fried.',
@@ -262,41 +269,49 @@ const MENU_CATEGORIES = [
       {
         sku: 'jugo-mango-agua-12',
         nombre: L('Jugo de Mango (Agua) 12oz', 'Mango Juice (Water) 12oz', 'マンゴージュース（水）12oz', 'Suco de Manga (Água) 12oz'),
+        img: 'img/platos/jugo-mango.jpg',
         precio: 500,
       },
       {
         sku: 'jugo-mango-agua-16',
         nombre: L('Jugo de Mango (Agua) 16oz', 'Mango Juice (Water) 16oz', 'マンゴージュース（水）16oz', 'Suco de Manga (Água) 16oz'),
+        img: 'img/platos/jugo-mango.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-mango-leche-12',
         nombre: L('Jugo de Mango (Leche) 12oz', 'Mango Juice (Milk) 12oz', 'マンゴージュース（ミルク）12oz', 'Suco de Manga (Leite) 12oz'),
+        img: 'img/platos/jugo-mango.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-mango-leche-16',
         nombre: L('Jugo de Mango (Leche) 16oz', 'Mango Juice (Milk) 16oz', 'マンゴージュース（ミルク）16oz', 'Suco de Manga (Leite) 16oz'),
+        img: 'img/platos/jugo-mango.jpg',
         precio: 700,
       },
       {
         sku: 'jugo-fresa-agua-12',
         nombre: L('Jugo de Fresa (Agua) 12oz', 'Strawberry Juice (Water) 12oz', 'いちごジュース（水）12oz', 'Suco de Morango (Água) 12oz'),
+        img: 'img/platos/jugo-fresa.jpg',
         precio: 500,
       },
       {
         sku: 'jugo-fresa-agua-16',
         nombre: L('Jugo de Fresa (Agua) 16oz', 'Strawberry Juice (Water) 16oz', 'いちごジュース（水）16oz', 'Suco de Morango (Água) 16oz'),
+        img: 'img/platos/jugo-fresa.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-fresa-leche-12',
         nombre: L('Jugo de Fresa (Leche) 12oz', 'Strawberry Juice (Milk) 12oz', 'いちごジュース（ミルク）12oz', 'Suco de Morango (Leite) 12oz'),
+        img: 'img/platos/jugo-fresa.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-fresa-leche-16',
         nombre: L('Jugo de Fresa (Leche) 16oz', 'Strawberry Juice (Milk) 16oz', 'いちごジュース（ミルク）16oz', 'Suco de Morango (Leite) 16oz'),
+        img: 'img/platos/jugo-fresa.jpg',
         precio: 700,
       },
       {
@@ -308,6 +323,7 @@ const MENU_CATEGORIES = [
         sku: 'panela-limon',
         nombre: L('Agua de Panela con Limón', 'Panela Water with Lime', 'パネラ・ライムウォーター', 'Água de Panela com Limão'),
         aka: 'Lemonela',
+        img: 'img/platos/lemonela.jpg',
         desc: L(
           'Bebida fría de panela (bloque de jugo de caña de azúcar sin refinar) con limón. También la conocemos como "Lemonela".',
           'Cold drink made with panela (unrefined cane sugar block) and lime. We also call it "Lemonela".',
@@ -326,14 +342,14 @@ const MENU_CATEGORIES = [
     items: [
       { sku: 'te-frutos-rojos-caliente-8', nombre: L('Té Caliente de Frutos Rojos 8oz', 'Hot Berry Tea 8oz', 'ホットベリーティー 8oz', 'Chá Quente de Frutas Vermelhas 8oz'), precio: 400 },
       { sku: 'te-frutos-rojos-caliente-12', nombre: L('Té Caliente de Frutos Rojos 12oz', 'Hot Berry Tea 12oz', 'ホットベリーティー 12oz', 'Chá Quente de Frutas Vermelhas 12oz'), precio: 500 },
-      { sku: 'capuccino-8', nombre: L('Capuccino 8oz', 'Cappuccino 8oz', 'カプチーノ 8oz', 'Capuccino 8oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 550 },
-      { sku: 'capuccino-12', nombre: L('Capuccino 12oz', 'Cappuccino 12oz', 'カプチーノ 12oz', 'Capuccino 12oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 650 },
-      { sku: 'mocha-8', nombre: L('Mocha 8oz', 'Mocha 8oz', 'モカ 8oz', 'Mocha 8oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 600 },
-      { sku: 'mocha-12', nombre: L('Mocha 12oz', 'Mocha 12oz', 'モカ 12oz', 'Mocha 12oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 700 },
-      { sku: 'latte-8', nombre: L('Café Latte 8oz', 'Café Latte 8oz', 'カフェラテ 8oz', 'Café Latte 8oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 550 },
-      { sku: 'latte-12', nombre: L('Café Latte 12oz', 'Café Latte 12oz', 'カフェラテ 12oz', 'Café Latte 12oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), precio: 650 },
-      { sku: 'tinto-8', nombre: L('Tinto 8oz', 'Colombian Black Coffee 8oz', 'ティント（コロンビア風ブラックコーヒー）8oz', 'Tinto 8oz'), precio: 400 },
-      { sku: 'tinto-12', nombre: L('Tinto 12oz', 'Colombian Black Coffee 12oz', 'ティント（コロンビア風ブラックコーヒー）12oz', 'Tinto 12oz'), precio: 500 },
+      { sku: 'capuccino-8', nombre: L('Capuccino 8oz', 'Cappuccino 8oz', 'カプチーノ 8oz', 'Capuccino 8oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), img: 'img/platos/capuccino.jpg', precio: 550 },
+      { sku: 'capuccino-12', nombre: L('Capuccino 12oz', 'Cappuccino 12oz', 'カプチーノ 12oz', 'Capuccino 12oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), img: 'img/platos/capuccino.jpg', precio: 650 },
+      { sku: 'mocha-8', nombre: L('Mocha 8oz', 'Mocha 8oz', 'モカ 8oz', 'Mocha 8oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), img: 'img/platos/mocha.jpg', precio: 600 },
+      { sku: 'mocha-12', nombre: L('Mocha 12oz', 'Mocha 12oz', 'モカ 12oz', 'Mocha 12oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), img: 'img/platos/mocha.jpg', precio: 700 },
+      { sku: 'latte-8', nombre: L('Café Latte 8oz', 'Café Latte 8oz', 'カフェラテ 8oz', 'Café Latte 8oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), img: 'img/platos/latte.jpg', precio: 550 },
+      { sku: 'latte-12', nombre: L('Café Latte 12oz', 'Café Latte 12oz', 'カフェラテ 12oz', 'Café Latte 12oz'), subt: L('Caliente o frío', 'Hot or iced', 'ホット・アイス', 'Quente ou gelado'), img: 'img/platos/latte.jpg', precio: 650 },
+      { sku: 'tinto-8', nombre: L('Tinto 8oz', 'Colombian Black Coffee 8oz', 'ティント（コロンビア風ブラックコーヒー）8oz', 'Tinto 8oz'), img: 'img/platos/tinto.jpg', precio: 400 },
+      { sku: 'tinto-12', nombre: L('Tinto 12oz', 'Colombian Black Coffee 12oz', 'ティント（コロンビア風ブラックコーヒー）12oz', 'Tinto 12oz'), img: 'img/platos/tinto.jpg', precio: 500 },
       { sku: 'americano-8', nombre: L('Americano 8oz', 'Americano 8oz', 'アメリカーノ 8oz', 'Americano 8oz'), precio: 450 },
       { sku: 'americano-12', nombre: L('Americano 12oz', 'Americano 12oz', 'アメリカーノ 12oz', 'Americano 12oz'), precio: 550 },
     ],
