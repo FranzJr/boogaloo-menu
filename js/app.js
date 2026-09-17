@@ -37,6 +37,37 @@ if (!sessionStorage.getItem(GATE_KEY)) {
 
 // ---------------- Render del menú ----------------
 
+// Junta variantes de tamaño (mismo sizeGroup) en una sola tarjeta con
+// selector de tamaño, en vez de una tarjeta repetida por cada onza.
+function groupItemsBySize(items) {
+  const groups = [];
+  const byKey = {};
+  (items || []).forEach((it) => {
+    if (!it.sizeGroup) {
+      groups.push({ single: true, item: it });
+      return;
+    }
+    if (!byKey[it.sizeGroup]) {
+      byKey[it.sizeGroup] = { single: false, key: it.sizeGroup, variants: [] };
+      groups.push(byKey[it.sizeGroup]);
+    }
+    byKey[it.sizeGroup].variants.push(it);
+  });
+  // Si un sizeGroup terminó con un solo item, se muestra simple (sin pills).
+  return groups.map((g) => (!g.single && g.variants.length === 1 ? { single: true, item: g.variants[0] } : g));
+}
+
+// Le quita el sufijo de onzas al nombre para mostrar el nombre "base" en la
+// tarjeta agrupada (ej. "Capuccino 8oz" -> "Capuccino").
+function stripSizeSuffix(nombre) {
+  return nombre.replace(/\s*\d+\s*oz\s*$/i, '');
+}
+
+function sizeLabel(nombre) {
+  const m = nombre.match(/(\d+\s*oz)\s*$/i);
+  return m ? m[1].replace(/\s+/, '') : nombre;
+}
+
 function renderMenu() {
   const nav = document.getElementById('cat-nav');
   const content = document.getElementById('menu-content');
@@ -53,14 +84,16 @@ function renderMenu() {
     section.className = 'category-section';
     section.id = cat.id;
 
-    const itemsHtml = (cat.items || [])
-      .map((it) => {
-        const nombre = mi(it.nombre);
-        const subt = mi(it.subt);
-        const desc = mi(it.desc);
-        const aka = it.aka ? ` <span class="aka">"${it.aka}"</span>` : '';
-        const photo = it.img ? `<img class="item-photo" src="${it.img}" alt="" loading="lazy" />` : '';
-        return `
+    const itemsHtml = groupItemsBySize(cat.items)
+      .map((g) => {
+        if (g.single) {
+          const it = g.item;
+          const nombre = mi(it.nombre);
+          const subt = mi(it.subt);
+          const desc = mi(it.desc);
+          const aka = it.aka ? ` <span class="aka">"${it.aka}"</span>` : '';
+          const photo = it.img ? `<img class="item-photo" src="${it.img}" alt="" loading="lazy" />` : '';
+          return `
       <article class="item-card${it.img ? ' has-photo' : ''}">
         ${photo}
         <div class="item-top">
@@ -73,6 +106,50 @@ function renderMenu() {
         <div class="item-footer">
           <span class="item-price">${fmt(it.precio)}</span>
           <button class="add-btn" data-add-sku="${it.sku}" type="button">${I18n.t('addBtn')}</button>
+        </div>
+      </article>`;
+        }
+
+        // Tarjeta agrupada por tamaño (jugos 12/16oz, café 8/12oz...)
+        const variants = g.variants;
+        const first = variants[0];
+        const nombreBase = stripSizeSuffix(mi(first.nombre));
+        const photo = first.img ? `<img class="item-photo" src="${first.img}" alt="" loading="lazy" />` : '';
+        const esAmbasTemp = first.subt && first.subt.es === 'Caliente o frío';
+        const esSoloCaliente = first.subt && first.subt.es === 'Caliente';
+        const subtHtml = esSoloCaliente ? `<span class="subt">${mi(first.subt)}</span>` : '';
+
+        const sizePills = variants
+          .map(
+            (v, idx) => `
+          <button type="button" class="pill-option${idx === 0 ? ' selected' : ''}" data-size-sku="${v.sku}" data-price="${v.precio}">${sizeLabel(mi(v.nombre))}</button>`
+          )
+          .join('');
+
+        // El valor real (data-temp) queda fijo en español -- es lo que ve
+        // cocina en el pedido -- aunque el texto del botón sí se traduzca.
+        const tempPills = esAmbasTemp
+          ? `
+          <div class="pill-row temp-row" data-temp-row>
+            <button type="button" class="pill-option selected" data-temp="Caliente">${I18n.t('tempHot')}</button>
+            <button type="button" class="pill-option" data-temp="Frío">${I18n.t('tempIced')}</button>
+          </div>`
+          : '';
+
+        return `
+      <article class="item-card${first.img ? ' has-photo' : ''} size-group" data-group="${g.key}">
+        ${photo}
+        <div class="item-top">
+          <div class="item-info">
+            <h3>${nombreBase}</h3>
+            ${subtHtml}
+          </div>
+        </div>
+        <div class="pill-row size-row" data-size-row>${sizePills}</div>
+        ${tempPills}
+        <div class="item-footer">
+          <span class="item-price">${fmt(first.precio)}</span>
+          <button class="add-btn" data-add-group="${g.key}" data-add-sku="${first.sku}" type="button">${I18n.t('addBtn')}</button>
         </div>
       </article>`;
       })
@@ -110,9 +187,31 @@ function renderMenu() {
 }
 
 document.getElementById('menu-content').addEventListener('click', (e) => {
+  const sizePill = e.target.closest('[data-size-sku]');
+  if (sizePill) {
+    const card = sizePill.closest('.item-card');
+    card.querySelectorAll('[data-size-sku]').forEach((p) => p.classList.remove('selected'));
+    sizePill.classList.add('selected');
+    card.querySelector('.item-price').textContent = fmt(sizePill.dataset.price);
+    const addBtn = card.querySelector('[data-add-sku]');
+    if (addBtn) addBtn.dataset.addSku = sizePill.dataset.sizeSku;
+    return;
+  }
+
+  const tempPill = e.target.closest('[data-temp]');
+  if (tempPill) {
+    const row = tempPill.closest('[data-temp-row]');
+    row.querySelectorAll('[data-temp]').forEach((p) => p.classList.remove('selected'));
+    tempPill.classList.add('selected');
+    return;
+  }
+
   const btn = e.target.closest('[data-add-sku]');
   if (!btn) return;
-  Cart.add(btn.dataset.addSku, 1);
+  const card = btn.closest('.item-card');
+  const tempPillSelected = card.querySelector('[data-temp].selected');
+  const nota = tempPillSelected ? tempPillSelected.dataset.temp : undefined;
+  Cart.add(btn.dataset.addSku, 1, nota);
   renderCartBadge();
   const original = btn.textContent;
   btn.textContent = I18n.t('addedBtn');

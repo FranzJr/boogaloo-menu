@@ -346,6 +346,22 @@ main {
   margin: 0;
 }
 
+.pill-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill-option {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+.pill-option.selected {
+  background: var(--co-blue);
+  border-color: var(--co-blue);
+  color: #fff;
+}
+
 .item-footer {
   margin-top: auto;
   display: flex;
