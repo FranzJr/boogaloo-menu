@@ -1317,7 +1317,7 @@ body.js-ready .ab-section.ab-visible {
 .blog-hero-figure { margin: 0 0 20px; }
 .blog-hero-figure img {
   width: 100%;
-  max-height: 420px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: var(--radius);
   display: block;
@@ -1365,7 +1365,7 @@ body.js-ready .ab-section.ab-visible {
 .blog-post-figure { margin: 0 0 28px; }
 .blog-post-figure img {
   width: 100%;
-  max-height: 460px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: var(--radius);
   display: block;

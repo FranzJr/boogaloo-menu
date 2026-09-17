@@ -128,7 +128,9 @@ function renderMenu() {
           const subt = mi(it.subt);
           const desc = mi(it.desc);
           const aka = it.aka ? ` <span class="aka">"${it.aka}"</span>` : '';
-          const photo = it.img ? `<img class="item-photo" src="${it.img}" alt="" loading="lazy" />` : '';
+          const photo = it.img
+            ? `<img class="item-photo" src="${it.img}" alt="" loading="lazy" ${it.imgPosition ? `style="object-position: ${it.imgPosition};"` : ''} />`
+            : '';
           const outOfStock = isAgotado(it.sku);
           return `
       <article class="item-card${it.img ? ' has-photo' : ''}${outOfStock ? ' out-of-stock' : ''}">
@@ -162,7 +164,9 @@ function renderMenu() {
           });
           const first = g.byStyleName[styleNames[0]][0];
           const nombreBase = mi(first.nombreBase);
-          const photo = first.img ? `<img class="item-photo" src="${first.img}" alt="" loading="lazy" />` : '';
+          const photo = first.img
+            ? `<img class="item-photo" src="${first.img}" alt="" loading="lazy" ${first.imgPosition ? `style="object-position: ${first.imgPosition};"` : ''} />`
+            : '';
 
           const allOut = styleNames.every((s) => stylesData[s].every((v) => v.out));
           // Arranca en el primer estilo que tenga al menos un tamaño disponible.
@@ -215,7 +219,9 @@ function renderMenu() {
         // primero que sí haya (así el precio/botón inicial ya son válidos).
         const initial = allOut ? first : availableVariants[0];
         const nombreBase = stripSizeSuffix(mi(first.nombre));
-        const photo = first.img ? `<img class="item-photo" src="${first.img}" alt="" loading="lazy" />` : '';
+        const photo = first.img
+          ? `<img class="item-photo" src="${first.img}" alt="" loading="lazy" ${first.imgPosition ? `style="object-position: ${first.imgPosition};"` : ''} />`
+          : '';
         const esAmbasTemp = first.subt && first.subt.es === 'Caliente o frío';
         const esSoloCaliente = first.subt && first.subt.es === 'Caliente';
         const subtHtml = esSoloCaliente ? `<span class="subt">${mi(first.subt)}</span>` : '';

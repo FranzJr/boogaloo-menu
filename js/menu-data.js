@@ -142,6 +142,7 @@ const MENU_CATEGORIES = [
         sku: 'aborrajado',
         nombre: L('Aborrajado con Queso y Bocadillo', 'Aborrajado with Cheese & Bocadillo', 'チーズとボカディージョのアボラハード', 'Aborrajado com Queijo e Bocadillo'),
         img: 'img/platos/aborrajado.jpg',
+        imgPosition: '45% 50%',
         desc: L(
           'Plátano maduro relleno de queso y bocadillo (dulce de guayaba), cubierto con una ligera masa y frito.',
           'Ripe plantain stuffed with cheese and bocadillo (Colombian guava paste), lightly battered and fried.',
@@ -149,122 +150,6 @@ const MENU_CATEGORIES = [
           'Banana-da-terra madura recheada com queijo e bocadillo (goiabada colombiana), empanada levemente e frita.'
         ),
         precio: 500,
-      },
-    ],
-  },
-  {
-    id: 'postres',
-    icon: 'postre',
-    nombre: L('Postres y Obleas', 'Desserts & Obleas', 'デザート＆オブレア', 'Sobremesas e Obleas'),
-    subt: L(
-      'Dulces colombianos tradicionales',
-      'Traditional Colombian sweets',
-      'コロンビアの伝統的なスイーツ',
-      'Doces tradicionais colombianos'
-    ),
-    items: [
-      {
-        sku: 'ensalada-frutas',
-        nombre: L('Ensalada de Frutas Premium', 'Premium Fruit Salad', 'プレミアムフルーツサラダ', 'Salada de Frutas Premium'),
-        img: 'img/platos/ensalada-frutas.jpg',
-        desc: L(
-          'Frutas de temporada, queso, crema, menta, oblea (galleta de barquillo) y almíbar casero.',
-          'Seasonal fruit, cheese, cream, mint, oblea (thin wafer) and homemade syrup.',
-          '旬のフルーツ、チーズ、クリーム、ミント、オブレア（薄いウエハース）、自家製シロップを合わせたコロンビア風フルーツサラダ。',
-          'Frutas da estação, queijo, creme, hortelã, oblea (bolacha fina) e calda caseira.'
-        ),
-        precio: 1850,
-      },
-      {
-        sku: 'oblea-traditional',
-        nombre: L('Oblea Traditional', 'Traditional Oblea', 'オブレア・トラディショナル', 'Oblea Tradicional'),
-        subt: L(null, 'With arequipe, cream & cheese', 'アレキペ+生クリーム+チーズ', 'Com arequipe, creme e queijo'),
-        img: 'img/platos/oblea-traditional.jpg',
-        desc: L(
-          'Oblea (galleta fina tipo barquillo) colombiana con arequipe (dulce de leche colombiano), crema fresca y queso.',
-          'Colombian oblea (thin wafer) with arequipe (Colombian dulce de leche), fresh cream and cheese.',
-          'コロンビアの薄いウエハース「オブレア」に、アレキペ（コロンビア風ミルクキャラメル）、生クリーム、チーズをのせました。',
-          'Oblea (bolacha fina) colombiana com arequipe (doce de leite colombiano), creme fresco e queijo.'
-        ),
-        precio: 950,
-      },
-      {
-        sku: 'oblea-berry',
-        nombre: L('Berry Oblea', 'Berry Oblea', 'ベリーオブレア', 'Oblea de Frutas Vermelhas'),
-        img: 'img/platos/oblea-berry.jpg',
-        desc: L(
-          'Oblea con arequipe (dulce de leche colombiano), crema fresca, queso y mermelada de frutos rojos.',
-          'Oblea (thin wafer) with arequipe (Colombian dulce de leche), fresh cream, cheese and mixed berry jam.',
-          'オブレアに、アレキペ（ミルクキャラメル）、生クリーム、チーズ、ベリーミックスジャムをのせました。',
-          'Oblea com arequipe (doce de leite colombiano), creme fresco, queijo e geleia de frutas vermelhas.'
-        ),
-        precio: 950,
-      },
-      {
-        sku: 'oblea-special',
-        nombre: L('Boogaloo Special Oblea', 'Boogaloo Special Oblea', 'ブーガルー・スペシャルオブレア', 'Oblea Especial Boogaloo'),
-        img: 'img/platos/oblea-special.jpg',
-        desc: L(
-          'Arequipe (dulce de leche colombiano), crema fresca, queso, mermelada de frutos rojos y banano o fresa.',
-          'Arequipe (Colombian dulce de leche), fresh cream, cheese, mixed berry jam and banana or strawberry.',
-          'アレキペ（ミルクキャラメル）、生クリーム、チーズ、ベリーミックスジャム、バナナまたはいちごをのせた特製オブレア。',
-          'Arequipe (doce de leite colombiano), creme fresco, queijo, geleia de frutas vermelhas e banana ou morango.'
-        ),
-        precio: 950,
-      },
-      {
-        sku: 'postre-alfajor',
-        nombre: L('Alfajor de Arequipe', 'Arequipe Alfajor', 'アレキペのアルファホール', 'Alfajor de Arequipe'),
-        subt: L(
-          'Postre ocasional de temporada',
-          'Seasonal occasional dessert',
-          '季節のデザート',
-          'Sobremesa sazonal ocasional'
-        ),
-        img: 'img/platos/postre-alfajor.jpg',
-        desc: L(
-          'Alfajor (dos galletas rellenas de dulce) relleno de arequipe, el dulce de leche colombiano.',
-          'Alfajor (two cookies filled with a sweet spread) filled with arequipe, Colombian dulce de leche.',
-          'アレキペ（コロンビア風ミルクキャラメル）を挟んだアルファホール。',
-          'Alfajor (duas bolachas recheadas) recheado com arequipe, o doce de leite colombiano.'
-        ),
-        precio: 600,
-      },
-      {
-        sku: 'postre-brownie',
-        nombre: L('Brownie de Arequipe', 'Arequipe Brownie', 'アレキペのブラウニー', 'Brownie de Arequipe'),
-        subt: L(
-          'Postre ocasional de temporada',
-          'Seasonal occasional dessert',
-          '季節のデザート',
-          'Sobremesa sazonal ocasional'
-        ),
-        img: 'img/platos/postre-brownie.jpg',
-        desc: L(
-          'Brownie de chocolate relleno con arequipe, el dulce de leche colombiano.',
-          'Chocolate brownie filled with arequipe, Colombian dulce de leche.',
-          'アレキペ（コロンビア風ミルクキャラメル）入りのチョコレートブラウニー。',
-          'Brownie de chocolate recheado com arequipe, o doce de leite colombiano.'
-        ),
-        precio: 600,
-      },
-      {
-        sku: 'postre-milhojas',
-        nombre: L('Milhojas de Arequipe', 'Arequipe Milhojas', 'アレキペのミルオハス', 'Milhojas de Arequipe'),
-        subt: L(
-          'Postre ocasional de temporada',
-          'Seasonal occasional dessert',
-          '季節のデザート',
-          'Sobremesa sazonal ocasional'
-        ),
-        img: 'img/platos/postre-milhojas.jpg',
-        desc: L(
-          'Hojaldre en capas relleno de arequipe, el dulce de leche colombiano.',
-          'Layered puff pastry filled with arequipe, Colombian dulce de leche.',
-          'アレキペ（コロンビア風ミルクキャラメル）を重ねたミルオハス（パイ生地のミルフィーユ）。',
-          'Massa folhada em camadas recheada com arequipe, o doce de leite colombiano.'
-        ),
-        precio: 600,
       },
     ],
   },
@@ -477,6 +362,122 @@ const MENU_CATEGORIES = [
     extras: [
       { sku: 'extra-queso', nombre: L('Extra Queso', 'Extra Cheese', 'チーズ追加', 'Queijo Extra'), precio: 100 },
       { sku: 'extra-helado-vainilla', nombre: L('Extra Helado de Vainilla', 'Extra Vanilla Ice Cream', 'バニラアイス追加', 'Sorvete de Baunilha Extra'), precio: 150 },
+    ],
+  },
+  {
+    id: 'postres',
+    icon: 'postre',
+    nombre: L('Postres y Obleas', 'Desserts & Obleas', 'デザート＆オブレア', 'Sobremesas e Obleas'),
+    subt: L(
+      'Dulces colombianos tradicionales',
+      'Traditional Colombian sweets',
+      'コロンビアの伝統的なスイーツ',
+      'Doces tradicionais colombianos'
+    ),
+    items: [
+      {
+        sku: 'ensalada-frutas',
+        nombre: L('Ensalada de Frutas Premium', 'Premium Fruit Salad', 'プレミアムフルーツサラダ', 'Salada de Frutas Premium'),
+        img: 'img/platos/ensalada-frutas.jpg',
+        desc: L(
+          'Frutas de temporada, queso, crema, menta, oblea (galleta de barquillo) y almíbar casero.',
+          'Seasonal fruit, cheese, cream, mint, oblea (thin wafer) and homemade syrup.',
+          '旬のフルーツ、チーズ、クリーム、ミント、オブレア（薄いウエハース）、自家製シロップを合わせたコロンビア風フルーツサラダ。',
+          'Frutas da estação, queijo, creme, hortelã, oblea (bolacha fina) e calda caseira.'
+        ),
+        precio: 1850,
+      },
+      {
+        sku: 'oblea-traditional',
+        nombre: L('Oblea Traditional', 'Traditional Oblea', 'オブレア・トラディショナル', 'Oblea Tradicional'),
+        subt: L(null, 'With arequipe, cream & cheese', 'アレキペ+生クリーム+チーズ', 'Com arequipe, creme e queijo'),
+        img: 'img/platos/oblea-traditional.jpg',
+        desc: L(
+          'Oblea (galleta fina tipo barquillo) colombiana con arequipe (dulce de leche colombiano), crema fresca y queso.',
+          'Colombian oblea (thin wafer) with arequipe (Colombian dulce de leche), fresh cream and cheese.',
+          'コロンビアの薄いウエハース「オブレア」に、アレキペ（コロンビア風ミルクキャラメル）、生クリーム、チーズをのせました。',
+          'Oblea (bolacha fina) colombiana com arequipe (doce de leite colombiano), creme fresco e queijo.'
+        ),
+        precio: 950,
+      },
+      {
+        sku: 'oblea-berry',
+        nombre: L('Berry Oblea', 'Berry Oblea', 'ベリーオブレア', 'Oblea de Frutas Vermelhas'),
+        img: 'img/platos/oblea-berry.jpg',
+        desc: L(
+          'Oblea con arequipe (dulce de leche colombiano), crema fresca, queso y mermelada de frutos rojos.',
+          'Oblea (thin wafer) with arequipe (Colombian dulce de leche), fresh cream, cheese and mixed berry jam.',
+          'オブレアに、アレキペ（ミルクキャラメル）、生クリーム、チーズ、ベリーミックスジャムをのせました。',
+          'Oblea com arequipe (doce de leite colombiano), creme fresco, queijo e geleia de frutas vermelhas.'
+        ),
+        precio: 950,
+      },
+      {
+        sku: 'oblea-special',
+        nombre: L('Boogaloo Special Oblea', 'Boogaloo Special Oblea', 'ブーガルー・スペシャルオブレア', 'Oblea Especial Boogaloo'),
+        img: 'img/platos/oblea-special.jpg',
+        desc: L(
+          'Arequipe (dulce de leche colombiano), crema fresca, queso, mermelada de frutos rojos y banano o fresa.',
+          'Arequipe (Colombian dulce de leche), fresh cream, cheese, mixed berry jam and banana or strawberry.',
+          'アレキペ（ミルクキャラメル）、生クリーム、チーズ、ベリーミックスジャム、バナナまたはいちごをのせた特製オブレア。',
+          'Arequipe (doce de leite colombiano), creme fresco, queijo, geleia de frutas vermelhas e banana ou morango.'
+        ),
+        precio: 950,
+      },
+      {
+        sku: 'postre-alfajor',
+        nombre: L('Alfajor de Arequipe', 'Arequipe Alfajor', 'アレキペのアルファホール', 'Alfajor de Arequipe'),
+        subt: L(
+          'Postre ocasional de temporada',
+          'Seasonal occasional dessert',
+          '季節のデザート',
+          'Sobremesa sazonal ocasional'
+        ),
+        img: 'img/platos/postre-alfajor.jpg',
+        desc: L(
+          'Alfajor (dos galletas rellenas de dulce) relleno de arequipe, el dulce de leche colombiano.',
+          'Alfajor (two cookies filled with a sweet spread) filled with arequipe, Colombian dulce de leche.',
+          'アレキペ（コロンビア風ミルクキャラメル）を挟んだアルファホール。',
+          'Alfajor (duas bolachas recheadas) recheado com arequipe, o doce de leite colombiano.'
+        ),
+        precio: 600,
+      },
+      {
+        sku: 'postre-brownie',
+        nombre: L('Brownie de Arequipe', 'Arequipe Brownie', 'アレキペのブラウニー', 'Brownie de Arequipe'),
+        subt: L(
+          'Postre ocasional de temporada',
+          'Seasonal occasional dessert',
+          '季節のデザート',
+          'Sobremesa sazonal ocasional'
+        ),
+        img: 'img/platos/postre-brownie.jpg',
+        desc: L(
+          'Brownie de chocolate relleno con arequipe, el dulce de leche colombiano.',
+          'Chocolate brownie filled with arequipe, Colombian dulce de leche.',
+          'アレキペ（コロンビア風ミルクキャラメル）入りのチョコレートブラウニー。',
+          'Brownie de chocolate recheado com arequipe, o doce de leite colombiano.'
+        ),
+        precio: 600,
+      },
+      {
+        sku: 'postre-milhojas',
+        nombre: L('Milhojas de Arequipe', 'Arequipe Milhojas', 'アレキペのミルオハス', 'Milhojas de Arequipe'),
+        subt: L(
+          'Postre ocasional de temporada',
+          'Seasonal occasional dessert',
+          '季節のデザート',
+          'Sobremesa sazonal ocasional'
+        ),
+        img: 'img/platos/postre-milhojas.jpg',
+        desc: L(
+          'Hojaldre en capas relleno de arequipe, el dulce de leche colombiano.',
+          'Layered puff pastry filled with arequipe, Colombian dulce de leche.',
+          'アレキペ（コロンビア風ミルクキャラメル）を重ねたミルオハス（パイ生地のミルフィーユ）。',
+          'Massa folhada em camadas recheada com arequipe, o doce de leite colombiano.'
+        ),
+        precio: 600,
+      },
     ],
   },
 ];
