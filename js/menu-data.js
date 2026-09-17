@@ -166,6 +166,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'ensalada-frutas',
         nombre: L('Ensalada de Frutas Premium', 'Premium Fruit Salad', 'プレミアムフルーツサラダ', 'Salada de Frutas Premium'),
+        img: 'img/platos/ensalada-frutas.jpg',
         desc: L(
           'Frutas de temporada, queso, crema, menta, oblea (galleta de barquillo) y almíbar casero.',
           'Seasonal fruit, cheese, cream, mint, oblea (thin wafer) and homemade syrup.',
@@ -178,6 +179,7 @@ const MENU_CATEGORIES = [
         sku: 'oblea-traditional',
         nombre: L('Oblea Traditional', 'Traditional Oblea', 'オブレア・トラディショナル', 'Oblea Tradicional'),
         subt: L(null, 'With arequipe, cream & cheese', 'アレキペ+生クリーム+チーズ', 'Com arequipe, creme e queijo'),
+        img: 'img/platos/oblea-traditional.jpg',
         desc: L(
           'Oblea (galleta fina tipo barquillo) colombiana con arequipe (dulce de leche colombiano), crema fresca y queso.',
           'Colombian oblea (thin wafer) with arequipe (Colombian dulce de leche), fresh cream and cheese.',
@@ -189,6 +191,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'oblea-berry',
         nombre: L('Berry Oblea', 'Berry Oblea', 'ベリーオブレア', 'Oblea de Frutas Vermelhas'),
+        img: 'img/platos/oblea-berry.jpg',
         desc: L(
           'Oblea con arequipe (dulce de leche colombiano), crema fresca, queso y mermelada de frutos rojos.',
           'Oblea (thin wafer) with arequipe (Colombian dulce de leche), fresh cream, cheese and mixed berry jam.',
@@ -200,6 +203,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'oblea-special',
         nombre: L('Boogaloo Special Oblea', 'Boogaloo Special Oblea', 'ブーガルー・スペシャルオブレア', 'Oblea Especial Boogaloo'),
+        img: 'img/platos/oblea-special.jpg',
         desc: L(
           'Arequipe (dulce de leche colombiano), crema fresca, queso, mermelada de frutos rojos y banano o fresa.',
           'Arequipe (Colombian dulce de leche), fresh cream, cheese, mixed berry jam and banana or strawberry.',
@@ -217,6 +221,7 @@ const MENU_CATEGORIES = [
           '季節のデザート',
           'Sobremesa sazonal ocasional'
         ),
+        img: 'img/platos/postre-alfajor.jpg',
         desc: L(
           'Alfajor (dos galletas rellenas de dulce) relleno de arequipe, el dulce de leche colombiano.',
           'Alfajor (two cookies filled with a sweet spread) filled with arequipe, Colombian dulce de leche.',
@@ -234,6 +239,7 @@ const MENU_CATEGORIES = [
           '季節のデザート',
           'Sobremesa sazonal ocasional'
         ),
+        img: 'img/platos/postre-brownie.jpg',
         desc: L(
           'Brownie de chocolate relleno con arequipe, el dulce de leche colombiano.',
           'Chocolate brownie filled with arequipe, Colombian dulce de leche.',
@@ -251,6 +257,7 @@ const MENU_CATEGORIES = [
           '季節のデザート',
           'Sobremesa sazonal ocasional'
         ),
+        img: 'img/platos/postre-milhojas.jpg',
         desc: L(
           'Hojaldre en capas relleno de arequipe, el dulce de leche colombiano.',
           'Layered puff pastry filled with arequipe, Colombian dulce de leche.',
@@ -269,84 +276,108 @@ const MENU_CATEGORIES = [
     items: [
       {
         sku: 'jugo-mango-agua-12',
-        sizeGroup: 'jugo-mango-agua',
+        styleGroup: 'jugo-mango',
+        style: 'Agua',
+        nombreBase: L('Jugo de Mango', 'Mango Juice', 'マンゴージュース', 'Suco de Manga'),
         nombre: L('Jugo de Mango (Agua) 12oz', 'Mango Juice (Water) 12oz', 'マンゴージュース（水）12oz', 'Suco de Manga (Água) 12oz'),
         img: 'img/platos/jugo-mango-agua.jpg',
         precio: 500,
       },
       {
         sku: 'jugo-mango-agua-16',
-        sizeGroup: 'jugo-mango-agua',
+        styleGroup: 'jugo-mango',
+        style: 'Agua',
+        nombreBase: L('Jugo de Mango', 'Mango Juice', 'マンゴージュース', 'Suco de Manga'),
         nombre: L('Jugo de Mango (Agua) 16oz', 'Mango Juice (Water) 16oz', 'マンゴージュース（水）16oz', 'Suco de Manga (Água) 16oz'),
         img: 'img/platos/jugo-mango-agua.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-mango-leche-12',
-        sizeGroup: 'jugo-mango-leche',
+        styleGroup: 'jugo-mango',
+        style: 'Leche',
+        nombreBase: L('Jugo de Mango', 'Mango Juice', 'マンゴージュース', 'Suco de Manga'),
         nombre: L('Jugo de Mango (Leche) 12oz', 'Mango Juice (Milk) 12oz', 'マンゴージュース（ミルク）12oz', 'Suco de Manga (Leite) 12oz'),
         img: 'img/platos/jugo-mango-leche.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-mango-leche-16',
-        sizeGroup: 'jugo-mango-leche',
+        styleGroup: 'jugo-mango',
+        style: 'Leche',
+        nombreBase: L('Jugo de Mango', 'Mango Juice', 'マンゴージュース', 'Suco de Manga'),
         nombre: L('Jugo de Mango (Leche) 16oz', 'Mango Juice (Milk) 16oz', 'マンゴージュース（ミルク）16oz', 'Suco de Manga (Leite) 16oz'),
         img: 'img/platos/jugo-mango-leche.jpg',
         precio: 700,
       },
       {
         sku: 'jugo-fresa-agua-12',
-        sizeGroup: 'jugo-fresa-agua',
+        styleGroup: 'jugo-fresa',
+        style: 'Agua',
+        nombreBase: L('Jugo de Fresa', 'Strawberry Juice', 'いちごジュース', 'Suco de Morango'),
         nombre: L('Jugo de Fresa (Agua) 12oz', 'Strawberry Juice (Water) 12oz', 'いちごジュース（水）12oz', 'Suco de Morango (Água) 12oz'),
         img: 'img/platos/jugo-fresa-agua.jpg',
         precio: 500,
       },
       {
         sku: 'jugo-fresa-agua-16',
-        sizeGroup: 'jugo-fresa-agua',
+        styleGroup: 'jugo-fresa',
+        style: 'Agua',
+        nombreBase: L('Jugo de Fresa', 'Strawberry Juice', 'いちごジュース', 'Suco de Morango'),
         nombre: L('Jugo de Fresa (Agua) 16oz', 'Strawberry Juice (Water) 16oz', 'いちごジュース（水）16oz', 'Suco de Morango (Água) 16oz'),
         img: 'img/platos/jugo-fresa-agua.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-fresa-leche-12',
-        sizeGroup: 'jugo-fresa-leche',
+        styleGroup: 'jugo-fresa',
+        style: 'Leche',
+        nombreBase: L('Jugo de Fresa', 'Strawberry Juice', 'いちごジュース', 'Suco de Morango'),
         nombre: L('Jugo de Fresa (Leche) 12oz', 'Strawberry Juice (Milk) 12oz', 'いちごジュース（ミルク）12oz', 'Suco de Morango (Leite) 12oz'),
         img: 'img/platos/jugo-fresa-leche.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-fresa-leche-16',
-        sizeGroup: 'jugo-fresa-leche',
+        styleGroup: 'jugo-fresa',
+        style: 'Leche',
+        nombreBase: L('Jugo de Fresa', 'Strawberry Juice', 'いちごジュース', 'Suco de Morango'),
         nombre: L('Jugo de Fresa (Leche) 16oz', 'Strawberry Juice (Milk) 16oz', 'いちごジュース（ミルク）16oz', 'Suco de Morango (Leite) 16oz'),
         img: 'img/platos/jugo-fresa-leche.jpg',
         precio: 700,
       },
       {
         sku: 'jugo-maracuya-agua-12',
-        sizeGroup: 'jugo-maracuya-agua',
+        styleGroup: 'jugo-maracuya',
+        style: 'Agua',
+        nombreBase: L('Jugo de Maracuyá', 'Passion Fruit Juice', 'パッションフルーツジュース', 'Suco de Maracujá'),
         nombre: L('Jugo de Maracuyá (Agua) 12oz', 'Passion Fruit Juice (Water) 12oz', 'パッションフルーツジュース（水）12oz', 'Suco de Maracujá (Água) 12oz'),
         img: 'img/platos/jugo-maracuya-agua.jpg',
         precio: 500,
       },
       {
         sku: 'jugo-maracuya-agua-16',
-        sizeGroup: 'jugo-maracuya-agua',
+        styleGroup: 'jugo-maracuya',
+        style: 'Agua',
+        nombreBase: L('Jugo de Maracuyá', 'Passion Fruit Juice', 'パッションフルーツジュース', 'Suco de Maracujá'),
         nombre: L('Jugo de Maracuyá (Agua) 16oz', 'Passion Fruit Juice (Water) 16oz', 'パッションフルーツジュース（水）16oz', 'Suco de Maracujá (Água) 16oz'),
         img: 'img/platos/jugo-maracuya-agua.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-maracuya-leche-12',
-        sizeGroup: 'jugo-maracuya-leche',
+        styleGroup: 'jugo-maracuya',
+        style: 'Leche',
+        nombreBase: L('Jugo de Maracuyá', 'Passion Fruit Juice', 'パッションフルーツジュース', 'Suco de Maracujá'),
         nombre: L('Jugo de Maracuyá (Leche) 12oz', 'Passion Fruit Juice (Milk) 12oz', 'パッションフルーツジュース（ミルク）12oz', 'Suco de Maracujá (Leite) 12oz'),
         img: 'img/platos/jugo-maracuya-leche.jpg',
         precio: 600,
       },
       {
         sku: 'jugo-maracuya-leche-16',
-        sizeGroup: 'jugo-maracuya-leche',
+        styleGroup: 'jugo-maracuya',
+        style: 'Leche',
+        nombreBase: L('Jugo de Maracuyá', 'Passion Fruit Juice', 'パッションフルーツジュース', 'Suco de Maracujá'),
         nombre: L('Jugo de Maracuyá (Leche) 16oz', 'Passion Fruit Juice (Milk) 16oz', 'パッションフルーツジュース（ミルク）16oz', 'Suco de Maracujá (Leite) 16oz'),
         img: 'img/platos/jugo-maracuya-leche.jpg',
         precio: 700,
@@ -420,6 +451,7 @@ const MENU_CATEGORIES = [
       {
         sku: 'ensalada-verde',
         nombre: L('Ensalada Verde', 'Green Salad', 'グリーンサラダ', 'Salada Verde'),
+        img: 'img/platos/ensalada-verde.jpg',
         desc: L(
           'Mezcla de lechugas, tomate, cebolla encurtida y vegetales frescos.',
           'Mixed lettuce, tomato, pickled onion and fresh vegetables.',
@@ -431,12 +463,14 @@ const MENU_CATEGORIES = [
       {
         sku: 'guacamole',
         nombre: L('Guacamole Casero', 'Homemade Guacamole', '自家製ワカモレ', 'Guacamole Caseiro'),
+        img: 'img/platos/guacamole.jpg',
         precio: 300,
       },
       {
         sku: 'caldo-costilla',
         nombre: L('Caldo de Costilla', 'Beef Rib Soup', 'コロンビア風牛カルビスープ', 'Sopa de Costela'),
         subt: L(null, 'Traditional Colombian soup', '伝統的なコロンビア料理', 'Sopa tradicional colombiana'),
+        img: 'img/platos/caldo-costilla.jpg',
         precio: 300,
       },
     ],

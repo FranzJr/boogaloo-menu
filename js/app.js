@@ -37,24 +37,41 @@ if (!sessionStorage.getItem(GATE_KEY)) {
 
 // ---------------- Render del menú ----------------
 
-// Junta variantes de tamaño (mismo sizeGroup) en una sola tarjeta con
-// selector de tamaño, en vez de una tarjeta repetida por cada onza.
-function groupItemsBySize(items) {
+// Junta variantes en una sola tarjeta en vez de una tarjeta repetida por cada
+// combinación. Dos niveles de agrupación:
+// - sizeGroup: mismo producto en varios tamaños (ej. Capuccino 8oz/12oz) -> selector de tamaño.
+// - styleGroup: además tiene una variante de "estilo" (Agua/Leche, ej. Jugo de Mango) ->
+//   selector de estilo + selector de tamaño dentro del estilo elegido.
+function groupItemsForDisplay(items) {
   const groups = [];
-  const byKey = {};
+  const bySize = {};
+  const byStyle = {};
   (items || []).forEach((it) => {
-    if (!it.sizeGroup) {
-      groups.push({ single: true, item: it });
+    if (it.styleGroup) {
+      if (!byStyle[it.styleGroup]) {
+        byStyle[it.styleGroup] = { kind: 'style', key: it.styleGroup, byStyleName: {}, styleOrder: [] };
+        groups.push(byStyle[it.styleGroup]);
+      }
+      const g = byStyle[it.styleGroup];
+      if (!g.byStyleName[it.style]) {
+        g.byStyleName[it.style] = [];
+        g.styleOrder.push(it.style);
+      }
+      g.byStyleName[it.style].push(it);
       return;
     }
-    if (!byKey[it.sizeGroup]) {
-      byKey[it.sizeGroup] = { single: false, key: it.sizeGroup, variants: [] };
-      groups.push(byKey[it.sizeGroup]);
+    if (!it.sizeGroup) {
+      groups.push({ kind: 'single', item: it });
+      return;
     }
-    byKey[it.sizeGroup].variants.push(it);
+    if (!bySize[it.sizeGroup]) {
+      bySize[it.sizeGroup] = { kind: 'size', key: it.sizeGroup, variants: [] };
+      groups.push(bySize[it.sizeGroup]);
+    }
+    bySize[it.sizeGroup].variants.push(it);
   });
   // Si un sizeGroup terminó con un solo item, se muestra simple (sin pills).
-  return groups.map((g) => (!g.single && g.variants.length === 1 ? { single: true, item: g.variants[0] } : g));
+  return groups.map((g) => (g.kind === 'size' && g.variants.length === 1 ? { kind: 'single', item: g.variants[0] } : g));
 }
 
 // Le quita el sufijo de onzas al nombre para mostrar el nombre "base" en la
@@ -103,9 +120,9 @@ function renderMenu() {
     section.className = 'category-section';
     section.id = cat.id;
 
-    const itemsHtml = groupItemsBySize(cat.items)
+    const itemsHtml = groupItemsForDisplay(cat.items)
       .map((g) => {
-        if (g.single) {
+        if (g.kind === 'single') {
           const it = g.item;
           const nombre = mi(it.nombre);
           const subt = mi(it.subt);
@@ -130,7 +147,66 @@ function renderMenu() {
       </article>`;
         }
 
-        // Tarjeta agrupada por tamaño (jugos 12/16oz, café 8/12oz...)
+        if (g.kind === 'style') {
+          // Tarjeta con selector de estilo (Agua/Leche) + selector de tamaño dentro
+          // del estilo elegido (ej. Jugo de Mango: Agua/Leche × 12oz/16oz).
+          const styleNames = g.styleOrder;
+          const stylesData = {};
+          styleNames.forEach((styleName) => {
+            stylesData[styleName] = g.byStyleName[styleName].map((v) => ({
+              sku: v.sku,
+              precio: v.precio,
+              label: sizeLabel(mi(v.nombre)),
+              out: isAgotado(v.sku),
+            }));
+          });
+          const first = g.byStyleName[styleNames[0]][0];
+          const nombreBase = mi(first.nombreBase);
+          const photo = first.img ? `<img class="item-photo" src="${first.img}" alt="" loading="lazy" />` : '';
+
+          const allOut = styleNames.every((s) => stylesData[s].every((v) => v.out));
+          // Arranca en el primer estilo que tenga al menos un tamaño disponible.
+          const initialStyle = styleNames.find((s) => stylesData[s].some((v) => !v.out)) || styleNames[0];
+          const initialVariants = stylesData[initialStyle];
+          const availableInitial = initialVariants.filter((v) => !v.out);
+          const initial = allOut ? initialVariants[0] : availableInitial[0];
+
+          const styleLabel = (s) => I18n.t(s === 'Agua' ? 'styleAgua' : 'styleLeche');
+          const stylePills = styleNames
+            .map((s) => `
+          <button type="button" class="pill-option${s === initialStyle ? ' selected' : ''}" data-style="${s}">${styleLabel(s)}</button>`)
+            .join('');
+
+          const sizePillsHtml = (variants, allOutInStyle, initialSku) =>
+            variants
+              .map((v) => {
+                const selected = !allOutInStyle && v.sku === initialSku;
+                const label = v.label + (v.out ? ' · ' + I18n.t('outOfStockBtn') : '');
+                return `
+          <button type="button" class="pill-option${selected ? ' selected' : ''}${v.out ? ' agotado' : ''}" data-size-sku="${v.sku}" data-price="${v.precio}" ${v.out ? 'disabled' : ''}>${label}</button>`;
+              })
+              .join('');
+
+          const stylesJson = JSON.stringify(stylesData).replace(/'/g, '&#39;');
+
+          return `
+      <article class="item-card${first.img ? ' has-photo' : ''} style-group${allOut ? ' out-of-stock' : ''}" data-group="${g.key}" data-styles='${stylesJson}'>
+        ${photo}
+        <div class="item-top">
+          <div class="item-info">
+            <h3>${nombreBase}</h3>
+          </div>
+        </div>
+        <div class="pill-row style-row" data-style-row>${stylePills}</div>
+        <div class="pill-row size-row" data-size-row>${sizePillsHtml(initialVariants, allOut, initial.sku)}</div>
+        <div class="item-footer">
+          <span class="item-price">${fmt(initial.precio)}</span>
+          <button class="add-btn" data-add-sku="${initial.sku}" type="button" ${allOut ? 'disabled' : ''}>${allOut ? I18n.t('outOfStockBtn') : I18n.t('addBtn')}</button>
+        </div>
+      </article>`;
+        }
+
+        // Tarjeta agrupada por tamaño (café 8/12oz, guanábana 12/16oz...)
         const variants = g.variants;
         const first = variants[0];
         const availableVariants = variants.filter((v) => !isAgotado(v.sku));
@@ -216,6 +292,35 @@ function renderMenu() {
 }
 
 document.getElementById('menu-content').addEventListener('click', (e) => {
+  const stylePill = e.target.closest('[data-style]');
+  if (stylePill) {
+    const card = stylePill.closest('.item-card');
+    card.querySelectorAll('[data-style]').forEach((p) => p.classList.remove('selected'));
+    stylePill.classList.add('selected');
+
+    const stylesData = JSON.parse(card.dataset.styles);
+    const variants = stylesData[stylePill.dataset.style];
+    const available = variants.filter((v) => !v.out);
+    const allOut = available.length === 0;
+    const initial = allOut ? variants[0] : available[0];
+
+    const sizeRow = card.querySelector('[data-size-row]');
+    sizeRow.innerHTML = variants
+      .map((v) => {
+        const selected = !allOut && v.sku === initial.sku;
+        const label = v.label + (v.out ? ' · ' + I18n.t('outOfStockBtn') : '');
+        return `<button type="button" class="pill-option${selected ? ' selected' : ''}${v.out ? ' agotado' : ''}" data-size-sku="${v.sku}" data-price="${v.precio}" ${v.out ? 'disabled' : ''}>${label}</button>`;
+      })
+      .join('');
+
+    card.querySelector('.item-price').textContent = fmt(initial.precio);
+    const addBtn = card.querySelector('[data-add-sku]');
+    addBtn.dataset.addSku = initial.sku;
+    addBtn.disabled = allOut;
+    addBtn.textContent = allOut ? I18n.t('outOfStockBtn') : I18n.t('addBtn');
+    return;
+  }
+
   const sizePill = e.target.closest('[data-size-sku]');
   if (sizePill) {
     const card = sizePill.closest('.item-card');

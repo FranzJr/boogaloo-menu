@@ -356,7 +356,7 @@ function openTurnoModal(turnoId) {
     if (!identity.esAdmin && t.esPropio) {
       if (t.Estado === 'Asignado') {
         body += `<button class="primary-btn" id="tn-modal-worked" type="button">${I18n.t('tnMarkWorked')}</button>`;
-        body += `<button class="ghost-btn" id="tn-modal-release" type="button" style="margin-top:8px;">${I18n.t('tnRelease')}</button>`;
+        body += `<p class="subt" style="margin-top:8px;">${I18n.t('tnReleaseAskAdminNote')}</p>`;
       } else if (t.Estado === 'Trabajado') {
         body += `<button class="ghost-btn" id="tn-modal-unworked" type="button">${I18n.t('tnMarkNotWorked')}</button>`;
       }
@@ -365,6 +365,11 @@ function openTurnoModal(turnoId) {
     if (identity.esAdmin) {
       if (t.Trabajado === 'Si' && t.Estado !== 'Confirmado') {
         body += `<button class="primary-btn" id="tn-modal-confirm" type="button">${I18n.t('tnConfirmPay')}</button>`;
+      }
+      // Una vez asignado, solo el admin puede liberar el turno (el colaborador
+      // ya no puede quitarlo por su cuenta, tiene que pedírselo al admin).
+      if (t.Estado === 'Asignado') {
+        body += `<button class="ghost-btn" id="tn-modal-release" type="button" style="margin-top:8px;">${I18n.t('tnRelease')}</button>`;
       }
       body += `<button class="ghost-btn" id="tn-modal-delete" type="button" style="margin-top:8px;">${I18n.t('tnDelete')}</button>`;
     }
