@@ -197,6 +197,16 @@ function estadoLabel(estado) {
   return I18n.t('statusPendiente');
 }
 
+// Lista plana de <option> con todos los productos del menú (para el
+// selector de "agregar item" en un pedido existente y en el pedido nuevo).
+function menuItemOptionsHtml() {
+  return MENU_CATEGORIES.map((cat) =>
+    (cat.items || [])
+      .map((it) => `<option value="${it.sku}">${mi(it.nombre)} — ${fmt(it.precio)}</option>`)
+      .join('')
+  ).join('');
+}
+
 function renderOrders() {
   const list = document.getElementById('orders-list');
   let pedidos = ordersCache;
@@ -208,19 +218,30 @@ function renderOrders() {
     return;
   }
 
+  const opciones = menuItemOptionsHtml();
+
   list.innerHTML = pedidos
     .map((p) => {
       const fecha = new Date(p.Fecha).toLocaleString('ja-JP');
+      const pagado = p.Pagado === 'Si' || p.Pagado === true;
       const itemsHtml = p.Items.map(
-        (it) => `
+        (it, idx) => `
         <div class="order-item-row">
           <button class="check-toggle ${it.entregado ? 'done' : ''}" data-pedido="${p.ID}" data-sku="${it.sku}" data-entregado="${!it.entregado}" type="button" title="${I18n.t('markDeliveredTitle')}">${it.entregado ? '✓' : ''}</button>
           <span class="n">${it.cantidad}x ${it.nombre}</span>
           <span class="p">${fmt(it.subtotal)}</span>
+          ${pagado ? '' : `<button class="item-remove-btn" data-quitar-pedido="${p.ID}" data-item-index="${idx}" type="button" title="${I18n.t('removeItemBtn')}">×</button>`}
         </div>`
       ).join('');
 
-      const pagado = p.Pagado === 'Si' || p.Pagado === true;
+      const addItemHtml = pagado
+        ? ''
+        : `
+        <div class="order-add-item" data-order-add>
+          <select class="order-add-select">${opciones}</select>
+          <input type="number" class="order-add-qty" min="1" value="1" />
+          <button class="ghost-btn" data-agregar-item="${p.ID}" type="button">${I18n.t('addItemToOrderBtn')}</button>
+        </div>`;
 
       return `
       <div class="order-card">
@@ -232,6 +253,7 @@ function renderOrders() {
           <span class="status-tag ${estadoClass(p.Estado)}">${estadoLabel(p.Estado)}</span>
         </div>
         <div class="order-items">${itemsHtml}</div>
+        ${addItemHtml}
         <div class="order-card-footer">
           <span class="order-total">${I18n.t('totalPrefix')}${fmt(p.Total)}</span>
           <div class="order-actions">
@@ -250,6 +272,44 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
   const toggleBtn = e.target.closest('[data-pedido]');
   const pagarBtn = e.target.closest('[data-pagar]');
   const eliminarBtn = e.target.closest('[data-eliminar]');
+  const quitarBtn = e.target.closest('[data-quitar-pedido]');
+  const agregarBtn = e.target.closest('[data-agregar-item]');
+
+  if (quitarBtn) {
+    if (!confirm(I18n.t('confirmRemoveItem'))) return;
+    quitarBtn.disabled = true;
+    try {
+      await apiCall('quitarItemPedido', {
+        ...authParams(),
+        pedidoId: quitarBtn.dataset.quitarPedido,
+        itemIndex: quitarBtn.dataset.itemIndex,
+      });
+      await fetchOrders();
+    } catch (err) {
+      alert(I18n.t('couldNotUpdatePrefix') + err.message);
+      quitarBtn.disabled = false;
+    }
+    return;
+  }
+
+  if (agregarBtn) {
+    const card = agregarBtn.closest('[data-order-add]');
+    const sku = card.querySelector('.order-add-select').value;
+    const cantidad = Math.max(1, parseInt(card.querySelector('.order-add-qty').value, 10) || 1);
+    agregarBtn.disabled = true;
+    try {
+      await apiCall('agregarItems', {
+        ...authParams(),
+        pedidoId: agregarBtn.dataset.agregarItem,
+        items: [{ sku, cantidad }],
+      });
+      await fetchOrders();
+    } catch (err) {
+      alert(I18n.t('couldNotUpdatePrefix') + err.message);
+      agregarBtn.disabled = false;
+    }
+    return;
+  }
 
   if (toggleBtn) {
     toggleBtn.disabled = true;
@@ -299,6 +359,111 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
     }
   }
 });
+
+// ---------------- Nuevo pedido manual (mesa/cliente sin cuenta) ----------------
+// Crea un pedido nuevo e independiente -- nunca se agrega a un pedido
+// existente, así que dos clientes nunca terminan mezclados en el mismo pedido.
+
+let nuevoPedidoItems = []; // [{sku, cantidad}]
+
+function renderNewOrderModal() {
+  const body = document.getElementById('new-order-modal-body');
+  const itemsHtml = nuevoPedidoItems.length
+    ? nuevoPedidoItems
+        .map((it, idx) => {
+          const def = MENU_INDEX[it.sku];
+          return `
+        <div class="order-item-row">
+          <span class="n">${it.cantidad}x ${mi(def.nombre)}</span>
+          <span class="p">${fmt(def.precio * it.cantidad)}</span>
+          <button class="item-remove-btn" data-quitar-nuevo="${idx}" type="button" title="${I18n.t('removeItemBtn')}">×</button>
+        </div>`;
+        })
+        .join('')
+    : `<p class="subt">${I18n.t('newOrderNoItems')}</p>`;
+
+  const total = nuevoPedidoItems.reduce((s, it) => s + MENU_INDEX[it.sku].precio * it.cantidad, 0);
+
+  body.innerHTML = `
+    <h2>${I18n.t('newOrderTitle')}</h2>
+    <div class="form-error" id="new-order-error" style="display:none;"></div>
+    <div class="field"><label>${I18n.t('newOrderNameLabel')}</label><input id="new-order-nombre" type="text" /></div>
+    <div class="field"><label>${I18n.t('newOrderPhoneLabel')}</label><input id="new-order-telefono" type="text" /></div>
+    <div class="order-add-item" data-order-add>
+      <select class="order-add-select" id="new-order-select">${menuItemOptionsHtml()}</select>
+      <input type="number" class="order-add-qty" id="new-order-qty" min="1" value="1" />
+      <button class="ghost-btn" id="new-order-add-btn" type="button">${I18n.t('addItemToOrderBtn')}</button>
+    </div>
+    <div class="order-items" style="margin:10px 0;">${itemsHtml}</div>
+    <div class="order-total" style="margin-bottom:14px;">${I18n.t('totalPrefix')}${fmt(total)}</div>
+    <button class="primary-btn" id="new-order-submit-btn" type="button" style="width:100%;">${I18n.t('newOrderSubmitBtn')}</button>
+    <button class="link-btn" id="new-order-cancel-btn" type="button" style="width:100%; margin-top:8px;">${I18n.t('cancelBtn')}</button>
+  `;
+
+  document.getElementById('new-order-add-btn').addEventListener('click', () => {
+    const sku = document.getElementById('new-order-select').value;
+    const cantidad = Math.max(1, parseInt(document.getElementById('new-order-qty').value, 10) || 1);
+    const existing = nuevoPedidoItems.find((it) => it.sku === sku);
+    if (existing) existing.cantidad += cantidad;
+    else nuevoPedidoItems.push({ sku, cantidad });
+    renderNewOrderModal();
+  });
+
+  document.getElementById('new-order-cancel-btn').addEventListener('click', closeNewOrderModal);
+
+  document.getElementById('new-order-submit-btn').addEventListener('click', async () => {
+    const nombre = document.getElementById('new-order-nombre').value.trim();
+    const errorBox = document.getElementById('new-order-error');
+    if (!nombre) {
+      errorBox.textContent = I18n.t('newOrderNameRequired');
+      errorBox.style.display = 'block';
+      return;
+    }
+    if (!nuevoPedidoItems.length) {
+      errorBox.textContent = I18n.t('newOrderNoItems');
+      errorBox.style.display = 'block';
+      return;
+    }
+    errorBox.style.display = 'none';
+    const submitBtn = document.getElementById('new-order-submit-btn');
+    submitBtn.disabled = true;
+    try {
+      await apiCall('crearPedido', {
+        cliente: {
+          nombre,
+          telefono: document.getElementById('new-order-telefono').value.trim(),
+          tipo: 'invitado',
+        },
+        items: nuevoPedidoItems,
+      });
+      closeNewOrderModal();
+      await fetchOrders();
+    } catch (err) {
+      errorBox.textContent = I18n.t('couldNotUpdatePrefix') + err.message;
+      errorBox.style.display = 'block';
+      submitBtn.disabled = false;
+    }
+  });
+
+  body.querySelectorAll('[data-quitar-nuevo]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      nuevoPedidoItems.splice(parseInt(btn.dataset.quitarNuevo, 10), 1);
+      renderNewOrderModal();
+    });
+  });
+}
+
+function openNewOrderModal() {
+  nuevoPedidoItems = [];
+  renderNewOrderModal();
+  document.getElementById('new-order-modal').classList.add('open');
+}
+
+function closeNewOrderModal() {
+  document.getElementById('new-order-modal').classList.remove('open');
+}
+
+document.getElementById('new-order-btn').addEventListener('click', openNewOrderModal);
 
 // ---------------- Reservas ----------------
 
@@ -493,6 +658,7 @@ function applyStaticI18n() {
   document.querySelector('[data-filter="cobrados"]').textContent = I18n.t('filterPaid');
   document.querySelector('[data-filter="todos"]').textContent = I18n.t('filterAll');
   document.getElementById('refresh-btn').textContent = I18n.t('refreshBtn');
+  document.getElementById('new-order-btn').textContent = I18n.t('newOrderBtn');
   document.getElementById('admin-reservas-title').textContent = I18n.t('hubReservasBtn');
   document.getElementById('reservas-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
   document.getElementById('reservas-logout-btn').textContent = I18n.t('logoutBtn');

@@ -49,11 +49,19 @@
         <button data-filter="activos" class="active" type="button">En curso</button>
         <button data-filter="cobrados" type="button">Cobrados</button>
         <button data-filter="todos" type="button">Todos</button>
-        <button id="refresh-btn" type="button" style="margin-left:auto;">↻ Actualizar</button>
+        <button id="new-order-btn" type="button" style="margin-left:auto;"></button>
+        <button id="refresh-btn" type="button">↻ Actualizar</button>
       </div>
     </div>
 
     <div id="orders-list"></div>
+  </div>
+
+  <!-- Modal: crear pedido manual para un cliente (no se mezcla con otros pedidos) -->
+  <div class="modal-overlay" id="new-order-modal">
+    <div class="modal-box">
+      <div id="new-order-modal-body"></div>
+    </div>
   </div>
 
   <!-- Vista de reservas -->
@@ -87,6 +95,7 @@
   </div>
 
   <script src="js/i18n.js"></script>
+  <script src="js/menu-data.js"></script>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
   <script src="js/session.js"></script>

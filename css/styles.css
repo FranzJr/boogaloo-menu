@@ -956,6 +956,45 @@ footer.site-footer {
   color: #fff;
 }
 
+.item-remove-btn {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  color: var(--co-red);
+  font-size: 0.9rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.item-remove-btn:hover { background: var(--co-red); color: #fff; border-color: var(--co-red); }
+
+.order-add-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 0;
+  flex-wrap: wrap;
+}
+.order-add-select {
+  flex: 1;
+  min-width: 160px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  font-size: 0.85rem;
+}
+.order-add-qty {
+  width: 56px;
+  padding: 8px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
 .order-card-footer {
   display: flex;
   align-items: center;
