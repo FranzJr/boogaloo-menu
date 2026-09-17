@@ -68,6 +68,25 @@ function sizeLabel(nombre) {
   return m ? m[1].replace(/\s+/, '') : nombre;
 }
 
+// ---------------- Productos agotados ----------------
+// Set de skus agotados, cargado del backend. El primer render del menú pasa
+// sin esta info (todo se ve disponible) y se re-renderiza en cuanto llega,
+// igual que refreshTrackedOrders: no bloquea el primer pintado del menú.
+let agotadosSkus = new Set();
+
+async function fetchAgotados() {
+  try {
+    const res = await apiCall('listarAgotados', {});
+    agotadosSkus = new Set(res.skus || []);
+  } catch (err) {
+    // si falla, el menú se queda como si nada estuviera agotado
+  }
+}
+
+function isAgotado(sku) {
+  return agotadosSkus.has(sku);
+}
+
 function renderMenu() {
   const nav = document.getElementById('cat-nav');
   const content = document.getElementById('menu-content');
@@ -93,8 +112,9 @@ function renderMenu() {
           const desc = mi(it.desc);
           const aka = it.aka ? ` <span class="aka">"${it.aka}"</span>` : '';
           const photo = it.img ? `<img class="item-photo" src="${it.img}" alt="" loading="lazy" />` : '';
+          const outOfStock = isAgotado(it.sku);
           return `
-      <article class="item-card${it.img ? ' has-photo' : ''}">
+      <article class="item-card${it.img ? ' has-photo' : ''}${outOfStock ? ' out-of-stock' : ''}">
         ${photo}
         <div class="item-top">
           <div class="item-info">
@@ -105,7 +125,7 @@ function renderMenu() {
         ${desc ? `<p class="item-desc">${desc}</p>` : ''}
         <div class="item-footer">
           <span class="item-price">${fmt(it.precio)}</span>
-          <button class="add-btn" data-add-sku="${it.sku}" type="button">${I18n.t('addBtn')}</button>
+          <button class="add-btn" data-add-sku="${it.sku}" type="button" ${outOfStock ? 'disabled' : ''}>${outOfStock ? I18n.t('outOfStockBtn') : I18n.t('addBtn')}</button>
         </div>
       </article>`;
         }
@@ -113,6 +133,11 @@ function renderMenu() {
         // Tarjeta agrupada por tamaño (jugos 12/16oz, café 8/12oz...)
         const variants = g.variants;
         const first = variants[0];
+        const availableVariants = variants.filter((v) => !isAgotado(v.sku));
+        const allOut = availableVariants.length === 0;
+        // Si el tamaño seleccionado por defecto está agotado, arranca en el
+        // primero que sí haya (así el precio/botón inicial ya son válidos).
+        const initial = allOut ? first : availableVariants[0];
         const nombreBase = stripSizeSuffix(mi(first.nombre));
         const photo = first.img ? `<img class="item-photo" src="${first.img}" alt="" loading="lazy" />` : '';
         const esAmbasTemp = first.subt && first.subt.es === 'Caliente o frío';
@@ -120,10 +145,13 @@ function renderMenu() {
         const subtHtml = esSoloCaliente ? `<span class="subt">${mi(first.subt)}</span>` : '';
 
         const sizePills = variants
-          .map(
-            (v, idx) => `
-          <button type="button" class="pill-option${idx === 0 ? ' selected' : ''}" data-size-sku="${v.sku}" data-price="${v.precio}">${sizeLabel(mi(v.nombre))}</button>`
-          )
+          .map((v) => {
+            const out = isAgotado(v.sku);
+            const selected = !allOut && v.sku === initial.sku;
+            const label = sizeLabel(mi(v.nombre)) + (out ? ' · ' + I18n.t('outOfStockBtn') : '');
+            return `
+          <button type="button" class="pill-option${selected ? ' selected' : ''}${out ? ' agotado' : ''}" data-size-sku="${v.sku}" data-price="${v.precio}" ${out ? 'disabled' : ''}>${label}</button>`;
+          })
           .join('');
 
         // El valor real (data-temp) queda fijo en español -- es lo que ve
@@ -137,7 +165,7 @@ function renderMenu() {
           : '';
 
         return `
-      <article class="item-card${first.img ? ' has-photo' : ''} size-group" data-group="${g.key}">
+      <article class="item-card${first.img ? ' has-photo' : ''} size-group${allOut ? ' out-of-stock' : ''}" data-group="${g.key}">
         ${photo}
         <div class="item-top">
           <div class="item-info">
@@ -148,8 +176,8 @@ function renderMenu() {
         <div class="pill-row size-row" data-size-row>${sizePills}</div>
         ${tempPills}
         <div class="item-footer">
-          <span class="item-price">${fmt(first.precio)}</span>
-          <button class="add-btn" data-add-group="${g.key}" data-add-sku="${first.sku}" type="button">${I18n.t('addBtn')}</button>
+          <span class="item-price">${fmt(initial.precio)}</span>
+          <button class="add-btn" data-add-group="${g.key}" data-add-sku="${initial.sku}" type="button" ${allOut ? 'disabled' : ''}>${allOut ? I18n.t('outOfStockBtn') : I18n.t('addBtn')}</button>
         </div>
       </article>`;
       })
@@ -160,10 +188,11 @@ function renderMenu() {
           ${cat.extras
             .map((ex) => {
               const exNombre = mi(ex.nombre);
+              const out = isAgotado(ex.sku);
               return `
-            <span class="extra-chip">
+            <span class="extra-chip${out ? ' out-of-stock' : ''}">
               ${exNombre} · <span class="price">${fmt(ex.precio)}</span>
-              <button data-add-sku="${ex.sku}" type="button" aria-label="${I18n.t('addAria')} ${exNombre}">+</button>
+              <button data-add-sku="${ex.sku}" type="button" aria-label="${I18n.t('addAria')} ${exNombre}" ${out ? 'disabled' : ''}>${out ? '×' : '+'}</button>
             </span>`;
             })
             .join('')}
@@ -691,3 +720,5 @@ renderCartBadge();
 updateAccountPill();
 refreshTrackedOrders();
 setInterval(refreshTrackedOrders, 20000);
+fetchAgotados().then(renderMenu);
+setInterval(() => fetchAgotados().then(renderMenu), 60000);

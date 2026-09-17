@@ -385,6 +385,12 @@ main {
   font-weight: 600;
 }
 .add-btn:active { transform: scale(0.96); }
+.add-btn:disabled { background: var(--ink-soft); cursor: not-allowed; transform: none; }
+
+.item-card.out-of-stock { opacity: 0.6; }
+.pill-option.agotado { opacity: 0.55; text-decoration: line-through; cursor: not-allowed; }
+.extra-chip.out-of-stock { opacity: 0.55; }
+.extra-chip.out-of-stock button { background: var(--ink-soft); color: #fff; cursor: not-allowed; }
 
 /* Extras (toppings) como chips */
 .extras-row {
@@ -1015,6 +1021,20 @@ footer.site-footer {
 }
 .btn-paid { background: #e6f6ec; color: #1f9d55; }
 .btn-paid.done { background: #1f9d55; color: #fff; }
+
+.menu-admin-section { margin-bottom: 20px; }
+.menu-admin-section h3 { margin: 0 0 6px; font-size: 0.95rem; }
+.btn-agotado {
+  flex: none;
+  background: #f1f1f1;
+  color: var(--ink-soft);
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.btn-agotado.done { background: var(--co-red); color: #fff; }
 
 .empty-state {
   text-align: center;

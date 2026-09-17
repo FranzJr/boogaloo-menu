@@ -56,6 +56,7 @@ function hideAllViews() {
   document.getElementById('hub-view').style.display = 'none';
   document.getElementById('panel-view').style.display = 'none';
   document.getElementById('reservas-view').style.display = 'none';
+  document.getElementById('menu-view').style.display = 'none';
 }
 
 function showLogin(message) {
@@ -89,6 +90,13 @@ function showReservas() {
   document.getElementById('reservas-who-label').textContent = identityLabel();
   fetchReservas();
   fetchHorarioSemanal();
+}
+
+function showMenuAdmin() {
+  hideAllViews();
+  document.getElementById('menu-view').style.display = 'block';
+  document.getElementById('menu-who-label').textContent = identityLabel();
+  fetchAgotados();
 }
 
 document.getElementById('login-btn').addEventListener('click', doLogin);
@@ -145,14 +153,17 @@ function doLogout() {
 document.getElementById('hub-logout-btn').addEventListener('click', doLogout);
 document.getElementById('logout-btn').addEventListener('click', doLogout);
 document.getElementById('reservas-logout-btn').addEventListener('click', doLogout);
+document.getElementById('menu-logout-btn').addEventListener('click', doLogout);
 
 document.getElementById('hub-pedidos-btn').addEventListener('click', showPanel);
 document.getElementById('hub-turnos-btn').addEventListener('click', () => {
   window.location.href = 'turnos.html';
 });
 document.getElementById('hub-reservas-btn').addEventListener('click', showReservas);
+document.getElementById('hub-menu-btn').addEventListener('click', showMenuAdmin);
 document.getElementById('back-to-hub-btn').addEventListener('click', showHub);
 document.getElementById('reservas-back-to-hub-btn').addEventListener('click', showHub);
+document.getElementById('menu-back-to-hub-btn').addEventListener('click', showHub);
 
 document.getElementById('refresh-btn').addEventListener('click', fetchOrders);
 
@@ -465,6 +476,63 @@ function closeNewOrderModal() {
 
 document.getElementById('new-order-btn').addEventListener('click', openNewOrderModal);
 
+// ---------------- Menú (productos agotados) ----------------
+
+let agotadosCache = new Set();
+
+async function fetchAgotados() {
+  const list = document.getElementById('menu-admin-list');
+  list.innerHTML = `<div class="empty-state">${I18n.t('loadingOrders')}</div>`;
+  try {
+    const res = await apiCall('listarAgotados', {});
+    agotadosCache = new Set(res.skus || []);
+    renderMenuAdmin();
+  } catch (err) {
+    list.innerHTML = `<div class="empty-state">${I18n.t('errorLoadingPrefix')}${err.message}</div>`;
+  }
+}
+
+function renderMenuAdmin() {
+  const list = document.getElementById('menu-admin-list');
+  list.innerHTML = MENU_CATEGORIES.map((cat) => {
+    const items = [].concat(cat.items || [], cat.extras || []);
+    const rowsHtml = items
+      .map((it) => {
+        const agotado = agotadosCache.has(it.sku);
+        return `
+        <div class="order-item-row">
+          <span class="n">${mi(it.nombre)} · ${fmt(it.precio)}</span>
+          <button class="btn-agotado ${agotado ? 'done' : ''}" data-toggle-agotado="${it.sku}" data-valor="${!agotado}" type="button">
+            ${agotado ? I18n.t('markAvailableBtn') : I18n.t('markAgotadoBtn')}
+          </button>
+        </div>`;
+      })
+      .join('');
+    return `
+      <div class="menu-admin-section">
+        <h3>${mi(cat.nombre)}</h3>
+        ${rowsHtml}
+      </div>`;
+  }).join('');
+}
+
+document.getElementById('menu-admin-list').addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-toggle-agotado]');
+  if (!btn) return;
+  btn.disabled = true;
+  try {
+    await apiCall('marcarAgotado', {
+      ...authParams(),
+      sku: btn.dataset.toggleAgotado,
+      agotado: btn.dataset.valor === 'true',
+    });
+    await fetchAgotados();
+  } catch (err) {
+    alert(I18n.t('couldNotUpdatePrefix') + err.message);
+    btn.disabled = false;
+  }
+});
+
 // ---------------- Reservas ----------------
 
 let currentReservasFilter = 'pendientes';
@@ -668,6 +736,10 @@ function applyStaticI18n() {
   document.querySelector('[data-rfilter="todas"]').textContent = I18n.t('rsFilterTodas');
   document.getElementById('reservas-refresh-btn').textContent = I18n.t('refreshBtn');
   document.getElementById('horario-title').textContent = I18n.t('horarioTitle');
+  document.getElementById('hub-menu-btn').textContent = I18n.t('hubMenuBtn');
+  document.getElementById('admin-menu-title').textContent = I18n.t('menuAdminTitle');
+  document.getElementById('menu-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
+  document.getElementById('menu-logout-btn').textContent = I18n.t('logoutBtn');
 }
 
 function onLangChange() {
@@ -677,12 +749,14 @@ function onLangChange() {
     renderReservas();
     renderHorarioSemanal();
   }
+  if (document.getElementById('menu-view').style.display !== 'none') renderMenuAdmin();
 }
 
 renderLangSelect(document.getElementById('admin-lang-slot'));
 renderLangSelect(document.getElementById('hub-lang-slot'));
 renderLangSelect(document.getElementById('panel-lang-slot'));
 renderLangSelect(document.getElementById('reservas-lang-slot'));
+renderLangSelect(document.getElementById('menu-lang-slot'));
 
 // ---------------- Init ----------------
 

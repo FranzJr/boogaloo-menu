@@ -28,6 +28,7 @@
     <button class="primary-btn" id="hub-pedidos-btn" type="button" style="width:100%; margin-bottom:10px;">Pedidos</button>
     <button class="primary-btn" id="hub-turnos-btn" type="button" style="width:100%; margin-bottom:10px;">Turnos</button>
     <button class="primary-btn" id="hub-reservas-btn" type="button" style="width:100%; margin-bottom:10px;">Reservas</button>
+    <button class="primary-btn" id="hub-menu-btn" type="button" style="width:100%; margin-bottom:10px;">Menú</button>
     <span class="who" id="hub-who-label" style="display:block; margin-top:14px;"></span>
     <button class="link-btn" id="hub-logout-btn" type="button">Cerrar sesión</button>
   </div>
@@ -62,6 +63,22 @@
     <div class="modal-box">
       <div id="new-order-modal-body"></div>
     </div>
+  </div>
+
+  <!-- Vista de gestión del menú: marcar productos agotados -->
+  <div class="admin-shell" id="menu-view" style="display:none;">
+    <div class="admin-sticky-top">
+      <div class="admin-topbar">
+        <h1 id="admin-menu-title">Menú</h1>
+        <div>
+          <span id="menu-lang-slot"></span>
+          <button class="link-btn" id="menu-back-to-hub-btn" type="button">← Volver</button>
+          <span class="who" id="menu-who-label"></span>
+          <button class="link-btn" id="menu-logout-btn" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+    <div id="menu-admin-list"></div>
   </div>
 
   <!-- Vista de reservas -->
