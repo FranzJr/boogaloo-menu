@@ -222,9 +222,41 @@ const STORY6_PARRAFOS = {
 // red/blue/gold; credit es null para fotos propias, o {name,url,source} para
 // una foto de banco externa). No hace falta tocar blog.html: el <article> de
 // cada entrada se genera solo, y siempre se muestra la más nueva primero.
+const STORY7_PARRAFOS = {
+  es: [
+    'La arepa es, en su forma más simple, maíz molido, agua y sal, cocinado sobre una plancha caliente. Nada más. Esa sencillez tiene siglos: el maíz ya se molía y se cocinaba en tortas planas entre los pueblos indígenas de lo que hoy es Colombia mucho antes de la llegada de los españoles, y desde entonces la arepa no ha dejado de estar en la mesa de casi todas las regiones del país -- gruesa o delgada, asada o frita, sola o rellena, según a qué valle o a qué montaña se llegue.',
+    'Lo que la hace especial no es un ingrediente raro, sino el gesto: la masa se amasa con las manos, se aplana con las palmas, se voltea en la plancha con los dedos. Es una comida que se hace tocándola. Y por eso mismo es una comida portátil, de las que caben en una mano: se le lleva al trabajo, al campo, a la escuela, se come de pie o caminando, con queso derretido adentro si hay, y sola si no hay.',
+    'En Japón existe una comida que nace del mismo gesto: el onigiri. Arroz cocido, todavía tibio, que se moldea con las manos -- con un poco de sal en las palmas -- hasta darle forma de triángulo o de bola, muchas veces con un relleno en el centro y una tira de alga nori alrededor. Igual que la arepa, es alimento de viaje, de jornada larga, de lonchera; igual que la arepa, es tan cotidiano que casi nadie lo piensa como "receta", y sin embargo cada casa tiene su manera de hacerlo.',
+    'Son dos cereales distintos, en dos extremos del planeta, que llegaron a una idea parecida: que la comida más reconfortante es la que se puede sostener con una mano, la que se hace sin cubiertos y sin ceremonia, con lo que hay a la mano y con las manos de quien cocina. En ambos casos el ingrediente principal es humilde; lo que lo convierte en algo memorable es quién lo prepara y con qué cuidado.',
+    'En Boogaloo las arepas se hacen así, a mano y sobre la plancha, rellenas de queso fundido, de carne o de pollo desmechado. Si algún día extraña su onigiri de la tienda de la esquina, venga a probar la arepa colombiana: no es el mismo plato, pero vienen de la misma idea. Lo esperamos en Boogaloo.',
+  ],
+  en: [
+    "In its simplest form, the arepa is ground corn, water and salt, cooked on a hot griddle. Nothing more. That simplicity is centuries old: the Indigenous peoples of what is now Colombia were grinding corn and cooking it into flat cakes long before the Spanish arrived, and the arepa has never left the table in almost any region of the country since -- thick or thin, grilled or fried, plain or filled, depending on which valley or mountain you're in.",
+    "What makes it special isn't a rare ingredient but the gesture: the dough is kneaded by hand, flattened with the palms, flipped on the griddle with the fingers. It's food you make by touching it. And for that very reason it's portable food, the kind that fits in one hand: taken to work, to the fields, to school, eaten standing up or on the move, with melted cheese inside if there is any, and plain if there isn't.",
+    "Japan has a food born of the same gesture: the onigiri. Cooked rice, still warm, shaped by hand -- with a little salt on the palms -- into a triangle or a ball, often with a filling in the center and a strip of nori seaweed around it. Like the arepa, it's food for travel, for long days, for lunch boxes; like the arepa, it's so everyday that hardly anyone thinks of it as a recipe, and yet every household has its own way of making it.",
+    "Two different grains, on opposite sides of the planet, arrived at a similar idea: that the most comforting food is the kind you can hold in one hand, made without cutlery and without ceremony, with what's at hand and with the hands of whoever is cooking. In both cases the main ingredient is humble; what makes it memorable is who prepares it and how carefully.",
+    "At Boogaloo, arepas are made just like that, by hand and on the griddle, filled with melted cheese, beef or shredded chicken. If you ever miss the onigiri from your corner store, come try the Colombian arepa: it's not the same dish, but it comes from the same idea. We're waiting for you at Boogaloo.",
+  ],
+  ja: [
+    'アレパを最もシンプルな形で言えば、挽いたトウモロコシと水と塩を、熱した鉄板で焼いたものだ。それだけである。このシンプルさには何世紀もの歴史がある。現在のコロンビアにあたる土地の先住民は、スペイン人が到来するはるか前からトウモロコシを挽いて平たい生地にして焼いていた。それ以来、アレパは国内のほぼどの地域の食卓からも消えたことがない ―― 厚いものも薄いものも、焼いたものも揚げたものも、具なしも具入りも、どの谷、どの山にいるかによって違う。',
+    'アレパを特別にしているのは珍しい材料ではなく、手の動きだ。生地は手でこね、手のひらで平たくし、指で鉄板の上で裏返す。触れながら作る食べ物である。だからこそ、片手で持てる携帯食でもある。仕事へ、畑へ、学校へ持って行き、立ったまま、あるいは歩きながら食べる。あればとろけるチーズを中に入れ、なければそのまま。',
+    '日本にも、同じ手の動きから生まれた食べ物がある。おにぎりだ。炊きたてで温かいご飯を、手のひらに少し塩をつけて、三角や丸に握る。中央に具を入れ、周りに海苔を巻くことも多い。アレパと同じく、旅や長い一日、お弁当のための食べ物であり、アレパと同じく、あまりに日常的で「レシピ」と考える人はほとんどいないのに、家ごとに握り方がある。',
+    '異なる二つの穀物が、地球の反対側どうしで、似た考えにたどり着いた。いちばん心を温めてくれる食べ物は、片手で持てるもの、カトラリーも儀式もいらず、そこにあるものと、作る人の手だけで作れるものだ、という考えである。どちらも主役は素朴な食材で、それを忘れがたいものにするのは、誰が、どれだけ丁寧に作るかだ。',
+    'Boogalooのアレパも、まさにそうして作られる。手で成形し、鉄板で焼き、とろけるチーズ、牛肉、ほぐした鶏肉を詰めている。近所のお店のおにぎりが恋しくなったら、コロンビアのアレパを食べに来てほしい。同じ料理ではないけれど、同じ発想から生まれた食べ物だ。Boogalooでお待ちしています。',
+  ],
+  pt: [
+    'Na sua forma mais simples, a arepa é milho moído, água e sal, cozido numa chapa quente. Nada mais. Essa simplicidade tem séculos: os povos indígenas do que hoje é a Colômbia já moíam o milho e o cozinhavam em bolos achatados muito antes da chegada dos espanhóis, e desde então a arepa não deixou de estar na mesa de quase todas as regiões do país -- grossa ou fina, assada ou frita, simples ou recheada, dependendo do vale ou da montanha.',
+    'O que a torna especial não é um ingrediente raro, e sim o gesto: a massa é sovada com as mãos, achatada com as palmas, virada na chapa com os dedos. É comida que se faz tocando. E por isso mesmo é comida portátil, das que cabem numa mão: leva-se ao trabalho, ao campo, à escola, come-se em pé ou andando, com queijo derretido dentro se houver, e sem nada se não houver.',
+    'O Japão tem uma comida que nasce do mesmo gesto: o onigiri. Arroz cozido, ainda morno, modelado à mão -- com um pouco de sal nas palmas -- em forma de triângulo ou de bola, muitas vezes com um recheio no centro e uma tira de alga nori em volta. Assim como a arepa, é alimento de viagem, de jornada longa, de lancheira; assim como a arepa, é tão cotidiano que quase ninguém pensa nele como "receita", e mesmo assim cada casa tem seu jeito de fazer.',
+    'São dois cereais diferentes, em extremos opostos do planeta, que chegaram a uma ideia parecida: que a comida mais reconfortante é a que se segura com uma mão, feita sem talheres e sem cerimônia, com o que se tem à mão e com as mãos de quem cozinha. Nos dois casos o ingrediente principal é humilde; o que o torna memorável é quem o prepara e com quanto cuidado.',
+    'No Boogaloo as arepas são feitas assim, à mão e na chapa, recheadas com queijo derretido, carne ou frango desfiado. Se um dia sentir falta do onigiri da lojinha da esquina, venha experimentar a arepa colombiana: não é o mesmo prato, mas vem da mesma ideia. Esperamos você no Boogaloo.',
+  ],
+};
+
 const STORIES = [
   {
     key: 'story1',
+    date: '2026-09-08',
     parrafos: STORY1_PARRAFOS,
     titleKey: 'blogStory1Title',
     color: 'red',
@@ -234,6 +266,7 @@ const STORIES = [
   },
   {
     key: 'story2',
+    date: '2026-09-08',
     parrafos: STORY2_PARRAFOS,
     titleKey: 'blogStory2Title',
     color: 'blue',
@@ -243,6 +276,7 @@ const STORIES = [
   },
   {
     key: 'story3',
+    date: '2026-09-09',
     parrafos: STORY3_PARRAFOS,
     titleKey: 'blogStory3Title',
     color: 'gold',
@@ -252,6 +286,7 @@ const STORIES = [
   },
   {
     key: 'story4',
+    date: '2026-09-11',
     parrafos: STORY4_PARRAFOS,
     titleKey: 'blogStory4Title',
     color: 'red',
@@ -261,6 +296,7 @@ const STORIES = [
   },
   {
     key: 'story5',
+    date: '2026-09-14',
     parrafos: STORY5_PARRAFOS,
     titleKey: 'blogStory5Title',
     color: 'blue',
@@ -270,11 +306,22 @@ const STORIES = [
   },
   {
     key: 'story6',
+    date: '2026-09-16',
     parrafos: STORY6_PARRAFOS,
     titleKey: 'blogStory6Title',
     color: 'gold',
     image: 'img/blog/catedral-plaza.jpg',
     imageAlt: 'Catedral con dos torres en una plaza principal de Colombia',
+    credit: null,
+  },
+  {
+    key: 'story7',
+    date: '2026-09-19',
+    parrafos: STORY7_PARRAFOS,
+    titleKey: 'blogStory7Title',
+    color: 'red',
+    image: 'img/blog/tolima-ladera.jpg',
+    imageAlt: 'Ladera verde con plantas de hojas rojizas al atardecer, Tolima, Colombia',
     credit: null,
   },
 ];
@@ -325,13 +372,19 @@ function postHtml(story) {
   `;
 }
 
-function applyStaticI18nToStory({ key, parrafos, titleKey }) {
+function formatStoryDate(iso, lang) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const locale = { es: 'es', en: 'en-US', ja: 'ja-JP', pt: 'pt-BR' }[lang] || 'es';
+  return new Date(y, m - 1, d).toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function applyStaticI18nToStory({ key, parrafos, titleKey, date }) {
   const lang = STORY1_PARRAFOS[I18n.lang] ? I18n.lang : 'es';
   const idPrefix = `blog-${key}`;
   const titleEl = document.getElementById(`${idPrefix}-title`);
   if (titleEl) titleEl.textContent = I18n.t(titleKey);
   const bylineEl = document.getElementById(`${idPrefix}-byline`);
-  if (bylineEl) bylineEl.textContent = '— Joseph de Boogaloo';
+  if (bylineEl) bylineEl.textContent = '— Joseph de Boogaloo' + (date ? ' · ' + formatStoryDate(date, lang) : '');
   const shareBtn = document.getElementById(`${idPrefix}-share`);
   if (shareBtn) shareBtn.textContent = I18n.t('blogShareLabel');
   const body = document.getElementById(`${idPrefix}-body`);
