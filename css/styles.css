@@ -1362,6 +1362,7 @@ body.js-ready .ab-section.ab-visible {
   margin: 0 0 24px;
 }
 .blog-share-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
+.share-options { display: grid; gap: 8px; }
 .blog-post-figure { margin: 0 0 28px; }
 .blog-post-figure img {
   width: 100%;

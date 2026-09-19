@@ -394,24 +394,199 @@ function applyStaticI18nToStory({ key, parrafos, titleKey, date }) {
   document.getElementById(`${idPrefix}-cta-menu`).textContent = I18n.t('abVerMenuBtn');
 }
 
+// ---------------- Compartir (enlace, Facebook, Instagram) ----------------
+// Instagram no tiene URL de "compartir" para la web: el estándar es subir una
+// imagen. Se genera en un canvas con el formato oficial (post 4:5 = 1080x1350,
+// historia 9:16 = 1080x1920), se descarga y se copia el texto de la publicación.
+// Facebook sí acepta un enlace (sharer.php).
+
+const STORY_COLORS = { red: '#ce1126', blue: '#003893', gold: '#a8701c' };
+
+function storyUrl(key) {
+  return `${location.origin}${location.pathname}#${key}`;
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function wrapLines(ctx, text, maxWidth) {
+  // Parte por palabras; si no hay espacios (japonés) parte por caracteres.
+  const tokens = /\s/.test(text) ? text.split(/(\s+)/) : Array.from(text);
+  const lines = [];
+  let line = '';
+  tokens.forEach((t) => {
+    if (ctx.measureText(line + t).width > maxWidth && line.trim()) {
+      lines.push(line.trim());
+      line = t.trim() ? t : '';
+    } else {
+      line += t;
+    }
+  });
+  if (line.trim()) lines.push(line.trim());
+  return lines;
+}
+
+async function makeShareImage(story, W, H) {
+  const lang = STORY1_PARRAFOS[I18n.lang] ? I18n.lang : 'es';
+  const color = STORY_COLORS[story.color] || '#003893';
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const font = '"Helvetica Neue", Arial, "Hiragino Sans", "Noto Sans JP", sans-serif';
+
+  ctx.fillStyle = '#fbf7ef';
+  ctx.fillRect(0, 0, W, H);
+
+  // Franja de bandera colombiana arriba
+  const bandH = 16;
+  ctx.fillStyle = '#ffcd00'; ctx.fillRect(0, 0, W / 2, bandH);
+  ctx.fillStyle = '#003893'; ctx.fillRect(W / 2, 0, W / 4, bandH);
+  ctx.fillStyle = '#ce1126'; ctx.fillRect(W * 0.75, 0, W / 4, bandH);
+
+  // Foto (cover) en la parte superior
+  const photoTop = bandH;
+  const photoH = Math.round(H * (H > 1500 ? 0.5 : 0.56));
+  const photo = await loadImage(story.image);
+  const scale = Math.max(W / photo.width, photoH / photo.height);
+  const dw = photo.width * scale, dh = photo.height * scale;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0, photoTop, W, photoH); ctx.clip();
+  ctx.drawImage(photo, (W - dw) / 2, photoTop + (photoH - dh) / 2, dw, dh);
+  ctx.restore();
+
+  // Título
+  const pad = 72;
+  let y = photoTop + photoH + 40;
+  ctx.fillStyle = color;
+  ctx.textBaseline = 'top';
+  let size = 76;
+  let lines;
+  do {
+    ctx.font = `800 ${size}px ${font}`;
+    lines = wrapLines(ctx, I18n.t(story.titleKey), W - pad * 2);
+    size -= 4;
+  } while (lines.length > 3 && size > 44);
+  const lh = (size + 4) * 1.18;
+  lines.forEach((l) => { ctx.fillText(l, pad, y); y += lh; });
+
+  // Firma + fecha
+  y += 10;
+  ctx.fillStyle = '#6b5f57';
+  ctx.font = `italic 34px ${font}`;
+  ctx.fillText('— Joseph de Boogaloo' + (story.date ? ' · ' + formatStoryDate(story.date, lang) : ''), pad, y);
+
+  // Pie: logo + dominio
+  const logo = await loadImage('img/logo/logo-web.png').catch(() => null);
+  const footY = H - 130;
+  if (logo) {
+    const lh2 = 90, lw2 = logo.width * (lh2 / logo.height);
+    ctx.drawImage(logo, pad, footY, lw2, lh2);
+  }
+  ctx.fillStyle = color;
+  ctx.font = `700 40px ${font}`;
+  ctx.textAlign = 'right';
+  ctx.fillText('boogaloo.cafe', W - pad, footY + 24);
+  ctx.textAlign = 'left';
+
+  return new Promise((res) => canvas.toBlob(res, 'image/png'));
+}
+
+function buildCaption(story) {
+  const lang = STORY1_PARRAFOS[I18n.lang] ? I18n.lang : 'es';
+  const first = story.parrafos[lang][0];
+  const excerpt = first.length > 220 ? first.slice(0, 220).replace(/\s+\S*$/, '') + '…' : first;
+  return `${I18n.t(story.titleKey)}\n\n${excerpt}\n\n${I18n.t('blogShareCaptionRead')}\n\n#Boogaloo #Nagoya #Colombia #ComidaColombiana #カフェ #名古屋`;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function downloadBlob(blob, filename) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+const shareModal = document.getElementById('share-modal');
+const shareModalBody = document.getElementById('share-modal-body');
+shareModal.addEventListener('click', (e) => {
+  if (e.target === shareModal) shareModal.classList.remove('open');
+});
+
+function openShareModal(key) {
+  const story = STORIES.find((s) => s.key === key);
+  if (!story) return;
+  shareModalBody.innerHTML = `
+    <h2>${I18n.t('blogShareModalTitle')}</h2>
+    <p class="subt">${I18n.t(story.titleKey)}</p>
+    <div class="share-options">
+      <button class="ghost-btn" data-share="link" type="button">${I18n.t('blogShareCopyLink')}</button>
+      <button class="ghost-btn" data-share="facebook" type="button">${I18n.t('blogShareFacebook')}</button>
+      <button class="ghost-btn" data-share="ig-post" type="button">${I18n.t('blogShareInstagramPost')}</button>
+      <button class="ghost-btn" data-share="ig-story" type="button">${I18n.t('blogShareInstagramStory')}</button>
+    </div>
+    <p class="subt" style="margin-top:12px;">${I18n.t('blogShareInstagramNote')}</p>
+    <button class="link-btn" data-share="close" type="button" style="width:100%;">${I18n.t('blogShareClose')}</button>
+  `;
+  shareModal.classList.add('open');
+
+  shareModalBody.onclick = async (e) => {
+    const btn = e.target.closest('[data-share]');
+    if (!btn) return;
+    const kind = btn.dataset.share;
+    const original = btn.textContent;
+    if (kind === 'close') return shareModal.classList.remove('open');
+    if (kind === 'link') {
+      const ok = await copyText(storyUrl(key));
+      if (!ok) window.prompt(I18n.t('blogShareLabel'), storyUrl(key));
+      btn.textContent = I18n.t('blogShareCopied');
+    } else if (kind === 'facebook') {
+      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(storyUrl(key)), '_blank', 'noopener,width=640,height=560');
+    } else {
+      const [w, h] = kind === 'ig-story' ? [1080, 1920] : [1080, 1350];
+      btn.disabled = true;
+      try {
+        const blob = await makeShareImage(story, w, h);
+        const caption = buildCaption(story);
+        const file = new File([blob], `boogaloo-${key}-${w}x${h}.png`, { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], text: caption }).catch(() => {});
+        } else {
+          downloadBlob(blob, file.name);
+          await copyText(caption);
+        }
+        btn.textContent = I18n.t('blogShareCopied');
+      } catch (err) {
+        alert(err.message);
+      }
+      btn.disabled = false;
+    }
+    setTimeout(() => { btn.textContent = original; }, 1800);
+  };
+}
+
 function setupShareButtons(stories) {
   stories.forEach(({ key }) => {
     const btn = document.getElementById(`blog-${key}-share`);
     if (!btn) return;
-    btn.addEventListener('click', () => {
-      const url = `${location.origin}${location.pathname}#${key}`;
-      const done = () => {
-        btn.textContent = I18n.t('blogShareCopied');
-        setTimeout(() => {
-          btn.textContent = I18n.t('blogShareLabel');
-        }, 1800);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(done).catch(() => window.prompt(I18n.t('blogShareLabel'), url));
-      } else {
-        window.prompt(I18n.t('blogShareLabel'), url);
-      }
-    });
+    btn.addEventListener('click', () => openShareModal(key));
   });
 }
 
