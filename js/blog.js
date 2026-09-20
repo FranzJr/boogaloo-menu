@@ -530,6 +530,21 @@ shareModal.addEventListener('click', (e) => {
   if (e.target === shareModal) shareModal.classList.remove('open');
 });
 
+let lastSelection = '';
+
+function storySentences(story) {
+  const lang = STORY1_PARRAFOS[I18n.lang] ? I18n.lang : 'es';
+  return story.parrafos[lang]
+    .join(' ')
+    .split(/(?<=[.!?。])\s*/)
+    .map((s) => s.trim())
+    .filter((s) => s.length >= 40 && s.length <= 200);
+}
+
+// X cuenta cada enlace como 23 caracteres, sin importar su largo real.
+const X_LIMIT = 280;
+const X_URL_LEN = 23;
+
 function openShareModal(key) {
   const story = STORIES.find((s) => s.key === key);
   if (!story) return;
@@ -543,9 +558,30 @@ function openShareModal(key) {
       <button class="ghost-btn" data-share="ig-story" type="button">${I18n.t('blogShareInstagramStory')}</button>
     </div>
     <p class="subt" style="margin-top:12px;">${I18n.t('blogShareInstagramNote')}</p>
+    <h3 style="margin:14px 0 6px; font-size:0.95rem;">${I18n.t('blogShareXTitle')}</h3>
+    <textarea id="share-x-text" rows="4" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border); font:inherit;"></textarea>
+    <div class="subt" id="share-x-count" style="margin:4px 0 8px;"></div>
+    <div class="share-options">
+      <button class="ghost-btn" data-share="x-next" type="button">${I18n.t('blogShareXNext')}</button>
+      <button class="primary-btn" data-share="x-post" type="button">${I18n.t('blogShareXPost')}</button>
+    </div>
+    <p class="subt" style="margin-top:8px;">${I18n.t('blogShareXHint')}</p>
     <button class="link-btn" data-share="close" type="button" style="width:100%;">${I18n.t('blogShareClose')}</button>
   `;
   shareModal.classList.add('open');
+
+  const sentences = storySentences(story);
+  let sIdx = 0;
+  const xText = document.getElementById('share-x-text');
+  const xCount = document.getElementById('share-x-count');
+  const updateXCount = () => {
+    const left = X_LIMIT - X_URL_LEN - 1 - xText.value.length;
+    xCount.textContent = left + ' / ' + (X_LIMIT - X_URL_LEN - 1);
+    xCount.style.color = left < 0 ? 'var(--co-red)' : '';
+  };
+  xText.value = lastSelection ? '\u201c' + lastSelection.slice(0, 230) + '\u201d' : sentences.length ? '\u201c' + sentences[0] + '\u201d' : I18n.t(story.titleKey);
+  xText.addEventListener('input', updateXCount);
+  updateXCount();
 
   shareModalBody.onclick = async (e) => {
     const btn = e.target.closest('[data-share]');
@@ -553,6 +589,22 @@ function openShareModal(key) {
     const kind = btn.dataset.share;
     const original = btn.textContent;
     if (kind === 'close') return shareModal.classList.remove('open');
+    if (kind === 'x-next') {
+      if (sentences.length) {
+        sIdx = (sIdx + 1) % sentences.length;
+        xText.value = '\u201c' + sentences[sIdx] + '\u201d';
+        updateXCount();
+      }
+      return;
+    }
+    if (kind === 'x-post') {
+      window.open(
+        'https://twitter.com/intent/tweet?text=' + encodeURIComponent(xText.value.trim()) + '&url=' + encodeURIComponent(storyUrl(key)),
+        '_blank',
+        'noopener,width=600,height=500'
+      );
+      return;
+    }
     if (kind === 'link') {
       const ok = await copyText(storyUrl(key));
       if (!ok) window.prompt(I18n.t('blogShareLabel'), storyUrl(key));
@@ -586,7 +638,14 @@ function setupShareButtons(stories) {
   stories.forEach(({ key }) => {
     const btn = document.getElementById(`blog-${key}-share`);
     if (!btn) return;
-    btn.addEventListener('click', () => openShareModal(key));
+    // La selección se toma antes del clic: así se conserva la frase elegida.
+    btn.addEventListener('mousedown', () => {
+      lastSelection = (window.getSelection().toString() || '').trim();
+    });
+    btn.addEventListener('click', () => {
+      openShareModal(key);
+      lastSelection = '';
+    });
   });
 }
 
