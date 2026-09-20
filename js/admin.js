@@ -97,7 +97,36 @@ function showMenuAdmin() {
   document.getElementById('menu-view').style.display = 'block';
   document.getElementById('menu-who-label').textContent = identityLabel();
   fetchAgotados();
+  loadSiteConfig();
 }
+
+// Configuración del sitio (solo admin): mostrar/ocultar el aviso de envíos en el home.
+async function loadSiteConfig() {
+  const box = document.getElementById('site-config');
+  box.style.display = identity.esAdmin ? 'block' : 'none';
+  if (!identity.esAdmin) return;
+  document.getElementById('cfg-ship-banner-label').textContent = I18n.t('cfgShipBanner');
+  try {
+    const res = await apiCall('obtenerConfig', {});
+    document.getElementById('cfg-ship-banner').checked = !!res.config.shipBanner;
+  } catch (err) {
+    document.getElementById('cfg-saved').textContent = err.message;
+  }
+}
+
+document.getElementById('cfg-ship-banner').addEventListener('change', async (e) => {
+  const cb = e.target;
+  const note = document.getElementById('cfg-saved');
+  cb.disabled = true;
+  try {
+    await apiCall('guardarConfig', { ...authParams(), clave: 'shipBanner', valor: cb.checked });
+    note.textContent = I18n.t('cfgSaved');
+  } catch (err) {
+    cb.checked = !cb.checked;
+    note.textContent = I18n.t('couldNotUpdatePrefix') + err.message;
+  }
+  cb.disabled = false;
+});
 
 document.getElementById('login-btn').addEventListener('click', doLogin);
 document.getElementById('login-clave').addEventListener('keydown', (e) => {

@@ -835,3 +835,22 @@ refreshTrackedOrders();
 setInterval(refreshTrackedOrders, 20000);
 fetchAgotados().then(renderMenu);
 setInterval(() => fetchAgotados().then(renderMenu), 60000);
+
+// ---------------- Aviso de envíos (lo activa/desactiva el admin) ----------------
+// Se recuerda el último valor para no parpadear al cargar.
+const SHIP_BANNER_KEY = 'boogaloo_ship_banner_v1';
+function applyShipBanner(visible) {
+  const el = document.getElementById('ship-banner');
+  if (el) el.style.display = visible ? '' : 'none';
+}
+try {
+  applyShipBanner(localStorage.getItem(SHIP_BANNER_KEY) !== 'false');
+} catch (e) {}
+apiCall('obtenerConfig', {})
+  .then((res) => {
+    applyShipBanner(res.config.shipBanner);
+    try {
+      localStorage.setItem(SHIP_BANNER_KEY, String(res.config.shipBanner));
+    } catch (e) {}
+  })
+  .catch(() => {});
