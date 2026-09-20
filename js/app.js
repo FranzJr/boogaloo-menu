@@ -809,6 +809,8 @@ function applyStaticI18n() {
   document.getElementById('gate-subtitle').textContent = I18n.t('gateSubtitle');
   document.getElementById('gate-dine-in-btn').textContent = I18n.t('gateDineInBtn');
   document.getElementById('gate-reserve-btn').textContent = I18n.t('gateReserveBtn');
+  document.getElementById('ship-banner-text').textContent = I18n.t('homeShipBannerText');
+  document.getElementById('ship-banner-cta').textContent = I18n.t('homeShipBannerCta');
 }
 
 function onLangChange() {

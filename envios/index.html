@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Boogaloo — Envíos congelados</title>
+<link rel="stylesheet" href="../css/styles.css" />
+<link rel="stylesheet" href="envios.css" />
+</head>
+<body>
+  <div id="fz-header-mount"></div>
+
+  <section class="fz-hero">
+    <div class="fz-snow" id="fz-snow"></div>
+    <div class="fz-hero-inner">
+      <h2 id="fz-hero-title"></h2>
+      <p id="fz-hero-subtitle"></p>
+      <a class="primary-btn" href="#fz-catalog" id="fz-hero-cta"></a>
+      <div class="fz-trust-row">
+        <span class="fz-trust-pill" id="fz-trust-fresh"></span>
+        <span class="fz-trust-pill" id="fz-trust-box"></span>
+        <span class="fz-trust-pill" id="fz-trust-courier"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="fz-how">
+    <h3 id="fz-how-title"></h3>
+    <div class="fz-how-steps">
+      <div class="fz-how-step">
+        <div class="fz-step-num">1</div>
+        <h4 id="fz-how1-title"></h4>
+        <p id="fz-how1-text"></p>
+      </div>
+      <div class="fz-how-step">
+        <div class="fz-step-num">2</div>
+        <h4 id="fz-how2-title"></h4>
+        <p id="fz-how2-text"></p>
+      </div>
+      <div class="fz-how-step">
+        <div class="fz-step-num">3</div>
+        <h4 id="fz-how3-title"></h4>
+        <p id="fz-how3-text"></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="fz-mascot">
+    <img src="../img/oso/oso-cocinando.png" alt="Oso Boogaloo" />
+    <div class="fz-mascot-bubble" id="fz-mascot-bubble"></div>
+  </div>
+
+  <section class="fz-catalog" id="fz-catalog">
+    <h3 id="fz-catalog-title"></h3>
+    <p class="subt" id="fz-catalog-subtitle"></p>
+    <div class="fz-grid" id="fz-grid"></div>
+  </section>
+
+  <section class="fz-faq">
+    <h3 id="fz-faq-title"></h3>
+    <div id="fz-faq-list"></div>
+  </section>
+
+  <div id="fz-footer-mount"></div>
+
+  <!-- Barra flotante: comparar -->
+  <div class="fz-compare-bar" id="fz-compare-bar">
+    <span id="fz-compare-bar-label"></span>
+    <button type="button" id="fz-compare-bar-btn"></button>
+  </div>
+
+  <!-- Barra flotante: tu caja -->
+  <button class="fz-box-bar" id="fz-box-bar" type="button">
+    <div class="fz-box-info">
+      <span class="count" id="fz-box-count"></span>
+      <span class="amount" id="fz-box-amount"></span>
+    </div>
+    <span id="fz-box-cta"></span>
+  </button>
+
+  <!-- Drawer: tu caja -->
+  <div class="fz-drawer-overlay" id="fz-drawer-overlay"></div>
+  <aside class="fz-drawer" id="fz-drawer" aria-label="Tu caja">
+    <div class="fz-drawer-header">
+      <h2 id="fz-drawer-title"></h2>
+      <button class="drawer-close" id="fz-drawer-close" type="button">✕</button>
+    </div>
+    <div class="fz-drawer-body" id="fz-drawer-body"></div>
+    <div class="fz-drawer-footer" id="fz-drawer-footer"></div>
+  </aside>
+
+  <!-- Modal: comparar productos -->
+  <div class="modal-overlay fz-compare-modal" id="fz-compare-modal">
+    <div class="modal-box">
+      <div id="fz-compare-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Modal: checkout (pasos) -->
+  <div class="modal-overlay" id="fz-checkout-modal">
+    <div class="modal-box">
+      <div id="fz-checkout-modal-body"></div>
+    </div>
+  </div>
+
+  <script src="../js/i18n.js"></script>
+  <script src="envios-data.js"></script>
+  <script src="envios.js"></script>
+</body>
+</html>

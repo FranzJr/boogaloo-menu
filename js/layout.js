@@ -78,6 +78,7 @@ function renderSiteFooter(extraLinksHtml) {
         <nav class="footer-links">
           <a href="about.html" id="footer-historia-link"></a>
           <a href="blog.html" id="footer-blog-link"></a>
+          <a href="envios/index.html" id="footer-envios-link"></a>
           <a href="https://instagram.com/boogaloo.jp" target="_blank" rel="noopener">Instagram</a>
           ${extraLinksHtml || ''}
         </nav>
@@ -101,6 +102,7 @@ function applyLayoutI18n() {
     document.getElementById('site-footer-text').textContent = I18n.t('footerText');
     document.getElementById('footer-historia-link').textContent = I18n.t('abNavHistoria');
     document.getElementById('footer-blog-link').textContent = I18n.t('blogNavLabel');
+    document.getElementById('footer-envios-link').textContent = I18n.t('footerEnviosLink');
     document.getElementById('footer-copyright').textContent = I18n.t('abCopyright', new Date().getFullYear());
   }
 }
