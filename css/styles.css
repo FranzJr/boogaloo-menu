@@ -1664,6 +1664,8 @@ body.js-ready .ab-cta.ab-visible .ab-steam:nth-child(3) { animation-delay: 1.2s;
 .ps-side { writing-mode: vertical-rl; text-orientation: upright; color: #000080; font-size: 0.75rem; padding: 4px 4px; border-right: 1px solid var(--ps-blue); text-align: center; letter-spacing: 2px; }
 .ps-grid { flex: 1; display: grid; }
 .ps-grid.g5 { grid-template-columns: repeat(5, 1fr); }
+.ps-grid.g3 { grid-template-columns: repeat(3, 1fr); }
+.ps-fill.s2 { grid-column: span 2; }
 .ps-grid.g7 { grid-template-columns: repeat(7, 1fr); }
 .ps-cell { border-right: 1px solid var(--ps-blue); border-bottom: 1px solid var(--ps-blue); min-width: 0; }
 .ps-h { background: var(--ps-head); color: #000080; font-size: 0.72rem; text-align: center; padding: 3px 2px; border-bottom: 1px solid var(--ps-blue); line-height: 1.2; }
