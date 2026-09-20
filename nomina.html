@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Boogaloo — Recibos de pago</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="site-header-mount"></div>
+
+  <main class="tn-wrap" id="nm-wrap">
+    <div class="tn-denied" id="nm-denied" style="display:none;"><p id="nm-denied-text"></p></div>
+
+    <div id="nm-app" style="display:none;">
+      <div class="nm-controls no-print">
+        <div class="field" id="nm-colab-field" style="display:none;">
+          <label id="nm-colab-label"></label>
+          <select id="nm-colab-select" class="order-add-select"></select>
+        </div>
+        <div class="pill-row" id="nm-months"></div>
+        <button class="ghost-btn" id="nm-print" type="button"></button>
+      </div>
+      <div id="nm-empty" class="empty-state" style="display:none;"></div>
+      <div id="nm-slip"></div>
+    </div>
+  </main>
+
+  <div id="site-footer-mount"></div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/nomina.js"></script>
+</body>
+</html>

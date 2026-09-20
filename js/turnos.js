@@ -134,10 +134,11 @@ function renderStats() {
         porPersona[key].valorPrevisto += Number(t.ValorPrevisto) || 0;
       }
     });
-    const cards = Object.values(porPersona)
+    const cards = Object.entries(porPersona)
       .map(
-        (p) => `
-      <div class="st"><b>${p.nombre}</b><small>${I18n.t('tnApproved')}: ${p.aprobadas.toFixed(1)}h · ${fmtY(p.valorAprobado)}<br>${I18n.t('tnForecast')}: ${p.previstas.toFixed(1)}h · ${fmtY(p.valorPrevisto)}</small></div>`
+        ([id, p]) => `
+      <div class="st"><b>${p.nombre}</b><small>${I18n.t('tnApproved')}: ${p.aprobadas.toFixed(1)}h · ${fmtY(p.valorAprobado)}<br>${I18n.t('tnForecast')}: ${p.previstas.toFixed(1)}h · ${fmtY(p.valorPrevisto)}</small>
+      ${p.aprobadas > 0 ? `<button class="ghost-btn" data-pay="${id}" data-nombre="${p.nombre}" data-valor="${p.valorAprobado}" data-horas="${p.aprobadas}" type="button" style="margin-top:8px;">${I18n.t('nmPayBtn')}</button>` : ''}</div>`
       )
       .join('');
     el.innerHTML = cards || `<p class="subt">${I18n.t('tnNoShiftsMonth')}</p>`;
@@ -434,6 +435,64 @@ document.getElementById('tn-table-body').addEventListener('click', (e) => {
 document.getElementById('tn-list').addEventListener('click', (e) => {
   const li = e.target.closest('[data-turno]');
   if (li) openTurnoModal(li.dataset.turno);
+});
+
+// ---------------- Admin: registrar pago del mes (genera el recibo) ----------------
+
+const PAY_ADJ_FIELDS = [
+  ['tsukinGravado', 'nmTsukinG'],
+  ['tsukinNoGravado', 'nmTsukinN'],
+  ['kenpo', 'nmKenpo'],
+  ['kosei', 'nmKosei'],
+  ['koyo', 'nmKoyo'],
+  ['shotoku', 'nmShotoku'],
+  ['juumin', 'nmJuumin'],
+];
+
+document.getElementById('tn-stats').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-pay]');
+  if (!btn || !identity.esAdmin) return;
+  const mes = currentMonth.getFullYear() + '-' + pad2(currentMonth.getMonth() + 1);
+  tnModalBody.innerHTML = `
+    <h2>${I18n.t('nmPayTitle')}</h2>
+    <p class="subt">${btn.dataset.nombre} · ${mes} · ${Number(btn.dataset.horas).toFixed(1)}h · ${fmtY(btn.dataset.valor)}</p>
+    <div class="form-error" id="pay-error"></div>
+    <div class="field"><label>${I18n.t('nmPayDate')}</label><input type="date" id="pay-fecha" value="${dstr(new Date())}" /></div>
+    <details class="tn-panel"><summary>${I18n.t('nmAdjustments')}</summary>
+      ${PAY_ADJ_FIELDS.map(([k, label]) => `<div class="field"><label>${I18n.t(label)}</label><input type="number" min="0" step="1" data-pay-adj="${k}" /></div>`).join('')}
+    </details>
+    <div class="field"><label>${I18n.t('nmMemo')}</label><input type="text" id="pay-memo" maxlength="300" /></div>
+    <p class="subt">${I18n.t('nmReplaceNote')}</p>
+    <button class="primary-btn" id="pay-submit" type="button">${I18n.t('nmPayConfirm')}</button>
+    <button class="ghost-btn" id="pay-cancel" type="button" style="margin-top:8px;">${I18n.t('tnCancel')}</button>
+  `;
+  tnModal.classList.add('open');
+  document.getElementById('pay-cancel').onclick = closeTnModal;
+  document.getElementById('pay-submit').onclick = async () => {
+    const extras = {};
+    tnModalBody.querySelectorAll('[data-pay-adj]').forEach((inp) => {
+      if (inp.value !== '') extras[inp.dataset.payAdj] = Number(inp.value);
+    });
+    const submit = document.getElementById('pay-submit');
+    submit.disabled = true;
+    try {
+      await apiCall('registrarPagoMes', {
+        ...authParams(),
+        mes,
+        colaboradorId: btn.dataset.pay,
+        fechaPago: document.getElementById('pay-fecha').value,
+        memo: document.getElementById('pay-memo').value.trim(),
+        extras,
+      });
+      closeTnModal();
+      alert(I18n.t('nmPaidOk'));
+    } catch (err) {
+      const box = document.getElementById('pay-error');
+      box.textContent = err.message;
+      box.classList.add('show');
+      submit.disabled = false;
+    }
+  };
 });
 
 // ---------------- Admin: nuevo turno ----------------

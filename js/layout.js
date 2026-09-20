@@ -55,6 +55,7 @@ function renderSiteHeader(actionsHtml, afterHtml) {
         <span class="staff-subnav-who" id="staff-subnav-who"></span>
         <a href="admin.html" id="staff-link-pedidos"></a>
         <a href="turnos.html" id="staff-link-turnos"></a>
+        <a href="nomina.html" id="staff-link-nomina"></a>
         <a href="about.html" id="staff-link-historia"></a>
         <a href="blog.html" id="staff-link-blog"></a>
       </div>
@@ -92,6 +93,7 @@ function applyLayoutI18n() {
   if (document.getElementById('staff-link-pedidos')) {
     document.getElementById('staff-link-pedidos').textContent = I18n.t('ordersTitle');
     document.getElementById('staff-link-turnos').textContent = I18n.t('hubTurnosBtn');
+    document.getElementById('staff-link-nomina').textContent = I18n.t('hubNominaBtn');
     document.getElementById('staff-link-historia').textContent = I18n.t('abNavHistoria');
     document.getElementById('staff-link-blog').textContent = I18n.t('blogNavLabel');
   }

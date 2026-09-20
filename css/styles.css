@@ -1628,3 +1628,42 @@ body.js-ready .ab-cta.ab-visible .ab-steam:nth-child(3) { animation-delay: 1.2s;
     opacity: 1 !important;
   }
 }
+
+/* ---------- Recibo de pago (給与明細書) ---------- */
+.nm-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.payslip { --ps-blue: #1a1aff; --ps-head: #99ccff; background: #fff; color: #000; border: 1px solid var(--ps-blue); padding: 16px; max-width: 860px; margin: 0 auto; font-family: 'Hiragino Mincho ProN', 'Noto Serif JP', serif; }
+.ps-top { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.ps-id { display: grid; grid-template-columns: 90px 110px minmax(160px, 1fr); border: 1px solid var(--ps-blue); }
+.ps-id .ps-cell + .ps-cell { border-left: 1px solid var(--ps-blue); }
+.ps-title { text-align: right; }
+.ps-title h2 { margin: 0; color: #000080; font-size: 1.3rem; }
+.ps-title small { display: block; color: #000080; }
+.ps-date { color: #000080; font-size: 0.8rem; margin-top: 2px; }
+.ps-co { margin-top: 10px; font-size: 0.9rem; }
+.ps-block { display: flex; border: 1px solid var(--ps-blue); margin-bottom: 12px; }
+.ps-side { writing-mode: vertical-rl; text-orientation: upright; color: #000080; font-size: 0.75rem; padding: 4px 4px; border-right: 1px solid var(--ps-blue); text-align: center; letter-spacing: 2px; }
+.ps-grid { flex: 1; display: grid; }
+.ps-grid.g5 { grid-template-columns: repeat(5, 1fr); }
+.ps-grid.g7 { grid-template-columns: repeat(7, 1fr); }
+.ps-cell { border-right: 1px solid var(--ps-blue); border-bottom: 1px solid var(--ps-blue); min-width: 0; }
+.ps-h { background: var(--ps-head); color: #000080; font-size: 0.72rem; text-align: center; padding: 3px 2px; border-bottom: 1px solid var(--ps-blue); line-height: 1.2; }
+.ps-h small { display: block; font-size: 0.6rem; opacity: 0.85; }
+.ps-v { text-align: right; padding: 5px 6px; font-size: 0.9rem; min-height: 28px; }
+.ps-fill { grid-column: span 6; border-bottom: 1px solid var(--ps-blue); border-right: 1px solid var(--ps-blue); }
+.ps-total .ps-v { font-weight: 700; }
+.ps-name .ps-v { text-align: left; }
+.ps-sama { float: right; }
+.ps-memo { flex: 1; padding: 8px 10px; min-height: 90px; font-size: 0.85rem; }
+.ps-memo p { margin: 0 0 6px; }
+.ps-shifts { color: #444; font-size: 0.75rem; }
+@media (max-width: 640px) {
+  .payslip { padding: 8px; }
+  .ps-h { font-size: 0.6rem; }
+  .ps-v { font-size: 0.72rem; padding: 4px 3px; }
+}
+@media print {
+  body { padding: 0; background: #fff; }
+  .site-header, .staff-subnav, .site-footer, .no-print, .flag-stripe { display: none !important; }
+  .payslip { border: none; max-width: none; padding: 0; }
+  .ps-h { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
