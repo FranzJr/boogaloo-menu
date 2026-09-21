@@ -854,3 +854,31 @@ apiCall('obtenerConfig', {})
     } catch (e) {}
   })
   .catch(() => {});
+
+// ---------------- Nav de categorías: se fija arriba solo al hacer scroll ----------------
+document.body.classList.add('menu-page');
+(function setupStickyCatNav() {
+  const nav = document.getElementById('cat-nav');
+  if (!nav) return;
+  const spacer = document.createElement('div');
+  spacer.className = 'cat-nav-spacer';
+  nav.parentNode.insertBefore(spacer, nav.nextSibling);
+  let naturalTop = 0;
+  const measure = () => {
+    const wasFixed = nav.classList.contains('is-fixed');
+    if (wasFixed) nav.classList.remove('is-fixed');
+    naturalTop = nav.getBoundingClientRect().top + window.scrollY;
+    spacer.style.height = nav.offsetHeight + 'px';
+    if (wasFixed) nav.classList.add('is-fixed');
+  };
+  const update = () => {
+    const fixed = window.scrollY > naturalTop;
+    nav.classList.toggle('is-fixed', fixed);
+    spacer.classList.toggle('on', fixed);
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', () => { measure(); update(); });
+  window.addEventListener('load', () => { measure(); update(); });
+  measure();
+  update();
+})();
