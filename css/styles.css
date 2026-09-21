@@ -1689,3 +1689,26 @@ body.js-ready .ab-cta.ab-visible .ab-steam:nth-child(3) { animation-delay: 1.2s;
   .payslip { border: none; max-width: none; padding: 0; }
   .ps-h { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* ---------- Eventos ---------- */
+.ev-wrap { padding: 24px 18px 40px; max-width: 860px; }
+.ev-hero { text-align: center; padding: 20px 0 10px; }
+.ev-hero h2 { font-size: clamp(2rem, 5vw, 2.6rem); font-weight: 800; margin: 0 0 8px; }
+.ev-hero p { color: var(--ink-soft); margin: 0 auto 16px; max-width: 560px; }
+.ev-meetup-btn { display: inline-block; text-decoration: none; width: auto; padding: 10px 20px; }
+.ev-section-title { margin: 28px 0 12px; font-size: 1.1rem; }
+.ev-card { display: flex; gap: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; margin-bottom: 14px; }
+.ev-badge { flex: none; width: 64px; height: 72px; border-radius: 12px; background: var(--co-blue); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-transform: uppercase; }
+.ev-badge span { font-size: 0.72rem; letter-spacing: 1px; }
+.ev-badge b { font-size: 1.7rem; line-height: 1; }
+.ev-body { min-width: 0; flex: 1; }
+.ev-tag { display: inline-block; font-size: 0.72rem; font-weight: 700; color: var(--co-red); text-transform: uppercase; letter-spacing: 0.5px; }
+.ev-body h3 { margin: 2px 0 8px; font-size: 1.15rem; }
+.ev-dates { list-style: none; margin: 0 0 10px; padding: 0; }
+.ev-dates li { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 0.88rem; text-transform: capitalize; }
+.ev-dates li:last-child { border-bottom: none; }
+.ev-dates .ghost-btn { text-decoration: none; text-transform: none; padding: 6px 12px; font-size: 0.8rem; }
+.ev-desc { font-size: 0.88rem; line-height: 1.6; color: var(--ink); margin: 0 0 10px; }
+.ev-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.8rem; color: var(--ink-soft); }
+.ev-empty { text-align: center; color: var(--ink-soft); padding: 40px 10px; }
+@media (max-width: 520px) { .ev-card { flex-direction: column; } .ev-badge { width: 60px; height: 64px; } }
