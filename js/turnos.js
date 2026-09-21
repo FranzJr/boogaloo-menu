@@ -287,10 +287,13 @@ function renderColaboradores() {
                   ${I18n.t('tnModeLabel')}: ${modo === 'libre' ? I18n.t('tnModeLibre') : I18n.t('tnModeElegir')}
                 </button>`
               : '';
+          const inactivo = c.activo === false;
+          const activoBtn = `<button class="ghost-btn" data-toggle-activo="${c.id}" data-activo="${inactivo ? 'false' : 'true'}" type="button">${inactivo ? I18n.t('tnActivate') : I18n.t('tnDeactivate')}</button>`;
           return `
-      <div class="tn-mode-row">
-        <span class="name">${c.nombre}<small>${c.email}</small></span>
+      <div class="tn-mode-row" style="${inactivo ? 'opacity:0.6;' : ''}">
+        <span class="name">${c.nombre}${inactivo ? ` <em>(${I18n.t('tnInactive')})</em>` : ''}<small>${c.email}</small></span>
         ${modoBtn}
+        ${activoBtn}
         <button class="ghost-btn" data-toggle-rol="${c.id}" data-rol="${c.rol}" type="button">
           ${c.rol === 'colaborador' ? I18n.t('tnMakeClient') : I18n.t('tnMakeColab')}
         </button>
@@ -609,6 +612,21 @@ document.getElementById('tn-colabs-body').addEventListener('click', async (e) =>
       alert(err.message);
     }
     rolBtn.disabled = false;
+    return;
+  }
+
+  const activoBtn = e.target.closest('[data-toggle-activo]');
+  if (activoBtn) {
+    const desactivar = activoBtn.dataset.activo === 'true';
+    if (desactivar && !confirm(I18n.t('tnConfirmDeactivate'))) return;
+    activoBtn.disabled = true;
+    try {
+      await apiCall('cambiarActivoCliente', { ...authParams(), clienteId: activoBtn.dataset.toggleActivo, activo: !desactivar });
+      await loadClientesYTarifas();
+    } catch (err) {
+      alert(err.message);
+    }
+    activoBtn.disabled = false;
     return;
   }
 
