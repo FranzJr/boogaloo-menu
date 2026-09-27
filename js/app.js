@@ -646,6 +646,38 @@ async function submitOrder() {
   }
 }
 
+// Le pregunta al cliente, justo después de pedir, si quiere que el staff le
+// converse o prefiere que sea breve -- con un toque simpático que además le
+// avisa en qué idioma estamos practicando (según el idioma del sitio).
+function chatPrefHtml() {
+  return `
+    <div class="chat-pref" id="chat-pref">
+      <img class="chat-pref-avatar" src="img/oso/oso-saludando.png" alt="" />
+      <div class="chat-pref-bubble">
+        <p class="chat-pref-note">${I18n.t('chatPrefNote')}</p>
+        <p class="chat-pref-question">${I18n.t('chatPrefQuestion')}</p>
+        <div class="chat-pref-actions">
+          <button type="button" class="chat-pref-btn" data-charla="conversar">${I18n.t('chatPrefChat')}</button>
+          <button type="button" class="chat-pref-btn" data-charla="minimo">${I18n.t('chatPrefMinimal')}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function bindChatPref(pedidoId) {
+  document.querySelectorAll('#chat-pref [data-charla]').forEach((btn) => {
+    btn.onclick = () => {
+      const charla = btn.dataset.charla;
+      apiCall('guardarCharla', { pedidoId, charla }).catch(() => {});
+      document.getElementById('chat-pref').innerHTML = `
+        <img class="chat-pref-avatar" src="img/oso/oso-bailando.png" alt="" />
+        <div class="chat-pref-bubble">
+          <p class="chat-pref-note">${charla === 'conversar' ? I18n.t('chatPrefThanksChat') : I18n.t('chatPrefThanksMinimal')}</p>
+        </div>`;
+    };
+  });
+}
+
 function renderSuccessStep() {
   const order = modalState.lastOrder;
   modalBody.innerHTML = `
@@ -658,8 +690,10 @@ function renderSuccessStep() {
       ${order.items.map((i) => `<div class="row"><span>${i.cantidad}x ${i.nombre}</span><span>${fmt(i.subtotal)}</span></div>`).join('')}
       <div class="row total"><span>${order.combinado ? I18n.t('orderTotalLabel') : I18n.t('totalLabel')}</span><span>${fmt(order.total)}</span></div>
     </div>
+    ${chatPrefHtml()}
     <button class="primary-btn" id="success-close" type="button">${I18n.t('doneBtn')}</button>
   `;
+  bindChatPref(order.pedidoId);
   document.getElementById('success-close').onclick = () => {
     modalState = { purpose: 'manage', tab: 'invitado' };
     closeModal();

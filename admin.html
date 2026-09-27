@@ -32,6 +32,7 @@
     <button class="primary-btn" id="hub-turnos-btn" type="button" style="width:100%; margin-bottom:10px;">Turnos</button>
     <button class="primary-btn" id="hub-reservas-btn" type="button" style="width:100%; margin-bottom:10px;">Reservas</button>
     <button class="primary-btn" id="hub-menu-btn" type="button" style="width:100%; margin-bottom:10px;">Menú</button>
+    <button class="primary-btn" id="hub-inventario-btn" type="button" style="width:100%; margin-bottom:10px;">Inventario</button>
     <span class="who" id="hub-who-label" style="display:block; margin-top:14px;"></span>
     <button class="link-btn" id="hub-logout-btn" type="button">Cerrar sesión</button>
   </div>
@@ -88,6 +89,34 @@
       <p class="subt" id="cfg-saved" style="margin:6px 0 0;"></p>
     </div>
     <div id="menu-admin-list"></div>
+  </div>
+
+  <!-- Vista de inventario: insumos y stock -->
+  <div class="admin-shell" id="inventario-view" style="display:none;">
+    <div class="admin-sticky-top">
+      <div class="admin-topbar">
+        <h1 id="admin-inventario-title">Inventario</h1>
+        <div>
+          <span id="inventario-lang-slot"></span>
+          <button class="link-btn" id="inventario-back-to-hub-btn" type="button">← Volver</button>
+          <span class="who" id="inventario-who-label"></span>
+          <button class="link-btn" id="inventario-logout-btn" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+      <div class="order-add-item" data-order-add>
+        <input type="text" id="insumo-nombre" class="order-add-select" />
+        <input type="text" id="insumo-unidad" class="order-add-qty" style="width:90px;" />
+        <button class="ghost-btn" id="insumo-add-btn" type="button"></button>
+      </div>
+    </div>
+    <div id="insumos-list"></div>
+  </div>
+
+  <!-- Modal: receta de un producto (qué insumos y cuánto consume) -->
+  <div class="modal-overlay" id="receta-modal">
+    <div class="modal-box">
+      <div id="receta-modal-body"></div>
+    </div>
   </div>
 
   <!-- Vista de reservas -->

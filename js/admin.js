@@ -57,6 +57,7 @@ function hideAllViews() {
   document.getElementById('panel-view').style.display = 'none';
   document.getElementById('reservas-view').style.display = 'none';
   document.getElementById('menu-view').style.display = 'none';
+  document.getElementById('inventario-view').style.display = 'none';
 }
 
 function showLogin(message) {
@@ -97,7 +98,16 @@ function showMenuAdmin() {
   document.getElementById('menu-view').style.display = 'block';
   document.getElementById('menu-who-label').textContent = identityLabel();
   fetchAgotados();
+  fetchInsumos();
+  fetchRecetas();
   loadSiteConfig();
+}
+
+function showInventario() {
+  hideAllViews();
+  document.getElementById('inventario-view').style.display = 'block';
+  document.getElementById('inventario-who-label').textContent = identityLabel();
+  fetchInsumos();
 }
 
 // Configuración del sitio (solo admin): mostrar/ocultar el aviso de envíos en el home.
@@ -183,6 +193,7 @@ document.getElementById('hub-logout-btn').addEventListener('click', doLogout);
 document.getElementById('logout-btn').addEventListener('click', doLogout);
 document.getElementById('reservas-logout-btn').addEventListener('click', doLogout);
 document.getElementById('menu-logout-btn').addEventListener('click', doLogout);
+document.getElementById('inventario-logout-btn').addEventListener('click', doLogout);
 
 document.getElementById('hub-pedidos-btn').addEventListener('click', showPanel);
 document.getElementById('hub-turnos-btn').addEventListener('click', () => {
@@ -190,8 +201,10 @@ document.getElementById('hub-turnos-btn').addEventListener('click', () => {
 });
 document.getElementById('hub-reservas-btn').addEventListener('click', showReservas);
 document.getElementById('hub-menu-btn').addEventListener('click', showMenuAdmin);
+document.getElementById('hub-inventario-btn').addEventListener('click', showInventario);
 document.getElementById('back-to-hub-btn').addEventListener('click', showHub);
 document.getElementById('reservas-back-to-hub-btn').addEventListener('click', showHub);
+document.getElementById('inventario-back-to-hub-btn').addEventListener('click', showHub);
 document.getElementById('menu-back-to-hub-btn').addEventListener('click', showHub);
 
 document.getElementById('refresh-btn').addEventListener('click', fetchOrders);
@@ -528,9 +541,13 @@ function renderMenuAdmin() {
     const rowsHtml = items
       .map((it) => {
         const agotado = agotadosCache.has(it.sku);
+        const tieneReceta = (recetasCache[it.sku] || []).length > 0;
         return `
         <div class="order-item-row">
           <span class="n">${mi(it.nombre)} · ${fmt(it.precio)}</span>
+          <button class="ghost-btn" data-receta="${it.sku}" data-nombre="${mi(it.nombre)}" type="button">
+            ${tieneReceta ? '✓ ' : ''}${I18n.t('recetaBtn')}
+          </button>
           <button class="btn-agotado ${agotado ? 'done' : ''}" data-toggle-agotado="${it.sku}" data-valor="${!agotado}" type="button">
             ${agotado ? I18n.t('markAvailableBtn') : I18n.t('markAgotadoBtn')}
           </button>
@@ -546,6 +563,9 @@ function renderMenuAdmin() {
 }
 
 document.getElementById('menu-admin-list').addEventListener('click', async (e) => {
+  const recetaBtn = e.target.closest('[data-receta]');
+  if (recetaBtn) return openRecetaModal(recetaBtn.dataset.receta, recetaBtn.dataset.nombre);
+
   const btn = e.target.closest('[data-toggle-agotado]');
   if (!btn) return;
   btn.disabled = true;
@@ -559,6 +579,154 @@ document.getElementById('menu-admin-list').addEventListener('click', async (e) =
   } catch (err) {
     alert(I18n.t('couldNotUpdatePrefix') + err.message);
     btn.disabled = false;
+  }
+});
+
+// ---------------- Recetas (qué insumos consume cada producto) ----------------
+
+let recetasCache = {}; // sku -> [{insumoId, cantidad}]
+
+async function fetchRecetas() {
+  try {
+    const res = await apiCall('listarRecetas', {});
+    recetasCache = res.recetas || {};
+    if (document.getElementById('menu-view').style.display !== 'none') renderMenuAdmin();
+  } catch (err) {
+    recetasCache = {};
+  }
+}
+
+const recetaModal = document.getElementById('receta-modal');
+recetaModal.addEventListener('click', (e) => {
+  if (e.target === recetaModal) recetaModal.classList.remove('open');
+});
+
+function openRecetaModal(sku, nombre) {
+  const actuales = {};
+  (recetasCache[sku] || []).forEach((it) => (actuales[it.insumoId] = it.cantidad));
+
+  const rowsHtml = insumosCache.length
+    ? insumosCache
+        .map(
+          (ins) => `
+        <div class="order-item-row">
+          <span class="n">${ins.nombre}${ins.unidad ? ` (${ins.unidad})` : ''}</span>
+          <input type="number" min="0" step="any" class="order-add-qty" style="width:80px;" data-receta-cantidad="${ins.id}" value="${actuales[ins.id] || ''}" placeholder="0" />
+        </div>`
+        )
+        .join('')
+    : `<p class="subt">${I18n.t('noInsumosYet')}</p>`;
+
+  document.getElementById('receta-modal-body').innerHTML = `
+    <h2>${I18n.t('recetaModalTitle')}</h2>
+    <p class="subt">${nombre}</p>
+    <p class="subt">${I18n.t('recetaModalHint')}</p>
+    <div id="receta-rows">${rowsHtml}</div>
+    <button class="primary-btn" id="receta-save-btn" type="button" style="width:100%; margin-top:12px;">${I18n.t('recetaSaveBtn')}</button>
+    <button class="link-btn" id="receta-cancel-btn" type="button" style="width:100%; margin-top:8px;">${I18n.t('cancelBtn')}</button>
+  `;
+  recetaModal.classList.add('open');
+
+  document.getElementById('receta-cancel-btn').onclick = () => recetaModal.classList.remove('open');
+  document.getElementById('receta-save-btn').onclick = async () => {
+    const items = [...document.querySelectorAll('[data-receta-cantidad]')]
+      .map((inp) => ({ insumoId: inp.dataset.recetaCantidad, cantidad: Number(inp.value) || 0 }))
+      .filter((it) => it.cantidad > 0);
+    const saveBtn = document.getElementById('receta-save-btn');
+    saveBtn.disabled = true;
+    try {
+      await apiCall('guardarReceta', { ...authParams(), sku, items });
+      await fetchRecetas();
+      recetaModal.classList.remove('open');
+    } catch (err) {
+      alert(I18n.t('couldNotUpdatePrefix') + err.message);
+      saveBtn.disabled = false;
+    }
+  };
+}
+
+// ---------------- Inventario (insumos y stock) ----------------
+
+let insumosCache = [];
+
+async function fetchInsumos() {
+  const list = document.getElementById('insumos-list');
+  try {
+    const res = await apiCall('listarInsumos', {});
+    insumosCache = res.insumos || [];
+    if (list && document.getElementById('inventario-view').style.display !== 'none') renderInsumos();
+  } catch (err) {
+    insumosCache = [];
+    if (list) list.innerHTML = `<div class="empty-state">${I18n.t('errorLoadingPrefix')}${err.message}</div>`;
+  }
+}
+
+function renderInsumos() {
+  const list = document.getElementById('insumos-list');
+  if (!insumosCache.length) {
+    list.innerHTML = `<div class="empty-state">${I18n.t('noInsumosYet')}</div>`;
+    return;
+  }
+  list.innerHTML = insumosCache
+    .map(
+      (ins) => `
+    <div class="order-item-row">
+      <span class="n">${ins.nombre}${ins.unidad ? ` (${ins.unidad})` : ''}</span>
+      <span class="p">${I18n.t('stockLabel')}: ${ins.stock}</span>
+      <input type="number" step="any" class="order-add-qty" style="width:80px;" data-stock-delta="${ins.id}" placeholder="±" />
+      <button class="ghost-btn" data-ajustar="${ins.id}" type="button">${I18n.t('applyBtn')}</button>
+      <button class="item-remove-btn" data-eliminar-insumo="${ins.id}" type="button" title="${I18n.t('deleteBtn')}">×</button>
+    </div>`
+    )
+    .join('');
+}
+
+document.getElementById('insumo-add-btn').addEventListener('click', async () => {
+  const nombreInp = document.getElementById('insumo-nombre');
+  const unidadInp = document.getElementById('insumo-unidad');
+  const nombre = nombreInp.value.trim();
+  if (!nombre) return;
+  const btn = document.getElementById('insumo-add-btn');
+  btn.disabled = true;
+  try {
+    await apiCall('guardarInsumo', { ...authParams(), nombre, unidad: unidadInp.value.trim() });
+    nombreInp.value = '';
+    unidadInp.value = '';
+    await fetchInsumos();
+  } catch (err) {
+    alert(I18n.t('couldNotUpdatePrefix') + err.message);
+  }
+  btn.disabled = false;
+});
+
+document.getElementById('insumos-list').addEventListener('click', async (e) => {
+  const ajustarBtn = e.target.closest('[data-ajustar]');
+  if (ajustarBtn) {
+    const input = document.querySelector(`[data-stock-delta="${ajustarBtn.dataset.ajustar}"]`);
+    const delta = Number(input.value);
+    if (!delta) return;
+    ajustarBtn.disabled = true;
+    try {
+      await apiCall('ajustarStock', { ...authParams(), insumoId: ajustarBtn.dataset.ajustar, delta });
+      await fetchInsumos();
+    } catch (err) {
+      alert(I18n.t('couldNotUpdatePrefix') + err.message);
+      ajustarBtn.disabled = false;
+    }
+    return;
+  }
+
+  const delBtn = e.target.closest('[data-eliminar-insumo]');
+  if (delBtn) {
+    if (!confirm(I18n.t('confirmDeleteInsumo'))) return;
+    delBtn.disabled = true;
+    try {
+      await apiCall('eliminarInsumo', { ...authParams(), insumoId: delBtn.dataset.eliminarInsumo });
+      await fetchInsumos();
+    } catch (err) {
+      alert(I18n.t('couldNotDeletePrefix') + err.message);
+      delBtn.disabled = false;
+    }
   }
 });
 
@@ -769,6 +937,13 @@ function applyStaticI18n() {
   document.getElementById('admin-menu-title').textContent = I18n.t('menuAdminTitle');
   document.getElementById('menu-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
   document.getElementById('menu-logout-btn').textContent = I18n.t('logoutBtn');
+  document.getElementById('hub-inventario-btn').textContent = I18n.t('hubInventarioBtn');
+  document.getElementById('admin-inventario-title').textContent = I18n.t('hubInventarioBtn');
+  document.getElementById('inventario-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
+  document.getElementById('inventario-logout-btn').textContent = I18n.t('logoutBtn');
+  document.getElementById('insumo-nombre').placeholder = I18n.t('insumoNombrePlaceholder');
+  document.getElementById('insumo-unidad').placeholder = I18n.t('insumoUnidadPlaceholder');
+  document.getElementById('insumo-add-btn').textContent = I18n.t('addInsumoBtn');
 }
 
 function onLangChange() {
@@ -779,6 +954,7 @@ function onLangChange() {
     renderHorarioSemanal();
   }
   if (document.getElementById('menu-view').style.display !== 'none') renderMenuAdmin();
+  if (document.getElementById('inventario-view').style.display !== 'none') renderInsumos();
 }
 
 renderLangSelect(document.getElementById('admin-lang-slot'));
@@ -786,6 +962,7 @@ renderLangSelect(document.getElementById('hub-lang-slot'));
 renderLangSelect(document.getElementById('panel-lang-slot'));
 renderLangSelect(document.getElementById('reservas-lang-slot'));
 renderLangSelect(document.getElementById('menu-lang-slot'));
+renderLangSelect(document.getElementById('inventario-lang-slot'));
 
 // ---------------- Init ----------------
 
