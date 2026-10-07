@@ -253,6 +253,37 @@ const STORY7_PARRAFOS = {
   ],
 };
 
+const STORY8_PARRAFOS = {
+  es: [
+    'Basta con subir un poco para entender cómo es Colombia: la cordillera de los Andes entra al país por el sur como una sola cadena y, más al norte, se abre en tres -- la Occidental, la Central y la Oriental --, con valles profundos entre una y otra. Casi todo lo que pasa en el país -- dónde se cultiva, dónde se vive, por dónde pasa una carretera -- se explica mirando hacia dónde se doblan esas montañas.',
+    'Las ciudades también se acomodaron a ese relieve. Medellín está en el valle de Aburrá, rodeada de montañas; Bogotá se levanta en una sabana a unos 2.600 metros sobre el nivel del mar. Y la altura cambia el clima casi como si se viajara de un país a otro: en Colombia se habla de “pisos térmicos” -- tierra caliente, templada, fría y páramo --, y en un solo día de camino se puede pasar del calor húmedo al frío de la neblina.',
+    'Japón vive algo parecido, aunque casi nadie lo piense así. Cerca de tres cuartas partes de su territorio son montañosas, y por eso la gente se concentró en las llanuras y las cuencas que quedan entre ellas. Nagoya, por ejemplo, está en la llanura de Nōbi, en la prefectura de Aichi, con montañas hacia el norte. Allá también la altura manda: la nieve, los cultivos y la temperatura cambian según qué tan arriba se esté.',
+    'En los dos países, entonces, el paisaje no es un telón de fondo: es lo que decide cómo se vive. Quien crece entre montañas aprende a medir las distancias en horas y no en kilómetros, a mirar el cielo antes de salir y a valorar lo que logra llegar hasta su mesa desde lo alto. La foto de esta entrada, tomada desde una montaña con el valle y las nubes al fondo, podría ser de cualquiera de los dos.',
+    'El café colombiano es parte de esa historia: generalmente se cultiva en laderas de montaña, entre unos 1.200 y 1.800 metros de altura, donde el clima templado y las noches frescas le dan su carácter. Tomar una taza de ese café en una ciudad de llanura como Nagoya cierra un círculo curioso. Si quiere probarlo y mirar de vez en cuando por la ventana, lo esperamos en Boogaloo.',
+  ],
+  en: [
+    "You only have to climb a little to understand what Colombia is like: the Andes enter the country from the south as a single chain and, farther north, split into three -- the Western, Central and Eastern ranges -- with deep valleys in between. Almost everything that happens in the country -- where things are grown, where people live, where a road can go -- is explained by looking at where those mountains bend.",
+    "Cities adapted to that terrain too. Medellín sits in the Aburrá Valley, surrounded by mountains; Bogotá rises on a high plain about 2,600 meters above sea level. And altitude changes the climate almost as if you were traveling to another country: in Colombia people talk about “thermal floors” -- hot land, temperate, cold and páramo -- and in a single day on the road you can go from humid heat to the chill of the fog.",
+    "Japan lives something similar, though hardly anyone thinks of it that way. Around three quarters of its territory is mountainous, which is why people gathered on the plains and basins between the ranges. Nagoya, for example, sits on the Nōbi Plain in Aichi Prefecture, with mountains to the north. There too, altitude rules: snow, crops and temperature change depending on how high up you are.",
+    "In both countries, then, the landscape isn't a backdrop: it's what decides how people live. Anyone who grows up among mountains learns to measure distance in hours instead of kilometers, to look at the sky before heading out, and to appreciate whatever manages to make its way down to the table from up high. The photo in this post, taken from a mountain with the valley and clouds in the distance, could belong to either of them.",
+    "Colombian coffee is part of that story: it's generally grown on mountain slopes, roughly between 1,200 and 1,800 meters above sea level, where the mild climate and cool nights give it its character. Drinking a cup of that coffee in a lowland city like Nagoya closes a curious circle. If you'd like to taste it and glance out the window now and then, we're waiting for you at Boogaloo.",
+  ],
+  ja: [
+    '少し高いところへ登れば、コロンビアという国のことがわかります。アンデス山脈は南から一本の連なりとして国内に入り、北へ進むにつれて西・中央・東の三つの山脈に分かれ、その間に深い谷が広がっています。作物がどこで育つか、人がどこに住むか、道路がどこを通れるか。国で起きるほとんどのことは、この山々がどこで曲がっているかを見れば説明がつきます。',
+    '都市も、この地形に合わせて作られてきました。メデジンは山々に囲まれたアブラ渓谷にあり、ボゴタは海抜およそ2,600メートルの高原に広がっています。そして標高によって気候は、まるで別の国へ旅したかのように変わります。コロンビアでは「ピソ・テルミコ（気温帯）」 ―― 暑い土地、温暖な土地、寒い土地、そしてパラモ（高地の湿原） ―― という言い方があり、一日移動するだけで、蒸し暑さから霧の冷たさまで体験できます。',
+    '日本にも似たところがありますが、そう考える人はあまりいません。国土の約4分の3が山地で、人々はその間にある平野や盆地に集まって暮らしてきました。たとえば名古屋は愛知県の濃尾平野にあり、北には山々が連なっています。日本でも標高がものを言います。雪も、作物も、気温も、どれくらい高いところにいるかで変わります。',
+    'つまり二つの国では、風景は背景ではなく、暮らし方を決めるものです。山の間で育った人は、距離をキロではなく時間で測ることを学び、出かける前に空を見上げ、高い場所から食卓までたどり着いたものを大切にするようになります。この記事の写真は、谷と雲を遠くに望む山から撮ったものですが、どちらの国の風景だと言われても不思議ではありません。',
+    'コロンビアのコーヒーも、その物語の一部です。一般に標高およそ1,200〜1,800メートルの山の斜面で育てられ、穏やかな気候と涼しい夜がその個性を生みます。名古屋のような平野の街でその一杯を飲むと、不思議な円が閉じる気がします。ときどき窓の外を眺めながら味わってみたい方は、ぜひBoogalooへ。',
+  ],
+  pt: [
+    'Basta subir um pouco para entender como é a Colômbia: a cordilheira dos Andes entra no país pelo sul como uma única cadeia e, mais ao norte, se abre em três -- a Ocidental, a Central e a Oriental --, com vales profundos entre elas. Quase tudo o que acontece no país -- onde se cultiva, onde se vive, por onde passa uma estrada -- se explica olhando para onde essas montanhas se dobram.',
+    'As cidades também se acomodaram a esse relevo. Medellín fica no vale de Aburrá, cercada de montanhas; Bogotá se ergue numa savana a cerca de 2.600 metros acima do nível do mar. E a altitude muda o clima quase como se a pessoa viajasse de um país a outro: na Colômbia fala-se em “pisos térmicos” -- terra quente, temperada, fria e páramo --, e em um único dia de estrada é possível passar do calor úmido ao frio da neblina.',
+    'O Japão vive algo parecido, embora quase ninguém pense assim. Cerca de três quartos do seu território são montanhosos, e por isso as pessoas se concentraram nas planícies e bacias que ficam entre elas. Nagoia, por exemplo, está na planície de Nōbi, na província de Aichi, com montanhas ao norte. Lá também a altitude manda: a neve, as lavouras e a temperatura mudam conforme a altura em que se está.',
+    'Nos dois países, portanto, a paisagem não é cenário: é o que decide como se vive. Quem cresce entre montanhas aprende a medir distâncias em horas e não em quilômetros, a olhar o céu antes de sair e a valorizar o que consegue chegar à mesa lá de cima. A foto desta entrada, tirada de uma montanha com o vale e as nuvens ao fundo, poderia ser de qualquer um dos dois.',
+    'O café colombiano faz parte dessa história: geralmente é cultivado em encostas de montanha, entre cerca de 1.200 e 1.800 metros de altitude, onde o clima ameno e as noites frescas lhe dão seu caráter. Tomar uma xícara desse café numa cidade de planície como Nagoia fecha um círculo curioso. Se quiser prová-lo e olhar de vez em quando pela janela, esperamos você no Boogaloo.',
+  ],
+};
+
 const STORIES = [
   {
     key: 'story1',
@@ -322,6 +353,16 @@ const STORIES = [
     color: 'red',
     image: 'img/blog/tolima-ladera.jpg',
     imageAlt: 'Ladera verde con plantas de hojas rojizas al atardecer, Tolima, Colombia',
+    credit: null,
+  },
+  {
+    key: 'story8',
+    date: '2026-10-07',
+    parrafos: STORY8_PARRAFOS,
+    titleKey: 'blogStory8Title',
+    color: 'blue',
+    image: 'img/blog/tolima-valle-nubes.jpg',
+    imageAlt: 'Vista desde lo alto de una montaña hacia un valle con un río y nubes, Colombia',
     credit: null,
   },
 ];
