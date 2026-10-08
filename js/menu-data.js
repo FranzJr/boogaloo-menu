@@ -154,6 +154,43 @@ const MENU_CATEGORIES = [
     ],
   },
   {
+    id: 'platos-fuertes',
+    icon: 'plato',
+    nombre: L('Platos Fuertes', 'Main Dishes', 'メインディッシュ', 'Pratos Principais'),
+    subt: L(
+      'Para comer con hambre',
+      'Hearty dishes',
+      'たっぷりのメイン料理',
+      'Pratos fartos'
+    ),
+    items: [
+      {
+        sku: 'bandeja-paisa',
+        nombre: L('Bandeja Paisa', 'Bandeja Paisa', 'バンデハ・パイサ', 'Bandeja Paisa'),
+        img: 'img/platos/bandeja-paisa.jpg',
+        desc: L(
+          'El plato más representativo de Colombia: frijoles, arroz, carne molida, chicharrón, chorizo, huevo frito, aguacate, arepa y patacón, todo en un mismo plato.',
+          "Colombia's most iconic dish: beans, rice, ground beef, pork belly, chorizo, fried egg, avocado, arepa and patacón, all on one plate.",
+          'コロンビアを代表する一皿。豆、ご飯、牛ひき肉、チチャロン（豚の皮の唐揚げ）、チョリソー、目玉焼き、アボカド、アレパ、パタコンが一皿に盛り込まれています。',
+          'O prato mais representativo da Colômbia: feijão, arroz, carne moída, torresmo, chorizo, ovo frito, abacate, arepa e patacón, tudo em um só prato.'
+        ),
+        precio: 2300,
+      },
+      {
+        sku: 'patacon-carne',
+        nombre: L('Patacón con Carne', 'Patacón with Beef', 'パタコン・コン・カルネ', 'Patacón com Carne'),
+        img: 'img/platos/patacon-carne.jpg',
+        desc: L(
+          'Patacón (plátano verde aplastado y frito) cubierto con carne de res guisada, acompañado de ensalada fresca.',
+          'Patacón (smashed and fried green plantain) topped with stewed beef, served with fresh salad.',
+          'パタコン（青いプランテンを潰して揚げたもの）に牛肉の煮込みをのせ、フレッシュサラダを添えました。',
+          'Patacón (banana-da-terra verde amassada e frita) coberto com carne bovina refogada, acompanhado de salada fresca.'
+        ),
+        precio: 1300,
+      },
+    ],
+  },
+  {
     id: 'jugos',
     icon: 'jugo',
     nombre: L('Jugos Naturales', 'Natural Juices', 'ナチュラルジュース', 'Sucos Naturais'),

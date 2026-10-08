@@ -29,6 +29,10 @@ function detectStaffIdentity() {
 // volver, etc.) — cada página sigue manejando sus propios ids y lógica.
 // afterHtml: contenido extra dentro de <header> después de header-inner (ej. el
 // nav de categorías del menú).
+// Enlaces del menú público (para quien no es staff).
+const GOOGLE_MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Boogaloo Colombian Café & Restaurant, 2-16 Nakago, Nakagawa Ward, Nagoya');
+const UBER_EATS_URL = 'https://www.ubereats.com/search?q=Boogaloo';
+
 function renderSiteHeader(actionsHtml, afterHtml) {
   const mount = document.getElementById('site-header-mount');
   if (!mount) return;
@@ -58,6 +62,16 @@ function renderSiteHeader(actionsHtml, afterHtml) {
         <a href="nomina.html" id="staff-link-nomina"></a>
         <a href="about.html" id="staff-link-historia"></a>
         <a href="blog.html" id="staff-link-blog"></a>
+        <a href="eventos.html" id="staff-link-eventos"></a>
+      </div>
+    </nav>
+    <nav class="public-nav" id="public-nav" style="display:none;">
+      <div class="staff-subnav-inner">
+        <a href="about.html" id="pub-link-historia"></a>
+        <a href="blog.html" id="pub-link-blog"></a>
+        <a href="eventos.html" id="pub-link-eventos"></a>
+        <a href="${GOOGLE_MAPS_URL}" target="_blank" rel="noopener" id="pub-link-maps">Google Maps</a>
+        <a href="${UBER_EATS_URL}" target="_blank" rel="noopener" id="pub-link-uber"></a>
       </div>
     </nav>
   `;
@@ -65,6 +79,8 @@ function renderSiteHeader(actionsHtml, afterHtml) {
   if (staff) {
     document.getElementById('staff-subnav').style.display = 'block';
     document.getElementById('staff-subnav-who').textContent = staff.nombre;
+  } else {
+    document.getElementById('public-nav').style.display = 'block';
   }
 }
 
@@ -78,6 +94,7 @@ function renderSiteFooter(extraLinksHtml) {
         <nav class="footer-links">
           <a href="about.html" id="footer-historia-link"></a>
           <a href="blog.html" id="footer-blog-link"></a>
+          <a href="eventos.html" id="footer-eventos-link"></a>
           <a href="envios/index.html" id="footer-envios-link"></a>
           <a href="https://instagram.com/boogaloo.jp" target="_blank" rel="noopener">Instagram</a>
           ${extraLinksHtml || ''}
@@ -97,11 +114,19 @@ function applyLayoutI18n() {
     document.getElementById('staff-link-nomina').textContent = I18n.t('hubNominaBtn');
     document.getElementById('staff-link-historia').textContent = I18n.t('abNavHistoria');
     document.getElementById('staff-link-blog').textContent = I18n.t('blogNavLabel');
+    document.getElementById('staff-link-eventos').textContent = I18n.t('evNavLabel');
+  }
+  if (document.getElementById('pub-link-historia')) {
+    document.getElementById('pub-link-historia').textContent = I18n.t('abNavHistoria');
+    document.getElementById('pub-link-blog').textContent = I18n.t('blogNavLabel');
+    document.getElementById('pub-link-eventos').textContent = I18n.t('evNavLabel');
+    document.getElementById('pub-link-uber').textContent = I18n.t('pubNavUber');
   }
   if (document.getElementById('site-footer-text')) {
     document.getElementById('site-footer-text').textContent = I18n.t('footerText');
     document.getElementById('footer-historia-link').textContent = I18n.t('abNavHistoria');
     document.getElementById('footer-blog-link').textContent = I18n.t('blogNavLabel');
+    document.getElementById('footer-eventos-link').textContent = I18n.t('evNavLabel');
     document.getElementById('footer-envios-link').textContent = I18n.t('footerEnviosLink');
     document.getElementById('footer-copyright').textContent = I18n.t('abCopyright', new Date().getFullYear());
   }

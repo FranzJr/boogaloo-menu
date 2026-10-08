@@ -110,11 +110,19 @@ function slipHtml(n) {
       <div class="ps-fill s6"></div>${cell('payTotal', fmtN(n.shikyuTotal), 'ps-total')}
     </div></div>
 
-    <div class="ps-block"><div class="ps-side">${PS.ded[0]}</div><div class="ps-grid g7">
+    <div class="ps-block"><div class="ps-side">${PS.ded[0]}</div>
+    ${n.seguros === false
+      ? `<div class="ps-grid g3">
+      ${cell('kazei', fmtN(n.kazeiTaisho))}${cell('shotoku', fmtN(n.shotoku))}${cell('juumin', fmtN(n.juumin))}
+      <div class="ps-fill s2"></div>${cell('dedTotal', fmtN(n.kojoTotal), 'ps-total')}
+      <div class="ps-fill s2"></div>${cell('net', fmtN(n.sashihiki), 'ps-total ps-net')}
+    </div>`
+      : `<div class="ps-grid g7">
       ${cell('kenpo', fmtN(n.kenpo))}${cell('kosei', fmtN(n.kosei))}${cell('koyo', fmtN(n.koyo))}${cell('shakai', fmtN(n.shakaiTotal))}${cell('kazei', fmtN(n.kazeiTaisho))}${cell('shotoku', fmtN(n.shotoku))}${cell('juumin', fmtN(n.juumin))}
       <div class="ps-fill s6"></div>${cell('dedTotal', fmtN(n.kojoTotal), 'ps-total')}
       <div class="ps-fill s6"></div>${cell('net', fmtN(n.sashihiki), 'ps-total ps-net')}
-    </div></div>
+    </div>`}
+    </div>
 
     <div class="ps-block"><div class="ps-side">${PS.memo[0]}</div><div class="ps-memo">
       ${n.memo ? `<p>${n.memo.replace(/</g, '&lt;')}</p>` : ''}

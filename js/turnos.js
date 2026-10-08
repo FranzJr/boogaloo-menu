@@ -88,6 +88,11 @@ async function loadClientesYTarifas() {
   renderColaboradores();
 }
 
+function transporteDe(colaboradorId) {
+  const t = tarifasCache.find((x) => x.colaboradorId === colaboradorId);
+  return t ? Number(t.transporte) || 0 : 0;
+}
+
 function tarifaDe(colaboradorId) {
   const t = tarifasCache.find((x) => x.colaboradorId === colaboradorId);
   return t ? Number(t.valorHora) || 0 : 0;
@@ -261,6 +266,8 @@ function renderTarifas() {
         <span>${c.nombre}</span>
         <input type="number" min="0" step="10" value="${tarifaDe(c.id)}" data-tarifa="${c.id}" data-nombre="${c.nombre}" />
         <span>${I18n.t('tnPerHour')}</span>
+        <input type="number" min="0" step="10" value="${transporteDe(c.id)}" data-transporte="${c.id}" title="${I18n.t('nmTransportDay')}" placeholder="0" />
+        <span>${I18n.t('nmTransportDay')}</span>
         <button class="ghost-btn" data-save-tarifa="${c.id}" type="button">${I18n.t('tnSetRate')}</button>
       </div>`
         )
@@ -280,10 +287,13 @@ function renderColaboradores() {
                   ${I18n.t('tnModeLabel')}: ${modo === 'libre' ? I18n.t('tnModeLibre') : I18n.t('tnModeElegir')}
                 </button>`
               : '';
+          const inactivo = c.activo === false;
+          const activoBtn = `<button class="ghost-btn" data-toggle-activo="${c.id}" data-activo="${inactivo ? 'false' : 'true'}" type="button">${inactivo ? I18n.t('tnActivate') : I18n.t('tnDeactivate')}</button>`;
           return `
-      <div class="tn-mode-row">
-        <span class="name">${c.nombre}<small>${c.email}</small></span>
+      <div class="tn-mode-row" style="${inactivo ? 'opacity:0.6;' : ''}">
+        <span class="name">${c.nombre}${inactivo ? ` <em>(${I18n.t('tnInactive')})</em>` : ''}<small>${c.email}</small></span>
         ${modoBtn}
+        ${activoBtn}
         <button class="ghost-btn" data-toggle-rol="${c.id}" data-rol="${c.rol}" type="button">
           ${c.rol === 'colaborador' ? I18n.t('tnMakeClient') : I18n.t('tnMakeColab')}
         </button>
@@ -439,14 +449,15 @@ document.getElementById('tn-list').addEventListener('click', (e) => {
 
 // ---------------- Admin: registrar pago del mes (genera el recibo) ----------------
 
+const HORAS_MIN_SEGUROS = 80; // mismo umbral que el backend
 const PAY_ADJ_FIELDS = [
-  ['tsukinGravado', 'nmTsukinG'],
-  ['tsukinNoGravado', 'nmTsukinN'],
-  ['kenpo', 'nmKenpo'],
-  ['kosei', 'nmKosei'],
-  ['koyo', 'nmKoyo'],
-  ['shotoku', 'nmShotoku'],
-  ['juumin', 'nmJuumin'],
+  ['tsukinGravado', 'nmTsukinG', false],
+  ['tsukinNoGravado', 'nmTsukinN', false],
+  ['kenpo', 'nmKenpo', true],
+  ['kosei', 'nmKosei', true],
+  ['koyo', 'nmKoyo', true],
+  ['shotoku', 'nmShotoku', false],
+  ['juumin', 'nmJuumin', false],
 ];
 
 document.getElementById('tn-stats').addEventListener('click', (e) => {
@@ -459,7 +470,10 @@ document.getElementById('tn-stats').addEventListener('click', (e) => {
     <div class="form-error" id="pay-error"></div>
     <div class="field"><label>${I18n.t('nmPayDate')}</label><input type="date" id="pay-fecha" value="${dstr(new Date())}" /></div>
     <details class="tn-panel"><summary>${I18n.t('nmAdjustments')}</summary>
-      ${PAY_ADJ_FIELDS.map(([k, label]) => `<div class="field"><label>${I18n.t(label)}</label><input type="number" min="0" step="1" data-pay-adj="${k}" /></div>`).join('')}
+      ${PAY_ADJ_FIELDS.filter(([, , soloSeguros]) => !soloSeguros || Number(btn.dataset.horas) > HORAS_MIN_SEGUROS)
+        .map(([k, label]) => `<div class="field"><label>${I18n.t(label)}</label><input type="number" min="0" step="1" data-pay-adj="${k}" /></div>`)
+        .join('')}
+      ${Number(btn.dataset.horas) > HORAS_MIN_SEGUROS ? '' : `<p class="subt">${I18n.t('nmInsuranceNote')}</p>`}
     </details>
     <div class="field"><label>${I18n.t('nmMemo')}</label><input type="text" id="pay-memo" maxlength="300" /></div>
     <p class="subt">${I18n.t('nmReplaceNote')}</p>
@@ -577,6 +591,7 @@ document.getElementById('tn-tarifas-body').addEventListener('click', async (e) =
       colaboradorId: btn.dataset.saveTarifa,
       colaboradorNombre: input.dataset.nombre,
       valorHora: Number(input.value) || 0,
+      transporte: Number(document.querySelector(`[data-transporte="${btn.dataset.saveTarifa}"]`).value) || 0,
     });
     await loadClientesYTarifas();
   } catch (err) {
@@ -597,6 +612,21 @@ document.getElementById('tn-colabs-body').addEventListener('click', async (e) =>
       alert(err.message);
     }
     rolBtn.disabled = false;
+    return;
+  }
+
+  const activoBtn = e.target.closest('[data-toggle-activo]');
+  if (activoBtn) {
+    const desactivar = activoBtn.dataset.activo === 'true';
+    if (desactivar && !confirm(I18n.t('tnConfirmDeactivate'))) return;
+    activoBtn.disabled = true;
+    try {
+      await apiCall('cambiarActivoCliente', { ...authParams(), clienteId: activoBtn.dataset.toggleActivo, activo: !desactivar });
+      await loadClientesYTarifas();
+    } catch (err) {
+      alert(err.message);
+    }
+    activoBtn.disabled = false;
     return;
   }
 

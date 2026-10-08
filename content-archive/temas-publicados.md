@@ -10,3 +10,4 @@ Cada entrada: fecha de publicación, slug interno (`STORYn` en js/blog.js), tema
 - 2026-09-14 — `story5` — Reserva Ciudad Perdida de Falan (Tolima) y el shinrin-yoku (森林浴) japonés — caminar entre árboles sin agenda, ligado al café de sombra que se sirve en Boogaloo.
 - 2026-09-16 — `story6` — Campanas de iglesias colombianas y el joya no kane (除夜の鐘) japonés — un sonido que marca ocasiones sin necesidad de reloj, ligado al origen musical del nombre Boogaloo.
 - 2026-09-19 — `story7` — Arepa y onigiri — comidas amasadas y moldeadas a mano, portátiles y cotidianas, dos cereales distintos (maíz y arroz) con la misma idea; ligado a las arepas hechas a mano en Boogaloo.
+- 2026-10-07 — `story8` — Montañas de los Andes colombianos y de Japón — el relieve decide dónde y cómo se vive (valles, pisos térmicos, llanuras como la de Nōbi), ligado al café de ladera que se sirve en Boogaloo.

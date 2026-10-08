@@ -646,6 +646,38 @@ async function submitOrder() {
   }
 }
 
+// Le pregunta al cliente, justo después de pedir, si quiere que el staff le
+// converse o prefiere que sea breve -- con un toque simpático que además le
+// avisa en qué idioma estamos practicando (según el idioma del sitio).
+function chatPrefHtml() {
+  return `
+    <div class="chat-pref" id="chat-pref">
+      <img class="chat-pref-avatar" src="img/oso/oso-saludando.png" alt="" />
+      <div class="chat-pref-bubble">
+        <p class="chat-pref-note">${I18n.t('chatPrefNote')}</p>
+        <p class="chat-pref-question">${I18n.t('chatPrefQuestion')}</p>
+        <div class="chat-pref-actions">
+          <button type="button" class="chat-pref-btn" data-charla="conversar">${I18n.t('chatPrefChat')}</button>
+          <button type="button" class="chat-pref-btn" data-charla="minimo">${I18n.t('chatPrefMinimal')}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function bindChatPref(pedidoId) {
+  document.querySelectorAll('#chat-pref [data-charla]').forEach((btn) => {
+    btn.onclick = () => {
+      const charla = btn.dataset.charla;
+      apiCall('guardarCharla', { pedidoId, charla }).catch(() => {});
+      document.getElementById('chat-pref').innerHTML = `
+        <img class="chat-pref-avatar" src="img/oso/oso-bailando.png" alt="" />
+        <div class="chat-pref-bubble">
+          <p class="chat-pref-note">${charla === 'conversar' ? I18n.t('chatPrefThanksChat') : I18n.t('chatPrefThanksMinimal')}</p>
+        </div>`;
+    };
+  });
+}
+
 function renderSuccessStep() {
   const order = modalState.lastOrder;
   modalBody.innerHTML = `
@@ -658,8 +690,10 @@ function renderSuccessStep() {
       ${order.items.map((i) => `<div class="row"><span>${i.cantidad}x ${i.nombre}</span><span>${fmt(i.subtotal)}</span></div>`).join('')}
       <div class="row total"><span>${order.combinado ? I18n.t('orderTotalLabel') : I18n.t('totalLabel')}</span><span>${fmt(order.total)}</span></div>
     </div>
+    ${chatPrefHtml()}
     <button class="primary-btn" id="success-close" type="button">${I18n.t('doneBtn')}</button>
   `;
+  bindChatPref(order.pedidoId);
   document.getElementById('success-close').onclick = () => {
     modalState = { purpose: 'manage', tab: 'invitado' };
     closeModal();
@@ -835,3 +869,50 @@ refreshTrackedOrders();
 setInterval(refreshTrackedOrders, 20000);
 fetchAgotados().then(renderMenu);
 setInterval(() => fetchAgotados().then(renderMenu), 60000);
+
+// ---------------- Aviso de envíos (lo activa/desactiva el admin) ----------------
+// Se recuerda el último valor para no parpadear al cargar.
+const SHIP_BANNER_KEY = 'boogaloo_ship_banner_v1';
+function applyShipBanner(visible) {
+  const el = document.getElementById('ship-banner');
+  if (el) el.style.display = visible ? '' : 'none';
+}
+try {
+  applyShipBanner(localStorage.getItem(SHIP_BANNER_KEY) !== 'false');
+} catch (e) {}
+apiCall('obtenerConfig', {})
+  .then((res) => {
+    applyShipBanner(res.config.shipBanner);
+    try {
+      localStorage.setItem(SHIP_BANNER_KEY, String(res.config.shipBanner));
+    } catch (e) {}
+  })
+  .catch(() => {});
+
+// ---------------- Nav de categorías: se fija arriba solo al hacer scroll ----------------
+document.body.classList.add('menu-page');
+(function setupStickyCatNav() {
+  const nav = document.getElementById('cat-nav');
+  if (!nav) return;
+  const spacer = document.createElement('div');
+  spacer.className = 'cat-nav-spacer';
+  nav.parentNode.insertBefore(spacer, nav.nextSibling);
+  let naturalTop = 0;
+  const measure = () => {
+    const wasFixed = nav.classList.contains('is-fixed');
+    if (wasFixed) nav.classList.remove('is-fixed');
+    naturalTop = nav.getBoundingClientRect().top + window.scrollY;
+    spacer.style.height = nav.offsetHeight + 'px';
+    if (wasFixed) nav.classList.add('is-fixed');
+  };
+  const update = () => {
+    const fixed = window.scrollY > naturalTop;
+    nav.classList.toggle('is-fixed', fixed);
+    spacer.classList.toggle('on', fixed);
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', () => { measure(); update(); });
+  window.addEventListener('load', () => { measure(); update(); });
+  measure();
+  update();
+})();
