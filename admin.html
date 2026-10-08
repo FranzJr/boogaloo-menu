@@ -33,7 +33,6 @@
     <button class="primary-btn" id="hub-reservas-btn" type="button" style="width:100%; margin-bottom:10px;">Reservas</button>
     <button class="primary-btn" id="hub-menu-btn" type="button" style="width:100%; margin-bottom:10px;">Menú</button>
     <button class="primary-btn" id="hub-inventario-btn" type="button" style="width:100%; margin-bottom:10px;">Inventario</button>
-    <button class="primary-btn" id="hub-analytics-btn" type="button" style="width:100%; margin-bottom:10px;">Analítica</button>
     <span class="who" id="hub-who-label" style="display:block; margin-top:14px;"></span>
     <button class="link-btn" id="hub-logout-btn" type="button">Cerrar sesión</button>
   </div>
@@ -150,63 +149,11 @@
     <div id="reservas-list"></div>
   </div>
 
-  <!-- Vista de Analítica — datos de EJEMPLO, ver nota en js/analytics-data.js -->
-  <div class="admin-shell" id="analytics-view" style="display:none;">
-    <div class="admin-sticky-top">
-      <div class="admin-topbar">
-        <h1><span id="analytics-title">Analítica</span> <span class="an-badge" id="analytics-mock-badge">Maqueta</span></h1>
-        <div>
-          <span id="analytics-lang-slot"></span>
-          <button class="link-btn" id="analytics-back-to-hub-btn" type="button">← Volver</button>
-          <span class="who" id="analytics-who-label"></span>
-          <button class="link-btn" id="analytics-logout-btn" type="button">Cerrar sesión</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="an-notice" id="analytics-mock-notice"></div>
-    <button class="ghost-btn" id="analytics-regenerate-btn" type="button" style="margin-bottom:18px;"></button>
-
-    <div class="tn-stats" id="an-kpis"></div>
-
-    <div class="an-grid">
-      <div class="an-card an-card-wide">
-        <h3 id="an-trend-title"></h3>
-        <div id="an-trend-chart"></div>
-      </div>
-      <div class="an-card">
-        <h3 id="an-bypage-title"></h3>
-        <div id="an-bypage-chart"></div>
-      </div>
-      <div class="an-card">
-        <h3 id="an-device-title"></h3>
-        <div id="an-device-chart"></div>
-      </div>
-      <div class="an-card">
-        <h3 id="an-funnel-title"></h3>
-        <div id="an-funnel-chart"></div>
-      </div>
-    </div>
-
-    <div class="an-card">
-      <h3 id="an-recommendations-title"></h3>
-      <div id="an-recommendations"></div>
-    </div>
-
-    <div class="an-card">
-      <h3 id="an-visitors-title"></h3>
-      <div style="overflow-x:auto;">
-        <table class="an-table" id="an-visitors-table"></table>
-      </div>
-    </div>
-  </div>
-
   <script src="js/i18n.js"></script>
   <script src="js/menu-data.js"></script>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
   <script src="js/session.js"></script>
-  <script src="js/analytics-data.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>
