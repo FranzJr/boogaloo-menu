@@ -284,6 +284,37 @@ const STORY8_PARRAFOS = {
   ],
 };
 
+const STORY9_PARRAFOS = {
+  es: [
+    'En Ráquira, un pueblo de Boyacá, el barro no es un recuerdo para turistas: es un oficio de generaciones. Su nombre, según suele explicarse, viene de una palabra chibcha que significa “ciudad de las ollas”, y todavía hoy el pueblo vive de moldear barro a mano y en torno.',
+    'Colombia tiene varias tradiciones de cerámica, y cada una cuenta algo distinto. En La Chamba, un caserío del Guamo, en el Tolima, se hace una cerámica negra y bruñida que sirve para cocinar sobre el fuego. En El Carmen de Viboral, en Antioquia, la loza se pinta a mano, muchas veces con flores de colores. Una es para la olla y la otra para la mesa, pero las dos salen de manos que moldean y decoran.',
+    'Aichi, la prefectura de Nagoya, tiene su propia historia con el barro. Seto y Tokoname están entre los “seis hornos antiguos” de Japón, los centros de cerámica con más tradición del país. De Seto salió tanta vajilla que en japonés la palabra setomono llegó a significar “cerámica” en general. Y Tokoname es famosa por sus teteras de arcilla roja y por los maneki-neko, los gatos de la suerte.',
+    'Las dos tradiciones comparten algo básico: el barro se moldea con las manos, se cuece, y el color llega como un último gesto. Pintar una pieza es la parte final de un proceso largo, y por eso mucha gente la disfruta más de lo que esperaba: no hace falta ser artista, solo tomar el pincel y decidir qué quedará en la superficie.',
+    'En Boogaloo, en Nagoya, esa tradición tiene una excusa más: el 10 y el 17 de octubre hay Arte y Café, un especial de Halloween en el que puede elegir entre pintar cerámica o hacer un retrato de fantasma, con café colombiano en la mesa. La inscripción (¥1.500 por persona) se hace en la página de eventos del sitio. Lo esperamos en Boogaloo.',
+  ],
+  en: [
+    "In Ráquira, a town in Boyacá, clay isn't a souvenir for tourists: it's a trade passed down through generations. Its name, as it is usually explained, comes from a Chibcha word meaning “city of pots,” and even today the town lives from shaping clay by hand and on the wheel.",
+    "Colombia has several pottery traditions, and each one says something different. In La Chamba, a hamlet in El Guamo, Tolima, makers produce a black, burnished pottery meant for cooking over fire. In El Carmen de Viboral, in Antioquia, dishware is painted by hand, often with colorful flowers. One is for the pot and the other for the table, but both come from hands that shape and decorate.",
+    "Aichi, the prefecture where Nagoya sits, has its own history with clay. Seto and Tokoname are among Japan's “Six Ancient Kilns,” the country's pottery centers with the longest tradition. So much tableware came out of Seto that in Japanese the word setomono came to mean “ceramics” in general. And Tokoname is famous for its red-clay teapots and for maneki-neko, the lucky cats.",
+    "The two traditions share something basic: clay is shaped by hand, fired, and the color arrives as a final gesture. Painting a piece is the last part of a long process, which is why many people enjoy it more than they expected: you don't have to be an artist, just pick up the brush and decide what stays on the surface.",
+    "At Boogaloo, in Nagoya, that tradition gets one more excuse: on October 10 and 17 there is Art & Coffee, a Halloween special where you can choose between painting pottery or making a ghost portrait, with Colombian coffee on the table. Registration (¥1,500 per person) is on the events page of the site. We're waiting for you at Boogaloo.",
+  ],
+  ja: [
+    'ボヤカ県の町ラキラでは、粘土は観光客向けの記念品ではなく、何世代にもわたって受け継がれてきた仕事です。町の名前は、一般には、チブチャ語の「壺の町」を意味する言葉に由来すると説明されていて、今も町は手とろくろで粘土を形づくることで成り立っています。',
+    'コロンビアにはいくつもの陶芸の伝統があり、それぞれが違う物語を語ります。トリマ県グアモの集落ラ・チャンバでは、火にかけて調理するための、黒く磨き上げた焼き物が作られています。アンティオキア県のエル・カルメン・デ・ビボラルでは、食器に手で絵付けをし、色とりどりの花が描かれることも多くあります。一方は鍋のため、もう一方は食卓のためですが、どちらも形づくり、飾る人の手から生まれます。',
+    '名古屋のある愛知県にも、粘土との深い歴史があります。瀬戸と常滑は、日本の「六古窯」に数えられる、最も歴史ある焼き物の産地です。瀬戸からあまりに多くの食器が生まれたため、日本語では「せともの」が焼き物全般を指す言葉になりました。そして常滑は、赤土の急須と、招き猫で知られています。',
+    '二つの伝統には、基本的な共通点があります。粘土を手で形づくり、焼き、色は最後のひと手間として加わること。絵付けは長い工程の最後の部分で、だからこそ、思った以上に楽しめる人が多いのです。芸術家である必要はなく、筆を持って、表面に何を残すかを決めるだけでいいのです。',
+    '名古屋のBoogalooでは、この伝統にもう一つ楽しむきっかけがあります。10月10日と17日に、ハロウィンスペシャルの「アート＆コーヒークラブ」を開催。陶器の絵付けか、ゴーストの肖像画のどちらかを選んで、コロンビアコーヒーを楽しめます。お申し込み（1名 ¥1,500）は、サイトのイベントページからどうぞ。Boogalooでお待ちしています。',
+  ],
+  pt: [
+    'Em Ráquira, uma cidade de Boyacá, o barro não é lembrança para turista: é um ofício de gerações. Seu nome, segundo costuma ser explicado, vem de uma palavra chibcha que significa “cidade das panelas”, e ainda hoje a cidade vive de moldar barro à mão e no torno.',
+    'A Colômbia tem várias tradições de cerâmica, e cada uma conta algo diferente. Em La Chamba, um povoado de El Guamo, no Tolima, faz-se uma cerâmica preta e polida, própria para cozinhar no fogo. Em El Carmen de Viboral, em Antioquia, a louça é pintada à mão, muitas vezes com flores coloridas. Uma é para a panela e a outra para a mesa, mas as duas saem de mãos que moldam e decoram.',
+    'Aichi, a província de Nagoia, tem sua própria história com o barro. Seto e Tokoname estão entre os “seis fornos antigos” do Japão, os centros de cerâmica com mais tradição do país. De Seto saiu tanta louça que, em japonês, a palavra setomono passou a significar “cerâmica” em geral. E Tokoname é famosa por seus bules de argila vermelha e pelos maneki-neko, os gatos da sorte.',
+    'As duas tradições compartilham algo básico: o barro é moldado à mão, queimado, e a cor chega como um último gesto. Pintar uma peça é a parte final de um longo processo, e por isso muita gente gosta mais do que esperava: não é preciso ser artista, basta pegar o pincel e decidir o que ficará na superfície.',
+    'No Boogaloo, em Nagoia, essa tradição ganha mais um motivo: nos dias 10 e 17 de outubro acontece o Arte e Café, um especial de Halloween em que você pode escolher entre pintar cerâmica ou fazer um retrato de fantasma, com café colombiano na mesa. A inscrição (¥1.500 por pessoa) é feita na página de eventos do site. Esperamos você no Boogaloo.',
+  ],
+};
+
 const STORIES = [
   {
     key: 'story1',
@@ -364,6 +395,16 @@ const STORIES = [
     image: 'img/blog/tolima-valle-nubes.jpg',
     imageAlt: 'Vista desde lo alto de una montaña hacia un valle con un río y nubes, Colombia',
     credit: null,
+  },
+  {
+    key: 'story9',
+    date: '2026-10-09',
+    parrafos: STORY9_PARRAFOS,
+    titleKey: 'blogStory9Title',
+    color: 'gold',
+    image: 'img/blog/raquira-ceramica.jpg',
+    imageAlt: 'Manos de un artesano moldeando barro en un torno, Ráquira, Boyacá, Colombia',
+    credit: { name: 'Daniela Quintana', url: 'https://www.pexels.com/@daniela-quintana-75707103/', source: 'Pexels' },
   },
 ];
 
