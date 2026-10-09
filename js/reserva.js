@@ -6,13 +6,13 @@ let reservaItems = {}; // sku -> cantidad
 // horarioSemanal: 0=domingo ... 6=sábado. Cada día abre en un rango distinto (o está
 // cerrado); lo carga configTurnos, este es solo el valor de respaldo antes de esa carga.
 let horarioSemanal = {
-  0: { abierto: true, horaInicio: '11:00', horaFin: '16:00' },
+  0: { abierto: true, horaInicio: '12:00', horaFin: '19:00' },
   1: { abierto: false, horaInicio: '', horaFin: '' },
-  2: { abierto: true, horaInicio: '11:00', horaFin: '18:00' },
-  3: { abierto: true, horaInicio: '11:00', horaFin: '18:00' },
-  4: { abierto: false, horaInicio: '', horaFin: '' },
-  5: { abierto: true, horaInicio: '11:00', horaFin: '18:00' },
-  6: { abierto: true, horaInicio: '11:00', horaFin: '18:00' },
+  2: { abierto: false, horaInicio: '', horaFin: '' },
+  3: { abierto: false, horaInicio: '', horaFin: '' },
+  4: { abierto: true, horaInicio: '16:00', horaFin: '22:00' },
+  5: { abierto: true, horaInicio: '16:00', horaFin: '22:00' },
+  6: { abierto: true, horaInicio: '12:00', horaFin: '19:00' },
 };
 
 function dstrToday() {

@@ -292,7 +292,11 @@ function mountBearChat(rootId) {
       ${bcAvatar().outerHTML}
       <div><b id="bc-title"></b><small id="bc-sub"></small></div>
     </div>
-    <div class="bc-msgs" id="bc-msgs" aria-live="polite"></div>
+    <div class="bc-msgs-wrap">
+      <div class="bc-msgs" id="bc-msgs" aria-live="polite"></div>
+      <button type="button" class="bc-jump bc-up" id="bc-up">↑</button>
+      <button type="button" class="bc-jump bc-down" id="bc-down">↓</button>
+    </div>
     <div class="bc-chips" id="bc-chips"></div>
     <form class="bc-form" id="bc-form" autocomplete="off">
       <input type="text" id="bc-input" maxlength="200" />
@@ -302,9 +306,25 @@ function mountBearChat(rootId) {
   const form = document.getElementById('bc-form');
   const input = document.getElementById('bc-input');
 
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const upBtn = document.getElementById('bc-up');
+  const downBtn = document.getElementById('bc-down');
+
+  // Cada mensaje nuevo baja la conversación hasta el final, como un chat.
   function scrollDown() {
-    msgs.scrollTop = msgs.scrollHeight;
+    msgs.scrollTo({ top: msgs.scrollHeight, behavior: reduced ? 'auto' : 'smooth' });
   }
+
+  // Los botones ↑ / ↓ aparecen solo cuando hay algo más arriba o más abajo.
+  function updateJumpButtons() {
+    const maxScroll = msgs.scrollHeight - msgs.clientHeight;
+    upBtn.classList.toggle('show', msgs.scrollTop > 24);
+    downBtn.classList.toggle('show', maxScroll - msgs.scrollTop > 24);
+  }
+  msgs.addEventListener('scroll', updateJumpButtons, { passive: true });
+  upBtn.addEventListener('click', () => msgs.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }));
+  downBtn.addEventListener('click', scrollDown);
+  new MutationObserver(updateJumpButtons).observe(msgs, { childList: true });
 
   function addUser(text) {
     const row = document.createElement('div');
@@ -407,6 +427,10 @@ function mountBearChat(rootId) {
     document.getElementById('bc-sub').textContent = I18n.t('chatSub');
     input.placeholder = I18n.t('chatPlaceholder');
     document.getElementById('bc-send').setAttribute('aria-label', I18n.t('chatSend'));
+    upBtn.setAttribute('aria-label', I18n.t('chatGoTop'));
+    upBtn.title = I18n.t('chatGoTop');
+    downBtn.setAttribute('aria-label', I18n.t('chatGoBottom'));
+    downBtn.title = I18n.t('chatGoBottom');
     renderChips();
   }
 
