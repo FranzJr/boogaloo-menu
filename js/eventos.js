@@ -6,47 +6,61 @@
 const MEETUP_URL = 'https://www.meetup.com/meetup-group-htdlitmv/';
 const VENUE_MAP = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Boogaloo ニシベビル 101, 2-16 Nakago, Nakagawa Ward, Nagoya, Aichi 454-0921');
 
+const L = (es, en, ja, pt) => ({ es, en, ja, pt });
+const ART_PRICE = 1500; // por persona que haga la actividad de arte (el servidor valida el total)
+
 const EVENTS = [
   {
-    id: 'mateada',
-    dates: [{ date: '2026-09-27', url: 'https://www.meetup.com/meetup-group-htdlitmv/events/316607314/' }],
-    start: '11:00',
-    end: '19:00',
-    price: { es: 'Entrada ¥300', en: 'Entrance ¥300', ja: '入場料 ¥300', pt: 'Entrada ¥300' },
-    langs: 'JA · ES · EN',
-    title: { es: 'MATEADA', en: 'MATEADA', ja: 'MATEADA', pt: 'MATEADA' },
-    tag: { es: 'Colombia × Argentina', en: 'Colombia × Argentina', ja: 'コロンビア × アルゼンチン', pt: 'Colômbia × Argentina' },
-    desc: {
-      es: 'Una celebración cultural Colombia × Argentina con comida, música, baile y buena conversación. Está abierta a todos, sin importar la nacionalidad ni el idioma. Con DJ Rey (Cunumi Fiesta) y la invitada especial Yuuki-san. ¡Come, bebe, baila, conversa y haz amigos!',
-      en: 'A Colombia × Argentina cultural celebration with food, music, dancing and good conversation. Everyone is welcome, whatever their nationality or language. With DJ Rey (Cunumi Fiesta) and special guest Yuuki-san. Eat, drink, dance, talk and make friends!',
-      ja: 'コロンビア×アルゼンチンの文化交流イベント。食べ物、音楽、ダンス、おしゃべりを楽しみます。国籍や言語を問わず、どなたでも歓迎です。DJ Rey（Cunumi Fiesta）とスペシャルゲストのYuukiさんが登場。食べて、飲んで、踊って、話して、友達を作ろう！',
-      pt: 'Uma celebração cultural Colômbia × Argentina com comida, música, dança e boa conversa. Todos são bem-vindos, seja qual for a nacionalidade ou o idioma. Com DJ Rey (Cunumi Fiesta) e a convidada especial Yuuki-san. Coma, beba, dance, converse e faça amigos!',
-    },
+    id: 'halloween-arte',
+    registration: true,
+    dates: [
+      { date: '2026-10-10', url: 'https://www.meetup.com/meetup-group-htdlitmv/events/316632366/' },
+      { date: '2026-10-17', url: 'https://www.meetup.com/meetup-group-htdlitmv/events/316731171/' },
+    ],
+    start: '15:00',
+    end: '17:00',
+    price: L(
+      '¥1.500 por persona que haga la actividad de arte (incluye materiales y una bebida)',
+      '¥1,500 per person doing the art activity (materials and one drink included)',
+      'アート体験は1名 ¥1,500（材料とワンドリンク込み）',
+      '¥1.500 por pessoa que fizer a atividade de arte (materiais e uma bebida incluídos)'
+    ),
+    langs: 'EN',
+    title: L(
+      'Arte y Café Club — Especial Halloween 🎃',
+      'Art & Coffee Club — Halloween Special 🎃',
+      'アート＆コーヒークラブ ～ハロウィンスペシャル～ 🎃',
+      'Clube de Arte e Café — Especial de Halloween 🎃'
+    ),
+    tag: L('Halloween 👻', 'Halloween 👻', 'ハロウィン 👻', 'Halloween 👻'),
+    desc: L(
+      'Actividad de arte de Halloween: elige entre pintar cerámica o hacer un retrato de fantasma. Se hace en inglés y es necesario inscribirse con anticipación.',
+      'A Halloween art activity: choose between pottery painting or a ghost portrait. Held in English, and advance registration is required.',
+      'ハロウィンのアート体験。陶器の絵付けか、ゴーストの肖像画のどちらかを選べます。英語で進行し、事前のお申し込みが必要です。',
+      'Uma atividade de arte de Halloween: escolha entre pintar cerâmica ou fazer um retrato de fantasma. Em inglês, com inscrição prévia obrigatória.'
+    ),
+    activities: [
+      { value: 'Pintura de cerámica', label: L('Pintura de cerámica', 'Pottery painting', '陶器の絵付け', 'Pintura de cerâmica') },
+      { value: 'Retrato fantasma', label: L('Retrato fantasma', 'Ghost portrait', 'ゴーストの肖像画', 'Retrato de fantasma') },
+    ],
   },
   {
-    id: 'spanish-club',
-    dates: [
-      { date: '2026-10-03', url: 'https://www.meetup.com/meetup-group-htdlitmv/events/lfhhbvyjcnbfb/' },
-      { date: '2026-10-10', url: 'https://www.meetup.com/meetup-group-htdlitmv/events/316632366/' },
-      { date: '2026-10-17', url: 'https://www.meetup.com/meetup-group-htdlitmv/events/lfhhbvyjcnbwb/' },
-    ],
-    start: '13:00',
-    end: '15:00',
-    price: { es: 'Una bebida como mínimo', en: 'One drink minimum', ja: 'ワンドリンク制', pt: 'Uma bebida no mínimo' },
+    id: 'halloween-sorpresa',
+    registration: true,
+    dates: [{ date: '2026-10-24' }, { date: '2026-10-31' }],
+    start: null,
+    end: '23:59',
+    price: L(
+      '¥1.500 por persona que haga la actividad de arte',
+      '¥1,500 per person doing the art activity',
+      'アート体験は1名 ¥1,500',
+      '¥1.500 por pessoa que fizer a atividade de arte'
+    ),
     langs: '',
-    title: {
-      es: 'Club de Español ☕ (principiantes bienvenidos)',
-      en: 'Spanish Club ☕ (beginners welcome)',
-      ja: 'スペイン語クラブ ☕ Club de Español（初心者歓迎）',
-      pt: 'Clube de Espanhol ☕ (iniciantes bem-vindos)',
-    },
-    tag: { es: 'Todos los sábados', en: 'Every Saturday', ja: '毎週土曜日', pt: 'Todos os sábados' },
-    desc: {
-      es: 'Dos horas de conversación informal en español con hablantes nativos, para todos los niveles. Hay una mesa para principiantes (saludos y presentaciones) y una mesa de conversación libre. Practica el idioma con café colombiano.',
-      en: 'Two hours of casual Spanish conversation with native speakers, for all levels. There is a beginners’ table (greetings and introductions) and a free-conversation table. Practice the language over Colombian coffee.',
-      ja: 'ネイティブスピーカーと楽しむ2時間のスペイン語会話。全レベル歓迎です。初心者テーブル（あいさつ・自己紹介）とフリートークのテーブルがあります。コロンビアコーヒーを飲みながら気軽に練習しましょう。',
-      pt: 'Duas horas de conversa informal em espanhol com falantes nativos, para todos os níveis. Há uma mesa para iniciantes (cumprimentos e apresentações) e uma mesa de conversa livre. Pratique o idioma tomando café colombiano.',
-    },
+    title: L('Sorpresa de Halloween 🎃', 'Halloween Surprise 🎃', 'ハロウィンのサプライズ 🎃', 'Surpresa de Halloween 🎃'),
+    tag: L('Por descubrir 👀', 'To be revealed 👀', 'お楽しみに 👀', 'A descobrir 👀'),
+    desc: null,
+    activities: null,
   },
 ];
 
@@ -84,8 +98,11 @@ function renderEvents() {
       const b = badgeParts(dates[0].date);
       const datesHtml = dates
         .map(
-          (d) => `<li><span>${fmtDate(d.date)} · ${ev.start}–${ev.end}</span>
-            <a class="ghost-btn" href="${d.url}" target="_blank" rel="noopener">${I18n.t('evRsvpBtn')}</a></li>`
+          (d) => `<li><span>${fmtDate(d.date)}${ev.start ? ' · ' + ev.start + (ev.end ? '–' + ev.end : '') : ''}</span>
+            <span class="ev-date-actions">
+              ${ev.registration ? `<button class="primary-btn ev-reg-btn" data-reg-event="${ev.id}" data-reg-date="${d.date}" type="button">${I18n.t('evRegisterBtn')}</button>` : ''}
+              ${d.url ? `<a class="ghost-btn" href="${d.url}" target="_blank" rel="noopener">${I18n.t('evRsvpBtn')}</a>` : ''}
+            </span></li>`
         )
         .join('');
       return `
@@ -95,7 +112,7 @@ function renderEvents() {
         <span class="ev-tag">${pick(ev.tag)}</span>
         <h3>${pick(ev.title)}</h3>
         <ul class="ev-dates">${datesHtml}</ul>
-        <p class="ev-desc">${pick(ev.desc)}</p>
+        ${ev.desc ? `<p class="ev-desc">${pick(ev.desc)}</p>` : ''}
         <div class="ev-meta">
           <span>📍 <a href="${VENUE_MAP}" target="_blank" rel="noopener">${I18n.t('evVenue')}</a></span>
           <span>💴 ${pick(ev.price)}</span>
@@ -105,6 +122,93 @@ function renderEvents() {
     </article>`;
     })
     .join('');
+}
+
+// ---------------- Inscripción ----------------
+
+const evModal = document.getElementById('ev-modal');
+const evModalBody = document.getElementById('ev-modal-body');
+evModal.addEventListener('click', (e) => {
+  if (e.target === evModal) evModal.classList.remove('open');
+});
+
+document.getElementById('ev-list').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-reg-event]');
+  if (btn) openRegistration(btn.dataset.regEvent, btn.dataset.regDate);
+});
+
+function openRegistration(eventId, fecha) {
+  const ev = EVENTS.find((x) => x.id === eventId);
+  if (!ev) return;
+  const s = typeof Session !== 'undefined' ? Session.data : null;
+  const activityHtml = ev.activities
+    ? `<div class="field"><label>${I18n.t('evRegActivity')}</label>
+        <select id="ev-r-actividad" class="order-add-select" style="width:100%;">
+          ${ev.activities.map((a) => `<option value="${a.value}">${pick(a.label)}</option>`).join('')}
+        </select></div>`
+    : '';
+  evModalBody.innerHTML = `
+    <h2>${I18n.t('evRegTitle')}</h2>
+    <p class="subt">${pick(ev.title)} · ${fmtDate(fecha)}${ev.start ? ' · ' + ev.start : ''}</p>
+    <div class="form-error" id="ev-r-error"></div>
+    <div class="field"><label>${I18n.t('nameLabel')}</label><input id="ev-r-nombre" type="text" value="${(s && s.nombre) || ''}" /></div>
+    <div class="field"><label>${I18n.t('emailLabel')}</label><input id="ev-r-email" type="email" value="${(s && s.email) || ''}" /></div>
+    <div class="field"><label>${I18n.t('phoneOptionalLabel')}</label><input id="ev-r-telefono" type="tel" value="${(s && s.telefono) || ''}" /></div>
+    <div class="field"><label>${I18n.t('evRegPeople')}</label><input id="ev-r-personas" type="number" min="1" max="10" value="1" /></div>
+    ${activityHtml}
+    <div class="field"><label>${I18n.t('evRegNotes')}</label><input id="ev-r-notas" type="text" maxlength="250" /></div>
+    <div class="order-summary"><div class="row total"><span>${I18n.t('totalLabel')}</span><span id="ev-r-total"></span></div></div>
+    <p class="subt">${I18n.t('evRegPayNote')}</p>
+    <button class="primary-btn" id="ev-r-submit" type="button" style="width:100%;">${I18n.t('evRegSubmit')}</button>
+    <button class="link-btn" id="ev-r-cancel" type="button" style="width:100%; margin-top:8px;">${I18n.t('cancelBtn')}</button>
+  `;
+  evModal.classList.add('open');
+
+  const personasInp = document.getElementById('ev-r-personas');
+  const totalEl = document.getElementById('ev-r-total');
+  const updateTotal = () => {
+    const n = Math.min(10, Math.max(1, parseInt(personasInp.value, 10) || 1));
+    totalEl.textContent = '¥' + (n * ART_PRICE).toLocaleString('ja-JP');
+  };
+  personasInp.addEventListener('input', updateTotal);
+  updateTotal();
+  document.getElementById('ev-r-cancel').onclick = () => evModal.classList.remove('open');
+
+  document.getElementById('ev-r-submit').onclick = async () => {
+    const box = document.getElementById('ev-r-error');
+    const submit = document.getElementById('ev-r-submit');
+    submit.disabled = true;
+    try {
+      const res = await apiCall('registrarEvento', {
+        eventoId: eventId,
+        fecha,
+        nombre: document.getElementById('ev-r-nombre').value.trim(),
+        email: document.getElementById('ev-r-email').value.trim(),
+        telefono: document.getElementById('ev-r-telefono').value.trim(),
+        personas: parseInt(personasInp.value, 10) || 1,
+        actividad: ev.activities ? document.getElementById('ev-r-actividad').value : '',
+        notas: document.getElementById('ev-r-notas').value.trim(),
+      });
+      if (window.Track) Track.event('inscripcion');
+      evModalBody.innerHTML = `
+        <div class="form-success">
+          <div class="check">✓</div>
+          <h2>${I18n.t('evRegSuccessTitle')}</h2>
+          <p class="subt">${res.inscripcionId}</p>
+        </div>
+        <div class="order-summary">
+          <div class="row"><span>${pick(ev.title)}</span><span>${fmtDate(fecha)}</span></div>
+          <div class="row total"><span>${I18n.t('totalLabel')}</span><span>¥${res.total.toLocaleString('ja-JP')}</span></div>
+        </div>
+        <p class="subt">${I18n.t('evRegPayNote')}</p>
+        <button class="primary-btn" id="ev-r-done" type="button" style="width:100%;">${I18n.t('doneBtn')}</button>`;
+      document.getElementById('ev-r-done').onclick = () => evModal.classList.remove('open');
+    } catch (err) {
+      box.textContent = err.message;
+      box.classList.add('show');
+      submit.disabled = false;
+    }
+  };
 }
 
 function applyStaticI18n() {

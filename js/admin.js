@@ -57,7 +57,9 @@ function hideAllViews() {
   document.getElementById('panel-view').style.display = 'none';
   document.getElementById('reservas-view').style.display = 'none';
   document.getElementById('menu-view').style.display = 'none';
+  document.getElementById('inscripciones-view').style.display = 'none';
   document.getElementById('inventario-view').style.display = 'none';
+  document.getElementById('analytics-view').style.display = 'none';
 }
 
 function showLogin(message) {
@@ -76,6 +78,8 @@ function showHub() {
   hideAllViews();
   document.getElementById('hub-view').style.display = 'block';
   document.getElementById('hub-who-label').textContent = identityLabel();
+  // La analítica (tráfico del sitio) queda reservada al admin, igual que nómina.
+  document.getElementById('hub-analytics-btn').style.display = identity.esAdmin ? '' : 'none';
 }
 
 function showPanel() {
@@ -91,6 +95,13 @@ function showReservas() {
   document.getElementById('reservas-who-label').textContent = identityLabel();
   fetchReservas();
   fetchHorarioSemanal();
+}
+
+function showInscripciones() {
+  hideAllViews();
+  document.getElementById('inscripciones-view').style.display = 'block';
+  document.getElementById('inscripciones-who-label').textContent = identityLabel();
+  fetchInscripciones();
 }
 
 function showMenuAdmin() {
@@ -137,6 +148,301 @@ document.getElementById('cfg-ship-banner').addEventListener('change', async (e) 
   }
   cb.disabled = false;
 });
+
+// ---------------- Analítica (datos de ejemplo — ver js/analytics-data.js) ----------------
+
+let anData = null;
+let anTimer = null;
+
+async function loadAnalytics(silent) {
+  const msg = document.getElementById('an-status');
+  if (!silent) msg.textContent = I18n.t('loadingText');
+  try {
+    anData = await fetchAnalyticsData();
+    msg.textContent = anData.dataSince ? I18n.t('anDataSince', anData.dataSince) : '';
+    renderAnalytics();
+  } catch (err) {
+    if (err.codigo === 'noAutorizado' || err.codigo === 'sesionExpirada') {
+      identity = null;
+      clearAdminSession();
+      Session.clear();
+      showLogin(I18n.t('sessionExpiredMsg'));
+      return;
+    }
+    msg.textContent = I18n.t('errorLoadingPrefix') + err.message;
+  }
+}
+
+function showAnalytics() {
+  hideAllViews();
+  document.getElementById('analytics-view').style.display = 'block';
+  document.getElementById('analytics-who-label').textContent = identityLabel();
+  loadAnalytics(false);
+  clearInterval(anTimer);
+  // "En línea ahora" cambia rápido: se refresca solo mientras el panel está abierto.
+  anTimer = setInterval(() => {
+    if (document.getElementById('analytics-view').style.display === 'none') return clearInterval(anTimer);
+    loadAnalytics(true);
+  }, 30000);
+}
+
+function anLangText(field) {
+  const lang = (typeof I18n !== 'undefined' && I18n.lang) || 'es';
+  return field[lang] || field.es || '';
+}
+
+function renderAnalytics() {
+  renderAnKpis();
+  renderAnTrendChart();
+  renderAnByPageChart();
+  renderAnDeviceChart();
+  renderAnFunnelChart();
+  renderAnHoursChart();
+  renderAnSourcesChart();
+  renderAnLanguagesChart();
+  renderAnRecommendations();
+  renderAnVisitorsTable();
+}
+
+function anPctLabel(n) {
+  const sign = n > 0 ? '+' : '';
+  return sign + Math.round(n) + '%';
+}
+
+function renderAnKpis() {
+  const d = anData;
+  const trendToday = ((d.visitsToday - d.visitsYesterday) / Math.max(1, d.visitsYesterday)) * 100;
+  const trendMonth = ((d.visitsThisMonth - d.visitsLastMonthToDate) / Math.max(1, d.visitsLastMonthToDate)) * 100;
+  const tiles = [
+    {
+      live: true,
+      value: String(d.onlineNow),
+      label: `<span class="an-live-dot"></span>${I18n.t('anOnlineNow')}`,
+    },
+    {
+      value: String(d.visitsToday),
+      label: I18n.t('anVisitsToday'),
+      trend: trendToday,
+      trendText: d.visitsYesterday > 0 ? I18n.t('anVsYesterday', anPctLabel(trendToday)) : '',
+    },
+    {
+      value: d.visitsThisMonth.toLocaleString('ja-JP'),
+      label: I18n.t('anVisitsMonth'),
+      trend: trendMonth,
+      trendText: d.visitsLastMonthToDate > 0 ? I18n.t('anVsLastMonth', anPctLabel(trendMonth)) : '',
+    },
+    { value: d.conversionPct.toFixed(1) + '%', label: I18n.t('anConversion') },
+    { value: I18n.t('anMinutesShort', d.avgSessionMinutes), label: I18n.t('anAvgSession') },
+    { value: d.bounceRatePct + '%', label: I18n.t('anBounceRate') },
+  ];
+  document.getElementById('an-kpis').innerHTML = tiles.map((tile) => `
+    <div class="st${tile.live ? ' an-live' : ''}">
+      <b>${tile.value}</b>
+      <small>${tile.label}</small>
+      ${tile.trendText ? `<small class="an-kpi-trend ${tile.trend >= 0 ? 'up' : 'down'}">${tile.trendText}</small>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderAnTrendChart() {
+  const series = anData.dailySeries;
+  const n = series.length;
+  const W = 640, H = 200, mL = 34, mR = 10, mT = 14, mB = 24;
+  const plotW = W - mL - mR, plotH = H - mT - mB;
+  const maxVal = Math.max(...series.map((d) => d.visits)) * 1.15;
+  const x = (i) => mL + (i / (n - 1)) * plotW;
+  const y = (v) => mT + plotH - (v / maxVal) * plotH;
+
+  const linePath = series.map((d, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(d.visits).toFixed(1)}`).join(' ');
+  const areaPath = `${linePath} L${x(n - 1).toFixed(1)},${(mT + plotH).toFixed(1)} L${x(0).toFixed(1)},${(mT + plotH).toFixed(1)} Z`;
+
+  const gridVals = [0, Math.round(maxVal / 2), Math.round(maxVal)];
+  const gridLines = gridVals.map((v) => `
+    <line x1="${mL}" y1="${y(v).toFixed(1)}" x2="${W - mR}" y2="${y(v).toFixed(1)}" stroke="var(--border)" stroke-width="1" />
+    <text x="0" y="${(y(v) + 3).toFixed(1)}" font-size="9" fill="var(--ink-soft)">${v}</text>
+  `).join('');
+
+  const labelIdxs = [0, Math.floor((n - 1) / 2), n - 1];
+  const dateLabels = labelIdxs.map((i) => `
+    <text x="${x(i).toFixed(1)}" y="${H - 4}" font-size="9" fill="var(--ink-soft)" text-anchor="${i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}">${series[i].date.slice(5)}</text>
+  `).join('');
+
+  document.getElementById('an-trend-chart').innerHTML = `
+    <div class="an-trend-wrap">
+      <svg class="an-trend-svg" viewBox="0 0 ${W} ${H}" id="an-trend-svg">
+        <defs>
+          <linearGradient id="an-trend-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--co-blue)" stop-opacity="0.35" />
+            <stop offset="100%" stop-color="var(--co-blue)" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        ${gridLines}
+        <path class="an-trend-area" d="${areaPath}" />
+        <path class="an-trend-line" d="${linePath}" />
+        <line class="an-trend-guide" id="an-trend-guide" x1="0" y1="${mT}" x2="0" y2="${mT + plotH}" />
+        <circle class="an-trend-dot" id="an-trend-dot" r="4" cx="0" cy="0" />
+        ${dateLabels}
+        <rect class="an-trend-hit" id="an-trend-hit" x="${mL}" y="0" width="${plotW}" height="${H}" />
+      </svg>
+      <div class="an-tooltip" id="an-trend-tooltip"></div>
+    </div>
+  `;
+
+  const svg = document.getElementById('an-trend-svg');
+  const hit = document.getElementById('an-trend-hit');
+  const guide = document.getElementById('an-trend-guide');
+  const dot = document.getElementById('an-trend-dot');
+  const tooltip = document.getElementById('an-trend-tooltip');
+  const wrap = svg.parentElement;
+
+  function showAt(clientX, clientY) {
+    const rect = svg.getBoundingClientRect();
+    const fraction = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    const i = Math.round(fraction * (n - 1));
+    const px = x(i), py = y(series[i].visits);
+    guide.setAttribute('x1', px); guide.setAttribute('x2', px);
+    guide.classList.add('show');
+    dot.setAttribute('cx', px); dot.setAttribute('cy', py);
+    dot.classList.add('show');
+    const wrapRect = wrap.getBoundingClientRect();
+    tooltip.textContent = `${series[i].date} — ${series[i].visits}`;
+    tooltip.style.left = (clientX - wrapRect.left) + 'px';
+    tooltip.style.top = (clientY - wrapRect.top) + 'px';
+    tooltip.classList.add('show');
+  }
+  function hide() {
+    guide.classList.remove('show');
+    dot.classList.remove('show');
+    tooltip.classList.remove('show');
+  }
+  hit.addEventListener('mousemove', (e) => showAt(e.clientX, e.clientY));
+  hit.addEventListener('mouseleave', hide);
+  hit.addEventListener('touchmove', (e) => {
+    if (e.touches[0]) showAt(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+  hit.addEventListener('touchend', hide);
+}
+
+function renderAnByPageChart() {
+  const pages = anData.byPage;
+  const max = Math.max(...pages.map((p) => p.visits));
+  document.getElementById('an-bypage-chart').innerHTML = pages.map((p) => `
+    <div class="an-bar-row">
+      <div class="an-bar-label"><span>${anLangText(p.nombre)}</span><span class="n">${p.visits}</span></div>
+      <div class="an-bar-track"><div class="an-bar-fill" style="width:${Math.max(4, (p.visits / max) * 100)}%;"></div></div>
+    </div>
+  `).join('');
+}
+
+function renderAnDeviceChart() {
+  const dv = anData.device;
+  const rows = [
+    { label: I18n.t('anDeviceMobile'), pct: dv.mobilePct },
+    { label: I18n.t('anDeviceDesktop'), pct: dv.desktopPct },
+    { label: I18n.t('anDeviceTablet'), pct: dv.tabletPct },
+  ];
+  document.getElementById('an-device-chart').innerHTML = rows.map((r) => `
+    <div class="an-bar-row">
+      <div class="an-bar-label"><span>${r.label}</span><span class="n">${r.pct}%</span></div>
+      <div class="an-bar-track"><div class="an-bar-fill" style="width:${Math.max(4, r.pct)}%;"></div></div>
+    </div>
+  `).join('');
+}
+
+function renderAnFunnelChart() {
+  const f = anData.funnel;
+  const stages = [
+    { key: 'visits', label: I18n.t('anFunnelVisits'), value: f.visits, tint: 0.25 },
+    { key: 'viewedMenu', label: I18n.t('anFunnelViewedMenu'), value: f.viewedMenu, tint: 0.5 },
+    { key: 'addedCart', label: I18n.t('anFunnelAddedCart'), value: f.addedCart, tint: 0.72 },
+    { key: 'completed', label: I18n.t('anFunnelCompleted'), value: f.completed, tint: 1 },
+  ];
+  const max = stages[0].value;
+  document.getElementById('an-funnel-chart').innerHTML = stages.map((s) => `
+    <div class="an-funnel-row">
+      <div class="an-funnel-label"><span>${s.label}</span><span class="pct">${s.value.toLocaleString('ja-JP')} (${Math.round((s.value / max) * 100)}%)</span></div>
+      <div class="an-funnel-track"><div class="an-funnel-fill" style="width:${Math.max(4, (s.value / max) * 100)}%; background: color-mix(in srgb, var(--co-blue) ${Math.round(s.tint * 100)}%, #cfe0f2);"></div></div>
+    </div>
+  `).join('');
+}
+
+function renderAnHoursChart() {
+  const hours = anData.hours;
+  const max = Math.max(1, ...hours);
+  const W = 640, H = 120, base = 100, bw = W / 24;
+  const bars = hours.map((v, h) => {
+    const bh = Math.max(v ? 3 : 0, (v / max) * 80);
+    return `<rect x="${(h * bw + 2).toFixed(1)}" y="${(base - bh).toFixed(1)}" width="${(bw - 4).toFixed(1)}" height="${bh.toFixed(1)}" rx="3" fill="var(--co-blue)" opacity="${v === max ? 1 : 0.45}"><title>${String(h).padStart(2, '0')}:00 — ${v}</title></rect>`;
+  }).join('');
+  const labels = [0, 6, 12, 18, 23].map((h) => `<text x="${(h * bw + bw / 2).toFixed(1)}" y="116" font-size="9" fill="var(--ink-soft)" text-anchor="middle">${String(h).padStart(2, '0')}</text>`).join('');
+  document.getElementById('an-hours-chart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">${bars}${labels}</svg>`;
+}
+
+function anBarList(rows, total) {
+  return rows.map((r) => `
+    <div class="an-bar-row">
+      <div class="an-bar-label"><span>${r.label}</span><span class="n">${Math.round((r.v / total) * 100)}%</span></div>
+      <div class="an-bar-track"><div class="an-bar-fill" style="width:${Math.max(4, (r.v / total) * 100)}%;"></div></div>
+    </div>`).join('');
+}
+
+function renderAnSourcesChart() {
+  const total = anData.sources.reduce((s, x) => s + x.v, 0);
+  document.getElementById('an-sources-chart').innerHTML = total
+    ? anBarList(anData.sources.map((x) => ({ label: anLangText(AN_SOURCES[x.k] || AN_SOURCES.otro), v: x.v })), total)
+    : `<p class="subt">${I18n.t('anNoDataShort')}</p>`;
+}
+
+function renderAnLanguagesChart() {
+  const total = anData.languages.reduce((s, x) => s + x.v, 0);
+  const names = { es: 'Español', en: 'English', ja: '日本語', pt: 'Português' };
+  document.getElementById('an-languages-chart').innerHTML = total
+    ? anBarList(anData.languages.map((x) => ({ label: names[x.k] || x.k.toUpperCase(), v: x.v })), total)
+    : `<p class="subt">${I18n.t('anNoDataShort')}</p>`;
+}
+
+function renderAnRecommendations() {
+  const lang = (typeof I18n !== 'undefined' && I18n.lang) || 'es';
+  const recs = computeAnRecommendations(anData, lang);
+  document.getElementById('an-recommendations').innerHTML = recs.map((r) => `
+    <div class="an-rec ${r.severity}">
+      <span class="an-rec-dot"></span>
+      <div>
+        <p class="an-rec-title">${r.title}</p>
+        <p class="an-rec-body">${r.body}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAnVisitorsTable() {
+  const rows = anData.visitorsToday;
+  const deviceLabel = { mobile: I18n.t('anDeviceMobile'), desktop: I18n.t('anDeviceDesktop'), tablet: I18n.t('anDeviceTablet') };
+  document.getElementById('an-visitors-table').innerHTML = `
+    <thead>
+      <tr>
+        <th>${I18n.t('anColVisitorId')}</th>
+        <th>${I18n.t('anColFirstSeen')}</th>
+        <th>${I18n.t('anColPages')}</th>
+        <th>${I18n.t('anColLastPage')}</th>
+        <th>${I18n.t('anColDevice')}</th>
+        <th>${I18n.t('anColType')}</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rows.map((v) => `
+        <tr>
+          <td>${v.id}</td>
+          <td>${v.firstSeen}</td>
+          <td>${v.pages}</td>
+          <td>${anLangText(v.lastPage.nombre)}</td>
+          <td>${deviceLabel[v.device]}</td>
+          <td><span class="an-type-tag ${v.isNew ? 'new' : 'returning'}">${v.isNew ? I18n.t('anNew') : I18n.t('anReturning')}</span></td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+}
 
 document.getElementById('login-btn').addEventListener('click', doLogin);
 document.getElementById('login-clave').addEventListener('keydown', (e) => {
@@ -201,11 +507,18 @@ document.getElementById('hub-turnos-btn').addEventListener('click', () => {
 });
 document.getElementById('hub-reservas-btn').addEventListener('click', showReservas);
 document.getElementById('hub-menu-btn').addEventListener('click', showMenuAdmin);
+document.getElementById('hub-eventos-btn').addEventListener('click', showInscripciones);
+document.getElementById('inscripciones-back-to-hub-btn').addEventListener('click', showHub);
+document.getElementById('inscripciones-logout-btn').addEventListener('click', doLogout);
 document.getElementById('hub-inventario-btn').addEventListener('click', showInventario);
+document.getElementById('hub-analytics-btn').addEventListener('click', showAnalytics);
 document.getElementById('back-to-hub-btn').addEventListener('click', showHub);
 document.getElementById('reservas-back-to-hub-btn').addEventListener('click', showHub);
 document.getElementById('inventario-back-to-hub-btn').addEventListener('click', showHub);
 document.getElementById('menu-back-to-hub-btn').addEventListener('click', showHub);
+document.getElementById('analytics-back-to-hub-btn').addEventListener('click', showHub);
+document.getElementById('analytics-logout-btn').addEventListener('click', doLogout);
+document.getElementById('analytics-regenerate-btn').addEventListener('click', () => loadAnalytics(false));
 
 document.getElementById('refresh-btn').addEventListener('click', fetchOrders);
 
@@ -730,6 +1043,78 @@ document.getElementById('insumos-list').addEventListener('click', async (e) => {
   }
 });
 
+// ---------------- Inscripciones a eventos ----------------
+
+let inscripcionesCache = [];
+
+async function fetchInscripciones() {
+  const list = document.getElementById('inscripciones-list');
+  list.innerHTML = `<div class="empty-state">${I18n.t('loadingText')}</div>`;
+  try {
+    const res = await apiCall('listarInscripciones', authParams());
+    inscripcionesCache = res.inscripciones;
+    renderInscripciones();
+  } catch (err) {
+    list.innerHTML = `<div class="empty-state">${I18n.t('errorLoadingPrefix')}${err.message}</div>`;
+  }
+}
+
+function renderInscripciones() {
+  const list = document.getElementById('inscripciones-list');
+  if (!inscripcionesCache.length) {
+    list.innerHTML = `<div class="empty-state">${I18n.t('evAdminNone')}</div>`;
+    return;
+  }
+  const grupos = {};
+  inscripcionesCache.forEach((r) => {
+    const key = r.FechaEvento + '|' + r.Evento;
+    (grupos[key] = grupos[key] || { fecha: r.FechaEvento, evento: r.Evento, filas: [] }).filas.push(r);
+  });
+  const estadoLabel = { Pendiente: 'evStatusPendiente', Pagado: 'evStatusPagado', Cancelado: 'evStatusCancelado' };
+  list.innerHTML = Object.values(grupos)
+    .map((g) => {
+      const activas = g.filas.filter((r) => r.Estado !== 'Cancelado');
+      const personas = activas.reduce((s, r) => s + (Number(r.Personas) || 0), 0);
+      const total = activas.reduce((s, r) => s + (Number(r.Total) || 0), 0);
+      const filas = g.filas
+        .map(
+          (r) => `
+        <div class="order-card">
+          <div class="order-card-head">
+            <div>
+              <div class="id">${r.Nombre} · ${r.Personas} ${I18n.t('evAdminPeople')}</div>
+              <div class="meta">${r.Email}${r.Telefono ? ' · ' + r.Telefono : ''}${r.Actividad ? ' · ' + r.Actividad : ''}${r.Notas ? '<br>' + String(r.Notas).replace(/</g, '&lt;') : ''}</div>
+            </div>
+            <span class="status-tag ${r.Estado === 'Pagado' ? 'cobrado' : r.Estado === 'Cancelado' ? 'cancelada' : 'pendiente'}">${I18n.t(estadoLabel[r.Estado] || 'evStatusPendiente')}</span>
+          </div>
+          <div class="order-card-footer">
+            <span class="order-total">${fmt(r.Total)}</span>
+            <div class="order-actions">
+              ${r.Estado !== 'Pagado' && r.Estado !== 'Cancelado' ? `<button class="btn-paid" data-insc="${r.ID}" data-estado="Pagado" type="button">${I18n.t('evMarkPaid')}</button>` : ''}
+              ${r.Estado !== 'Cancelado' ? `<button class="ghost-btn" data-insc="${r.ID}" data-estado="Cancelado" type="button">${I18n.t('evCancelReg')}</button>` : ''}
+            </div>
+          </div>
+        </div>`
+        )
+        .join('');
+      return `<div class="menu-admin-section"><h3>${g.fecha} · ${g.evento} — ${personas} ${I18n.t('evAdminPeople')} · ${fmt(total)}</h3>${filas}</div>`;
+    })
+    .join('');
+}
+
+document.getElementById('inscripciones-list').addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-insc]');
+  if (!btn) return;
+  btn.disabled = true;
+  try {
+    await apiCall('actualizarInscripcion', { ...authParams(), inscripcionId: btn.dataset.insc, estado: btn.dataset.estado });
+    await fetchInscripciones();
+  } catch (err) {
+    alert(I18n.t('couldNotUpdatePrefix') + err.message);
+    btn.disabled = false;
+  }
+});
+
 // ---------------- Reservas ----------------
 
 let currentReservasFilter = 'pendientes';
@@ -944,6 +1329,24 @@ function applyStaticI18n() {
   document.getElementById('insumo-nombre').placeholder = I18n.t('insumoNombrePlaceholder');
   document.getElementById('insumo-unidad').placeholder = I18n.t('insumoUnidadPlaceholder');
   document.getElementById('insumo-add-btn').textContent = I18n.t('addInsumoBtn');
+  document.getElementById('hub-analytics-btn').textContent = I18n.t('anHubBtn');
+  document.getElementById('hub-eventos-btn').textContent = I18n.t('hubEventosBtn');
+  document.getElementById('admin-inscripciones-title').textContent = I18n.t('evAdminTitle');
+  document.getElementById('inscripciones-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
+  document.getElementById('inscripciones-logout-btn').textContent = I18n.t('logoutBtn');
+  document.getElementById('analytics-title').textContent = I18n.t('anTitle');
+  document.getElementById('analytics-regenerate-btn').textContent = I18n.t('refreshBtn');
+  document.getElementById('analytics-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
+  document.getElementById('analytics-logout-btn').textContent = I18n.t('logoutBtn');
+  document.getElementById('an-trend-title').textContent = I18n.t('anTrendChartTitle');
+  document.getElementById('an-bypage-title').textContent = I18n.t('anByPageTitle');
+  document.getElementById('an-device-title').textContent = I18n.t('anByDeviceTitle');
+  document.getElementById('an-funnel-title').textContent = I18n.t('anFunnelTitle');
+  document.getElementById('an-hours-title').textContent = I18n.t('anHoursTitle');
+  document.getElementById('an-sources-title').textContent = I18n.t('anSourcesTitle');
+  document.getElementById('an-languages-title').textContent = I18n.t('anLanguagesTitle');
+  document.getElementById('an-recommendations-title').textContent = I18n.t('anRecommendationsTitle');
+  document.getElementById('an-visitors-title').textContent = I18n.t('anVisitorsTodayTitle');
 }
 
 function onLangChange() {
@@ -955,13 +1358,17 @@ function onLangChange() {
   }
   if (document.getElementById('menu-view').style.display !== 'none') renderMenuAdmin();
   if (document.getElementById('inventario-view').style.display !== 'none') renderInsumos();
+  if (document.getElementById('analytics-view').style.display !== 'none' && anData) renderAnalytics();
+  if (document.getElementById('inscripciones-view').style.display !== 'none') renderInscripciones();
 }
 
 renderLangSelect(document.getElementById('admin-lang-slot'));
 renderLangSelect(document.getElementById('hub-lang-slot'));
 renderLangSelect(document.getElementById('panel-lang-slot'));
 renderLangSelect(document.getElementById('reservas-lang-slot'));
+renderLangSelect(document.getElementById('analytics-lang-slot'));
 renderLangSelect(document.getElementById('menu-lang-slot'));
+renderLangSelect(document.getElementById('inscripciones-lang-slot'));
 renderLangSelect(document.getElementById('inventario-lang-slot'));
 
 // ---------------- Init ----------------

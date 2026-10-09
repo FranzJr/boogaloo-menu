@@ -352,6 +352,7 @@ document.getElementById('menu-content').addEventListener('click', (e) => {
   const tempPillSelected = card.querySelector('[data-temp].selected');
   const nota = tempPillSelected ? tempPillSelected.dataset.temp : undefined;
   Cart.add(btn.dataset.addSku, 1, nota);
+  if (window.Track) Track.event('cart');
   renderCartBadge();
   const original = btn.textContent;
   btn.textContent = I18n.t('addedBtn');
@@ -636,6 +637,7 @@ async function submitOrder() {
 
     Cart.clear();
     trackOrder(res.pedidoId);
+    if (window.Track) Track.event('order');
     modalState.step = 'success';
     modalState.lastOrder = res;
     renderModal();

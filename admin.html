@@ -2,6 +2,13 @@
 <html lang="es">
 <head>
 <meta charset="utf-8" />
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TD4LF6K3');</script>
+<!-- End Google Tag Manager -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Boogaloo — Panel de pedidos</title>
 <link rel="icon" href="favicon.ico" sizes="any" />
@@ -10,6 +17,10 @@
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TD4LF6K3"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
   <div class="flag-stripe"></div>
 
   <!-- Vista de login -->
@@ -32,7 +43,9 @@
     <button class="primary-btn" id="hub-turnos-btn" type="button" style="width:100%; margin-bottom:10px;">Turnos</button>
     <button class="primary-btn" id="hub-reservas-btn" type="button" style="width:100%; margin-bottom:10px;">Reservas</button>
     <button class="primary-btn" id="hub-menu-btn" type="button" style="width:100%; margin-bottom:10px;">Menú</button>
+    <button class="primary-btn" id="hub-eventos-btn" type="button" style="width:100%; margin-bottom:10px;">Eventos</button>
     <button class="primary-btn" id="hub-inventario-btn" type="button" style="width:100%; margin-bottom:10px;">Inventario</button>
+    <button class="primary-btn" id="hub-analytics-btn" type="button" style="width:100%; margin-bottom:10px;">Analítica</button>
     <span class="who" id="hub-who-label" style="display:block; margin-top:14px;"></span>
     <button class="link-btn" id="hub-logout-btn" type="button">Cerrar sesión</button>
   </div>
@@ -119,6 +132,22 @@
     </div>
   </div>
 
+  <!-- Vista de inscripciones a eventos -->
+  <div class="admin-shell" id="inscripciones-view" style="display:none;">
+    <div class="admin-sticky-top">
+      <div class="admin-topbar">
+        <h1 id="admin-inscripciones-title">Eventos</h1>
+        <div>
+          <span id="inscripciones-lang-slot"></span>
+          <button class="link-btn" id="inscripciones-back-to-hub-btn" type="button">← Volver</button>
+          <span class="who" id="inscripciones-who-label"></span>
+          <button class="link-btn" id="inscripciones-logout-btn" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+    <div id="inscripciones-list"></div>
+  </div>
+
   <!-- Vista de reservas -->
   <div class="admin-shell" id="reservas-view" style="display:none;">
     <div class="admin-sticky-top">
@@ -149,11 +178,75 @@
     <div id="reservas-list"></div>
   </div>
 
+  <!-- Vista de Analítica — datos reales de la hoja Visitas (ver js/track.js) -->
+  <div class="admin-shell" id="analytics-view" style="display:none;">
+    <div class="admin-sticky-top">
+      <div class="admin-topbar">
+        <h1><span id="analytics-title">Analítica</span></h1>
+        <div>
+          <span id="analytics-lang-slot"></span>
+          <button class="link-btn" id="analytics-back-to-hub-btn" type="button">← Volver</button>
+          <span class="who" id="analytics-who-label"></span>
+          <button class="link-btn" id="analytics-logout-btn" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="subt" id="an-status"></p>
+    <button class="ghost-btn" id="analytics-regenerate-btn" type="button" style="margin-bottom:18px;"></button>
+
+    <div class="tn-stats" id="an-kpis"></div>
+
+    <div class="an-grid">
+      <div class="an-card an-card-wide">
+        <h3 id="an-trend-title"></h3>
+        <div id="an-trend-chart"></div>
+      </div>
+      <div class="an-card">
+        <h3 id="an-bypage-title"></h3>
+        <div id="an-bypage-chart"></div>
+      </div>
+      <div class="an-card">
+        <h3 id="an-device-title"></h3>
+        <div id="an-device-chart"></div>
+      </div>
+      <div class="an-card">
+        <h3 id="an-funnel-title"></h3>
+        <div id="an-funnel-chart"></div>
+      </div>
+      <div class="an-card an-card-wide">
+        <h3 id="an-hours-title"></h3>
+        <div id="an-hours-chart"></div>
+      </div>
+      <div class="an-card">
+        <h3 id="an-sources-title"></h3>
+        <div id="an-sources-chart"></div>
+      </div>
+      <div class="an-card">
+        <h3 id="an-languages-title"></h3>
+        <div id="an-languages-chart"></div>
+      </div>
+    </div>
+
+    <div class="an-card">
+      <h3 id="an-recommendations-title"></h3>
+      <div id="an-recommendations"></div>
+    </div>
+
+    <div class="an-card">
+      <h3 id="an-visitors-title"></h3>
+      <div style="overflow-x:auto;">
+        <table class="an-table" id="an-visitors-table"></table>
+      </div>
+    </div>
+  </div>
+
   <script src="js/i18n.js"></script>
   <script src="js/menu-data.js"></script>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
   <script src="js/session.js"></script>
+  <script src="js/analytics-data.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>
