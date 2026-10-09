@@ -9,6 +9,7 @@ const LK_SHIP_KEY = 'boogaloo_ship_banner_v1';
 
 const LK_LINKS = [
   { id: 'uber', emoji: '🛵', key: 'lkUber', href: UBER_EATS_URL, ext: true, primary: true },
+  { id: 'chat', emoji: '💬', key: 'lkChat', href: '#lk-chat' },
   { id: 'menu', emoji: '🍽️', key: 'lkMenu', href: '../index.html' },
   { id: 'maps', emoji: '📍', key: 'lkMaps', href: GOOGLE_MAPS_URL, ext: true },
   { id: 'reserva', emoji: '📅', key: 'lkReserve', href: '../reserva.html' },
@@ -41,11 +42,17 @@ document.getElementById('lk-links').addEventListener('click', (e) => {
   if (!a) return;
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ event: 'boogaloo_link_click', link: a.dataset.lk });
+  if (a.dataset.lk === 'chat') {
+    e.preventDefault();
+    document.getElementById('lk-chat').scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
+    const input = document.getElementById('bc-input');
+    if (input) setTimeout(() => input.focus({ preventScroll: true }), 350);
+  }
 });
 
 // ---------------- El oso habla ----------------
 
-const LK_PHRASES = ['lkBubble1', 'lkBubble2', 'lkBubble3'];
+const LK_PHRASES = ['lkBubble1', 'lkBubble2', 'lkBubble3', 'lkBubble4'];
 let lkIndex = 0;
 let lkTyping = null;
 const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -84,12 +91,16 @@ function applyStaticI18n() {
 
 function onLangChange() {
   applyStaticI18n();
+  if (window.refreshBearChatLang) window.refreshBearChatLang();
   lkIndex = Math.max(0, lkIndex - 1);
   nextPhrase();
 }
 
 renderLangSelect(document.getElementById('lk-lang-slot'));
 applyStaticI18n();
+// El oso responde con la información de la página, publicada en un meta tag.
+window.bearKnowledgeReady = initBearKnowledge();
+mountBearChat('lk-chat');
 nextPhrase();
 if (!reducedMotion) setInterval(nextPhrase, 5200);
 
