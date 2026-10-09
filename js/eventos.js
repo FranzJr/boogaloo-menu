@@ -4,7 +4,7 @@
    añade un objeto a EVENTS (o una fecha a una serie) con el enlace de Meetup. */
 
 const MEETUP_URL = 'https://www.meetup.com/meetup-group-htdlitmv/';
-const VENUE_MAP = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Boogaloo ニシベビル 101, 2-16 Nakago, Nakagawa Ward, Nagoya, Aichi 454-0921');
+const VENUE_MAP = 'https://maps.app.goo.gl/YZKnmjyWFr4daoji8';
 
 const L = (es, en, ja, pt) => ({ es, en, ja, pt });
 const ART_PRICE = 1500; // por persona que haga la actividad de arte (el servidor valida el total)

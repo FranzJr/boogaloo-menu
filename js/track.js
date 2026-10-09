@@ -40,6 +40,8 @@
 
   const path = location.pathname.toLowerCase();
   const pagina = path.indexOf('/envios') !== -1 ? 'envios'
+    : /\/links/.test(path) ? 'links'
+    : /trabajos/.test(path) ? 'trabajos'
     : /about/.test(path) ? 'historia'
     : /blog/.test(path) ? 'blog'
     : /eventos/.test(path) ? 'eventos'

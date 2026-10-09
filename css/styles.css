@@ -1941,3 +1941,39 @@ body.js-ready .ab-cta.ab-visible .ab-steam:nth-child(3) { animation-delay: 1.2s;
 .admin-subnav { background: #5a2410; }
 .staff-subnav-logout { margin-left: auto; }
 @media print { .public-nav, .admin-subnav { display: none !important; } }
+
+/* ---------- Trabajos ---------- */
+.job-badge { font-size: 1.8rem; background: var(--accent-soft); color: inherit; }
+.job-card .ev-dates li { text-transform: none; }
+
+/* ---------- Página de enlaces para Instagram (links/) ---------- */
+body.lk-body { padding-bottom: 0; background: linear-gradient(180deg, #fff3d6 0%, var(--bg) 38%); min-height: 100vh; }
+.lk-wrap { max-width: 460px; margin: 0 auto; padding: 14px 20px 40px; text-align: center; }
+.lk-top { display: flex; justify-content: flex-end; min-height: 34px; }
+.lk-bear { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin: 6px 0 14px; }
+.lk-bear-img { width: 112px; height: 112px; object-fit: contain; flex: none; transform-origin: 50% 100%; filter: drop-shadow(0 6px 8px rgba(42, 35, 32, 0.18)); }
+.lk-bear-img.talking { animation: lkTalk 0.36s ease-in-out infinite; }
+@keyframes lkTalk { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(-3deg); } }
+.lk-bubble {
+  position: relative; flex: 1; min-height: 78px; display: flex; align-items: center; text-align: left;
+  background: #fff; border: 2px solid var(--ink); border-radius: 20px 20px 20px 4px;
+  padding: 12px 14px; font-weight: 600; font-size: 0.95rem; line-height: 1.35; box-shadow: 4px 4px 0 var(--co-yellow);
+}
+.lk-bubble::before { content: ''; position: absolute; left: -11px; bottom: 14px; width: 0; height: 0;
+  border: 8px solid transparent; border-right-color: var(--ink); border-left: 0; }
+.lk-bubble::after { content: ''; position: absolute; left: -7px; bottom: 16px; width: 0; height: 0;
+  border: 6px solid transparent; border-right-color: #fff; border-left: 0; }
+.lk-title { margin: 6px 0 2px; font-size: 1.8rem; letter-spacing: 0.5px; }
+.lk-sub { margin: 0 0 20px; color: var(--ink-soft); font-size: 0.9rem; }
+.lk-links { display: grid; gap: 10px; }
+.lk-btn {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; text-decoration: none; text-align: left;
+  background: #fff; border: 2px solid var(--ink); color: var(--ink); font-weight: 700; font-size: 1rem;
+  box-shadow: 3px 3px 0 var(--ink); transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.lk-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.lk-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.lk-btn-primary { background: var(--co-blue); border-color: var(--co-blue); color: #fff; box-shadow: 3px 3px 0 var(--co-red); }
+.lk-emoji { font-size: 1.35rem; width: 30px; text-align: center; flex: none; }
+.lk-foot { margin: 26px 0 0; font-size: 0.78rem; color: var(--ink-soft); }
+@media (prefers-reduced-motion: reduce) { .lk-bear-img.talking { animation: none; } .lk-btn { transition: none; } }

@@ -11,6 +11,8 @@ const AN_PAGES = {
   blog: L('Blog', 'Blog', 'ブログ', 'Blog'),
   eventos: L('Eventos', 'Events', 'イベント', 'Eventos'),
   reserva: L('Reservar', 'Reservations', '予約', 'Reservas'),
+  links: L('Enlaces (Instagram)', 'Links (Instagram)', 'リンク集（Instagram）', 'Links (Instagram)'),
+  trabajos: L('Trabajos', 'Jobs', '求人', 'Vagas'),
   otra: L('Otra', 'Other', 'その他', 'Outra'),
 };
 

@@ -35,7 +35,7 @@ function detectStaffIdentity() {
 //   1. Invitado: lo ve todo el mundo (historia, blog, eventos, Maps, Uber Eats).
 //   2. Colaborador: lo ve el colaborador y también el admin (pedidos, turnos...).
 //   3. Admin: solo lo ve el admin (analítica, colaboradores y tarifas, configuración).
-const GOOGLE_MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Boogaloo Colombian Café & Restaurant, 2-16 Nakago, Nakagawa Ward, Nagoya');
+const GOOGLE_MAPS_URL = 'https://maps.app.goo.gl/YZKnmjyWFr4daoji8';
 const UBER_EATS_URL = 'https://www.ubereats.com/jp/store/boogaloo/wVHPVVMsXsCw1K6icgtndw?diningMode=DELIVERY&surfaceName=';
 
 const NAV_GUEST = [
@@ -161,6 +161,7 @@ function renderSiteFooter(extraLinksHtml) {
           <a href="about.html" id="footer-historia-link"></a>
           <a href="blog.html" id="footer-blog-link"></a>
           <a href="eventos.html" id="footer-eventos-link"></a>
+          <a href="trabajos.html" id="footer-trabajos-link"></a>
           <a href="envios/index.html" id="footer-envios-link"></a>
           <a href="https://instagram.com/boogaloo.jp" target="_blank" rel="noopener">Instagram</a>
           ${extraLinksHtml || ''}
@@ -182,6 +183,7 @@ function applyLayoutI18n() {
     document.getElementById('footer-historia-link').textContent = I18n.t('abNavHistoria');
     document.getElementById('footer-blog-link').textContent = I18n.t('blogNavLabel');
     document.getElementById('footer-eventos-link').textContent = I18n.t('evNavLabel');
+    document.getElementById('footer-trabajos-link').textContent = I18n.t('jobsNavLabel');
     document.getElementById('footer-envios-link').textContent = I18n.t('footerEnviosLink');
     document.getElementById('footer-copyright').textContent = I18n.t('abCopyright', new Date().getFullYear());
   }
