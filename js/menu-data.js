@@ -413,8 +413,11 @@ const MENU_CATEGORIES = [
     ),
     items: [
       {
-        sku: 'ensalada-frutas',
-        nombre: L('Ensalada de Frutas Premium', 'Premium Fruit Salad', 'プレミアムフルーツサラダ', 'Salada de Frutas Premium'),
+        sku: 'ensalada-frutas-regular',
+        sizeGroup: 'ensalada-frutas',
+        nombreBase: L('Ensalada de Frutas Premium', 'Premium Fruit Salad', 'プレミアムフルーツサラダ', 'Salada de Frutas Premium'),
+        sizeName: L('Regular', 'Regular', 'レギュラー', 'Regular'),
+        nombre: L('Ensalada de Frutas Premium (Regular)', 'Premium Fruit Salad (Regular)', 'プレミアムフルーツサラダ（レギュラー）', 'Salada de Frutas Premium (Regular)'),
         img: 'img/platos/ensalada-frutas.jpg',
         desc: L(
           'Frutas de temporada, queso, crema, menta, oblea (galleta de barquillo) y almíbar casero.',
@@ -422,19 +425,22 @@ const MENU_CATEGORIES = [
           '旬のフルーツ、チーズ、クリーム、ミント、オブレア（薄いウエハース）、自家製シロップを合わせたコロンビア風フルーツサラダ。',
           'Frutas da estação, queijo, creme, hortelã, oblea (bolacha fina) e calda caseira.'
         ),
-        precio: 1450,
+        precio: 850,
       },
       {
-        sku: 'ensalada-frutas-pequena',
-        nombre: L('Ensalada de Frutas Premium (Pequeña)', 'Premium Fruit Salad (Small)', 'プレミアムフルーツサラダ（小）', 'Salada de Frutas Premium (Pequena)'),
+        sku: 'ensalada-frutas',
+        sizeGroup: 'ensalada-frutas',
+        nombreBase: L('Ensalada de Frutas Premium', 'Premium Fruit Salad', 'プレミアムフルーツサラダ', 'Salada de Frutas Premium'),
+        sizeName: L('Large', 'Large', 'ラージ', 'Large'),
+        nombre: L('Ensalada de Frutas Premium (Large)', 'Premium Fruit Salad (Large)', 'プレミアムフルーツサラダ（ラージ）', 'Salada de Frutas Premium (Large)'),
         img: 'img/platos/ensalada-frutas.jpg',
         desc: L(
-          'Frutas de temporada, queso, crema, menta, oblea (galleta de barquillo) y almíbar casero. Porción pequeña.',
-          'Seasonal fruit, cheese, cream, mint, oblea (thin wafer) and homemade syrup. Small portion.',
-          '旬のフルーツ、チーズ、クリーム、ミント、オブレア（薄いウエハース）、自家製シロップを合わせたコロンビア風フルーツサラダ。小サイズ。',
-          'Frutas da estação, queijo, creme, hortelã, oblea (bolacha fina) e calda caseira. Porção pequena.'
+          'Frutas de temporada, queso, crema, menta, oblea (galleta de barquillo) y almíbar casero.',
+          'Seasonal fruit, cheese, cream, mint, oblea (thin wafer) and homemade syrup.',
+          '旬のフルーツ、チーズ、クリーム、ミント、オブレア（薄いウエハース）、自家製シロップを合わせたコロンビア風フルーツサラダ。',
+          'Frutas da estação, queijo, creme, hortelã, oblea (bolacha fina) e calda caseira.'
         ),
-        precio: 850,
+        precio: 1500,
       },
       {
         sku: 'oblea-traditional',

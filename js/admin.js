@@ -52,6 +52,7 @@ function identityLabel() {
 // ---------------- Vistas ----------------
 
 function hideAllViews() {
+  mountSiteNav('site-nav-mount', '');
   document.getElementById('login-view').style.display = 'none';
   document.getElementById('hub-view').style.display = 'none';
   document.getElementById('panel-view').style.display = 'none';
@@ -249,8 +250,8 @@ function renderAnTrendChart() {
   const n = series.length;
   const W = 640, H = 200, mL = 34, mR = 10, mT = 14, mB = 24;
   const plotW = W - mL - mR, plotH = H - mT - mB;
-  const maxVal = Math.max(...series.map((d) => d.visits)) * 1.15;
-  const x = (i) => mL + (i / (n - 1)) * plotW;
+  const maxVal = Math.max(1, ...series.map((d) => d.visits)) * 1.15;
+  const x = (i) => mL + (n > 1 ? i / (n - 1) : 0) * plotW;
   const y = (v) => mT + plotH - (v / maxVal) * plotH;
 
   const linePath = series.map((d, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(d.visits).toFixed(1)}`).join(' ');
@@ -325,7 +326,7 @@ function renderAnTrendChart() {
 
 function renderAnByPageChart() {
   const pages = anData.byPage;
-  const max = Math.max(...pages.map((p) => p.visits));
+  const max = Math.max(1, ...pages.map((p) => p.visits));
   document.getElementById('an-bypage-chart').innerHTML = pages.map((p) => `
     <div class="an-bar-row">
       <div class="an-bar-label"><span>${anLangText(p.nombre)}</span><span class="n">${p.visits}</span></div>
@@ -357,7 +358,7 @@ function renderAnFunnelChart() {
     { key: 'addedCart', label: I18n.t('anFunnelAddedCart'), value: f.addedCart, tint: 0.72 },
     { key: 'completed', label: I18n.t('anFunnelCompleted'), value: f.completed, tint: 1 },
   ];
-  const max = stages[0].value;
+  const max = Math.max(1, stages[0].value);
   document.getElementById('an-funnel-chart').innerHTML = stages.map((s) => `
     <div class="an-funnel-row">
       <div class="an-funnel-label"><span>${s.label}</span><span class="pct">${s.value.toLocaleString('ja-JP')} (${Math.round((s.value / max) * 100)}%)</span></div>
@@ -461,7 +462,7 @@ async function doLogin() {
     saveAdminSession({ usuario: res.usuario, token: res.token, rol: res.rol });
     identity = { esAdmin: true, usuario: res.usuario, token: res.token, rol: res.rol, nombre: res.usuario };
     showLogin(null);
-    showHub();
+    routeFromHash();
     return;
   } catch (err) {
     // No es admin: intenta como colaborador (mismo campo usado como correo).
@@ -474,7 +475,7 @@ async function doLogin() {
       Session.setCliente(res.cliente);
       identity = { esAdmin: false, clienteId: res.cliente.id, token: res.cliente.token, nombre: res.cliente.nombre };
       showLogin(null);
-      showHub();
+      routeFromHash();
       return;
     } catch (err2) {
       showLogin(I18n.t('wrongCredentialsError'));
@@ -501,22 +502,22 @@ document.getElementById('reservas-logout-btn').addEventListener('click', doLogou
 document.getElementById('menu-logout-btn').addEventListener('click', doLogout);
 document.getElementById('inventario-logout-btn').addEventListener('click', doLogout);
 
-document.getElementById('hub-pedidos-btn').addEventListener('click', showPanel);
+document.getElementById('hub-pedidos-btn').addEventListener('click', () => (location.hash = 'pedidos'));
 document.getElementById('hub-turnos-btn').addEventListener('click', () => {
   window.location.href = 'turnos.html';
 });
-document.getElementById('hub-reservas-btn').addEventListener('click', showReservas);
-document.getElementById('hub-menu-btn').addEventListener('click', showMenuAdmin);
-document.getElementById('hub-eventos-btn').addEventListener('click', showInscripciones);
-document.getElementById('inscripciones-back-to-hub-btn').addEventListener('click', showHub);
+document.getElementById('hub-reservas-btn').addEventListener('click', () => (location.hash = 'reservas'));
+document.getElementById('hub-menu-btn').addEventListener('click', () => (location.hash = 'menu'));
+document.getElementById('hub-eventos-btn').addEventListener('click', () => (location.hash = 'eventos'));
+document.getElementById('inscripciones-back-to-hub-btn').addEventListener('click', goHub);
 document.getElementById('inscripciones-logout-btn').addEventListener('click', doLogout);
-document.getElementById('hub-inventario-btn').addEventListener('click', showInventario);
-document.getElementById('hub-analytics-btn').addEventListener('click', showAnalytics);
-document.getElementById('back-to-hub-btn').addEventListener('click', showHub);
-document.getElementById('reservas-back-to-hub-btn').addEventListener('click', showHub);
-document.getElementById('inventario-back-to-hub-btn').addEventListener('click', showHub);
-document.getElementById('menu-back-to-hub-btn').addEventListener('click', showHub);
-document.getElementById('analytics-back-to-hub-btn').addEventListener('click', showHub);
+document.getElementById('hub-inventario-btn').addEventListener('click', () => (location.hash = 'inventario'));
+document.getElementById('hub-analytics-btn').addEventListener('click', () => (location.hash = 'analitica'));
+document.getElementById('back-to-hub-btn').addEventListener('click', goHub);
+document.getElementById('reservas-back-to-hub-btn').addEventListener('click', goHub);
+document.getElementById('inventario-back-to-hub-btn').addEventListener('click', goHub);
+document.getElementById('menu-back-to-hub-btn').addEventListener('click', goHub);
+document.getElementById('analytics-back-to-hub-btn').addEventListener('click', goHub);
 document.getElementById('analytics-logout-btn').addEventListener('click', doLogout);
 document.getElementById('analytics-regenerate-btn').addEventListener('click', () => loadAnalytics(false));
 
@@ -1290,6 +1291,7 @@ document.getElementById('horario-body').addEventListener('click', async (e) => {
 // ---------------- Idioma ----------------
 
 function applyStaticI18n() {
+  if (typeof applyLayoutI18n === 'function') applyLayoutI18n();
   document.getElementById('admin-panel-title').textContent = I18n.t('adminPanelTitle');
   document.getElementById('admin-login-sub').textContent = I18n.t('adminLoginSub');
   document.getElementById('admin-usuario-label').textContent = I18n.t('usuarioLabel');
@@ -1371,12 +1373,44 @@ renderLangSelect(document.getElementById('menu-lang-slot'));
 renderLangSelect(document.getElementById('inscripciones-lang-slot'));
 renderLangSelect(document.getElementById('inventario-lang-slot'));
 
+// ---------------- Rutas (admin.html#pedidos, #reservas, #menu...) ----------------
+// El menú único del sitio enlaza a estas secciones; cada una se abre por su hash.
+
+const ROUTES = {
+  pedidos: showPanel,
+  reservas: showReservas,
+  menu: showMenuAdmin,
+  inventario: showInventario,
+  eventos: showInscripciones,
+  analitica: showAnalytics,
+  config: () => {
+    showMenuAdmin();
+    setTimeout(() => document.getElementById('site-config').scrollIntoView({ behavior: 'smooth', block: 'center' }), 400);
+  },
+};
+const ADMIN_ONLY_ROUTES = ['analitica', 'config'];
+
+function routeFromHash() {
+  if (!identity) return;
+  const route = (location.hash || '').replace('#', '');
+  const fn = ROUTES[route];
+  if (!fn || (ADMIN_ONLY_ROUTES.indexOf(route) !== -1 && !identity.esAdmin)) return showHub();
+  fn();
+}
+
+function goHub() {
+  if (location.hash) location.hash = '';
+  else showHub();
+}
+
+window.addEventListener('hashchange', routeFromHash);
+
 // ---------------- Init ----------------
 
 applyStaticI18n();
 identity = detectIdentity();
 if (identity) {
-  showHub();
+  routeFromHash();
 } else {
   showLogin(null);
 }

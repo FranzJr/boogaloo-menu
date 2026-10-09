@@ -125,6 +125,8 @@ function renderFzHeader() {
       </div>
     </header>
   `;
+  mount.insertAdjacentHTML('beforeend', '<div id="fz-nav-mount"></div>');
+  mountSiteNav('fz-nav-mount', '../');
   renderLangSelect(document.getElementById('fz-lang-select-slot'));
 }
 
@@ -617,6 +619,7 @@ function renderFaq() {
 // ---------------- Idioma ----------------
 
 function applyStaticI18n() {
+  if (typeof applyLayoutI18n === 'function') applyLayoutI18n();
   document.getElementById('fz-page-subtitle').textContent = I18n.t('fzBrandSubtitle');
   document.getElementById('fz-footer-text').textContent = I18n.t('footerText');
   document.getElementById('fz-footer-menu-link').textContent = I18n.t('backToMenuBtn');

@@ -29,9 +29,100 @@ function detectStaffIdentity() {
 // volver, etc.) — cada página sigue manejando sus propios ids y lógica.
 // afterHtml: contenido extra dentro de <header> después de header-inner (ej. el
 // nav de categorías del menú).
-// Enlaces del menú público (para quien no es staff).
+// ---------------- Menú único del sitio (3 niveles) ----------------
+// Un solo componente para todas las pantallas. Según quién esté identificado se
+// apilan hasta tres filas:
+//   1. Invitado: lo ve todo el mundo (historia, blog, eventos, Maps, Uber Eats).
+//   2. Colaborador: lo ve el colaborador y también el admin (pedidos, turnos...).
+//   3. Admin: solo lo ve el admin (analítica, colaboradores y tarifas, configuración).
 const GOOGLE_MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Boogaloo Colombian Café & Restaurant, 2-16 Nakago, Nakagawa Ward, Nagoya');
-const UBER_EATS_URL = 'https://www.ubereats.com/search?q=Boogaloo';
+const UBER_EATS_URL = 'https://www.ubereats.com/jp/store/boogaloo/wVHPVVMsXsCw1K6icgtndw?diningMode=DELIVERY&surfaceName=';
+
+const NAV_GUEST = [
+  { id: 'historia', href: 'about.html', key: 'abNavHistoria' },
+  { id: 'blog', href: 'blog.html', key: 'blogNavLabel' },
+  { id: 'eventos', href: 'eventos.html', key: 'evNavLabel' },
+  { id: 'maps', href: GOOGLE_MAPS_URL, ext: true, text: 'Google Maps' },
+  { id: 'uber', href: UBER_EATS_URL, ext: true, key: 'pubNavUber' },
+];
+const NAV_STAFF = [
+  { id: 'pedidos', href: 'admin.html#pedidos', key: 'ordersTitle' },
+  { id: 'turnos', href: 'turnos.html', key: 'hubTurnosBtn' },
+  { id: 'reservas', href: 'admin.html#reservas', key: 'hubReservasBtn' },
+  { id: 'menu', href: 'admin.html#menu', key: 'menuAdminTitle' },
+  { id: 'inventario', href: 'admin.html#inventario', key: 'hubInventarioBtn' },
+  { id: 'inscripciones', href: 'admin.html#eventos', key: 'navInscripciones' },
+  { id: 'nomina', href: 'nomina.html', key: 'hubNominaBtn' },
+];
+const NAV_ADMIN = [
+  { id: 'analitica', href: 'admin.html#analitica', key: 'anHubBtn' },
+  { id: 'colaboradores', href: 'turnos.html', key: 'navColabsRates' },
+  { id: 'config', href: 'admin.html#config', key: 'navSiteConfig' },
+];
+
+function navLinkHtml(it, prefix) {
+  const href = (it.ext ? it.href : prefix + it.href).replace(/&/g, '&amp;');
+  return `<a href="${href}" data-nav-id="${it.id}"${it.key ? ` data-nav-key="${it.key}"` : ''}${it.ext ? ' target="_blank" rel="noopener"' : ''}>${it.text || ''}</a>`;
+}
+
+// prefix: ruta hacia la raíz del sitio ('' en la raíz, '../' en /envios/).
+function siteNavHtml(prefix) {
+  const staff = detectStaffIdentity();
+  let html = `<nav class="public-nav" aria-label="Boogaloo"><div class="staff-subnav-inner">${NAV_GUEST.map((it) => navLinkHtml(it, prefix)).join('')}</div></nav>`;
+  if (staff) {
+    html += `<nav class="staff-subnav" aria-label="Staff"><div class="staff-subnav-inner">
+      <span class="staff-subnav-who">${String(staff.nombre || '').replace(/</g, '&lt;')}</span>
+      ${NAV_STAFF.map((it) => navLinkHtml(it, prefix)).join('')}
+      <a href="#" data-nav-logout data-nav-key="logoutBtn" class="staff-subnav-logout"></a>
+    </div></nav>`;
+  }
+  if (staff && staff.esAdmin) {
+    html += `<nav class="staff-subnav admin-subnav" aria-label="Admin"><div class="staff-subnav-inner">
+      <span class="staff-subnav-who">Admin</span>
+      ${NAV_ADMIN.map((it) => navLinkHtml(it, prefix)).join('')}
+    </div></nav>`;
+  }
+  return html;
+}
+
+// Marca como activo el enlace de la página (y sección de admin) actual.
+function markActiveNav() {
+  const file = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  document.querySelectorAll('[data-nav-id]').forEach((a) => {
+    if (a.target === '_blank') return;
+    const [f, h] = a.getAttribute('href').split('#');
+    const hrefFile = (f.split('/').pop() || 'index.html').toLowerCase();
+    const active = hrefFile === file && (h ? location.hash === '#' + h : !location.hash);
+    if (active) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
+}
+
+function logoutStaff() {
+  try {
+    localStorage.removeItem(STAFF_ADMIN_SESSION_KEY);
+    if (typeof Session !== 'undefined') Session.clear();
+  } catch (e) {
+    // ignora
+  }
+  location.reload();
+}
+
+// Pinta (o repinta, por ejemplo después de iniciar o cerrar sesión) el menú en mountId.
+function mountSiteNav(mountId, prefix) {
+  const mount = document.getElementById(mountId);
+  if (!mount) return;
+  mount.innerHTML = siteNavHtml(prefix || '');
+  mount.onclick = (e) => {
+    if (e.target.closest('[data-nav-logout]')) {
+      e.preventDefault();
+      logoutStaff();
+    }
+  };
+  applyLayoutI18n();
+  markActiveNav();
+}
+window.addEventListener('hashchange', markActiveNav);
 
 function renderSiteHeader(actionsHtml, afterHtml) {
   const mount = document.getElementById('site-header-mount');
@@ -54,34 +145,9 @@ function renderSiteHeader(actionsHtml, afterHtml) {
       </div>
       ${afterHtml || ''}
     </header>
-    <nav class="staff-subnav" id="staff-subnav" style="display:none;">
-      <div class="staff-subnav-inner">
-        <span class="staff-subnav-who" id="staff-subnav-who"></span>
-        <a href="admin.html" id="staff-link-pedidos"></a>
-        <a href="turnos.html" id="staff-link-turnos"></a>
-        <a href="nomina.html" id="staff-link-nomina"></a>
-        <a href="about.html" id="staff-link-historia"></a>
-        <a href="blog.html" id="staff-link-blog"></a>
-        <a href="eventos.html" id="staff-link-eventos"></a>
-      </div>
-    </nav>
-    <nav class="public-nav" id="public-nav" style="display:none;">
-      <div class="staff-subnav-inner">
-        <a href="about.html" id="pub-link-historia"></a>
-        <a href="blog.html" id="pub-link-blog"></a>
-        <a href="eventos.html" id="pub-link-eventos"></a>
-        <a href="${GOOGLE_MAPS_URL}" target="_blank" rel="noopener" id="pub-link-maps">Google Maps</a>
-        <a href="${UBER_EATS_URL}" target="_blank" rel="noopener" id="pub-link-uber"></a>
-      </div>
-    </nav>
+    <div id="site-nav-mount"></div>
   `;
-  const staff = detectStaffIdentity();
-  if (staff) {
-    document.getElementById('staff-subnav').style.display = 'block';
-    document.getElementById('staff-subnav-who').textContent = staff.nombre;
-  } else {
-    document.getElementById('public-nav').style.display = 'block';
-  }
+  mountSiteNav('site-nav-mount', '');
 }
 
 function renderSiteFooter(extraLinksHtml) {
@@ -108,20 +174,9 @@ function renderSiteFooter(extraLinksHtml) {
 // Traduce las partes compartidas (menú de staff + footer). Cada página llama
 // esto dentro de su propio applyStaticI18n(), después de renderSiteHeader/Footer.
 function applyLayoutI18n() {
-  if (document.getElementById('staff-link-pedidos')) {
-    document.getElementById('staff-link-pedidos').textContent = I18n.t('ordersTitle');
-    document.getElementById('staff-link-turnos').textContent = I18n.t('hubTurnosBtn');
-    document.getElementById('staff-link-nomina').textContent = I18n.t('hubNominaBtn');
-    document.getElementById('staff-link-historia').textContent = I18n.t('abNavHistoria');
-    document.getElementById('staff-link-blog').textContent = I18n.t('blogNavLabel');
-    document.getElementById('staff-link-eventos').textContent = I18n.t('evNavLabel');
-  }
-  if (document.getElementById('pub-link-historia')) {
-    document.getElementById('pub-link-historia').textContent = I18n.t('abNavHistoria');
-    document.getElementById('pub-link-blog').textContent = I18n.t('blogNavLabel');
-    document.getElementById('pub-link-eventos').textContent = I18n.t('evNavLabel');
-    document.getElementById('pub-link-uber').textContent = I18n.t('pubNavUber');
-  }
+  document.querySelectorAll('[data-nav-key]').forEach((a) => {
+    a.textContent = I18n.t(a.dataset.navKey);
+  });
   if (document.getElementById('site-footer-text')) {
     document.getElementById('site-footer-text').textContent = I18n.t('footerText');
     document.getElementById('footer-historia-link').textContent = I18n.t('abNavHistoria');

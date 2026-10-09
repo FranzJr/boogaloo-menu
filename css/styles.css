@@ -1933,3 +1933,11 @@ body.js-ready .ab-cta.ab-visible .ab-steam:nth-child(3) { animation-delay: 1.2s;
 .ev-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.8rem; color: var(--ink-soft); }
 .ev-empty { text-align: center; color: var(--ink-soft); padding: 40px 10px; }
 @media (max-width: 520px) { .ev-card { flex-direction: column; } .ev-badge { width: 60px; height: 64px; } }
+
+/* ---------- Menú único: estados y fila de admin ---------- */
+.staff-subnav-inner { flex-wrap: wrap; }
+.staff-subnav-inner a[aria-current="page"] { opacity: 1; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.public-nav .staff-subnav-inner a[aria-current="page"] { color: var(--accent); text-decoration: none; border-bottom: 2px solid var(--accent); }
+.admin-subnav { background: #5a2410; }
+.staff-subnav-logout { margin-left: auto; }
+@media print { .public-nav, .admin-subnav { display: none !important; } }

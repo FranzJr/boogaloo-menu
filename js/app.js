@@ -80,6 +80,12 @@ function stripSizeSuffix(nombre) {
   return nombre.replace(/\s*\d+\s*oz\s*$/i, '');
 }
 
+// Etiqueta del selector de tamaño: usa sizeName si el producto lo define
+// (ej. Regular / Large) y si no, saca las onzas del nombre (12oz).
+function variantSizeLabel(v) {
+  return v.sizeName ? mi(v.sizeName) : sizeLabel(mi(v.nombre));
+}
+
 function sizeLabel(nombre) {
   const m = nombre.match(/(\d+\s*oz)\s*$/i);
   return m ? m[1].replace(/\s+/, '') : nombre;
@@ -158,7 +164,7 @@ function renderMenu() {
             stylesData[styleName] = g.byStyleName[styleName].map((v) => ({
               sku: v.sku,
               precio: v.precio,
-              label: sizeLabel(mi(v.nombre)),
+              label: variantSizeLabel(v),
               out: isAgotado(v.sku),
             }));
           });
@@ -218,7 +224,7 @@ function renderMenu() {
         // Si el tamaño seleccionado por defecto está agotado, arranca en el
         // primero que sí haya (así el precio/botón inicial ya son válidos).
         const initial = allOut ? first : availableVariants[0];
-        const nombreBase = stripSizeSuffix(mi(first.nombre));
+        const nombreBase = first.nombreBase ? mi(first.nombreBase) : stripSizeSuffix(mi(first.nombre));
         const photo = first.img
           ? `<img class="item-photo" src="${first.img}" alt="" loading="lazy" ${first.imgPosition ? `style="object-position: ${first.imgPosition};"` : ''} />`
           : '';
@@ -230,7 +236,7 @@ function renderMenu() {
           .map((v) => {
             const out = isAgotado(v.sku);
             const selected = !allOut && v.sku === initial.sku;
-            const label = sizeLabel(mi(v.nombre)) + (out ? ' · ' + I18n.t('outOfStockBtn') : '');
+            const label = variantSizeLabel(v) + (out ? ' · ' + I18n.t('outOfStockBtn') : '');
             return `
           <button type="button" class="pill-option${selected ? ' selected' : ''}${out ? ' agotado' : ''}" data-size-sku="${v.sku}" data-price="${v.precio}" ${out ? 'disabled' : ''}>${label}</button>`;
           })
