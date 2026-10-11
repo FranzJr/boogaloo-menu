@@ -1934,6 +1934,21 @@ body.js-ready .ab-cta.ab-visible .ab-steam:nth-child(3) { animation-delay: 1.2s;
 .ev-empty { text-align: center; color: var(--ink-soft); padding: 40px 10px; }
 @media (max-width: 520px) { .ev-card { flex-direction: column; } .ev-badge { width: 60px; height: 64px; } }
 
+/* Tarjeta de evento con foto (ej. Kids Halloween Party): la foto ocupa su
+   propia línea (flex-basis 100%) y debajo siguen el badge + cuerpo de
+   siempre, sin tocar el layout de .ev-card que también usa trabajos.html. */
+.ev-has-photo { flex-wrap: wrap; }
+.ev-photo { flex-basis: 100%; width: 100%; max-height: 340px; object-fit: cover; border-radius: 12px; margin-bottom: 4px; }
+
+.ev-menu-toggle { margin-top: 8px; }
+.ev-menu-toggle summary { cursor: pointer; font-size: 0.85rem; font-weight: 700; color: var(--accent); list-style: none; }
+.ev-menu-toggle summary::-webkit-details-marker { display: none; }
+.ev-menu-img { width: 100%; border-radius: 12px; margin-top: 10px; display: block; }
+
+.ev-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+.ev-gallery img { width: 100%; height: 90px; object-fit: cover; border-radius: 10px; }
+@media (max-width: 420px) { .ev-gallery { grid-template-columns: repeat(3, 1fr); gap: 4px; } .ev-gallery img { height: 70px; } }
+
 /* ---------- Menú único: estados y fila de admin ---------- */
 .staff-subnav-inner { flex-wrap: wrap; }
 .staff-subnav-inner a[aria-current="page"] { opacity: 1; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }

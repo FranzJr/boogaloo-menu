@@ -49,8 +49,21 @@ function renderEvents() {
             </span></li>`
         )
         .join('');
+      const menuHtml = ev.menuImg
+        ? `<details class="ev-menu-toggle">
+            <summary>${I18n.t('evSpecialMenuBtn')}</summary>
+            <img class="ev-menu-img" src="${ev.menuImg.src}" alt="${pick(ev.menuImg.alt)}" loading="lazy" />
+          </details>`
+        : '';
+      const galleryHtml = ev.gallery && ev.gallery.length
+        ? `<div class="ev-gallery">${ev.gallery
+            .map((g) => `<img src="${g.src}" alt="${pick(g.alt)}" loading="lazy" />`)
+            .join('')}</div>`
+        : '';
+
       return `
-    <article class="ev-card">
+    <article class="ev-card${ev.img ? ' ev-has-photo' : ''}">
+      ${ev.img ? `<img class="ev-photo" src="${ev.img}" alt="${pick(ev.title)}" loading="lazy" />` : ''}
       <div class="ev-badge"><span>${b.month}</span><b>${b.day}</b></div>
       <div class="ev-body">
         <span class="ev-tag">${pick(ev.tag)}</span>
@@ -62,6 +75,8 @@ function renderEvents() {
           <span>💴 ${pick(ev.price)}</span>
           ${ev.langs ? `<span>🗣 ${ev.langs}</span>` : ''}
         </div>
+        ${menuHtml}
+        ${galleryHtml}
       </div>
     </article>`;
     })
@@ -98,10 +113,12 @@ function openRegistration(eventId, fecha) {
     <div class="field"><label>${I18n.t('nameLabel')}</label><input id="ev-r-nombre" type="text" value="${(s && s.nombre) || ''}" /></div>
     <div class="field"><label>${I18n.t('emailLabel')}</label><input id="ev-r-email" type="email" value="${(s && s.email) || ''}" /></div>
     <div class="field"><label>${I18n.t('phoneOptionalLabel')}</label><input id="ev-r-telefono" type="tel" value="${(s && s.telefono) || ''}" /></div>
-    <div class="field"><label>${I18n.t('evRegPeople')}</label><input id="ev-r-personas" type="number" min="1" max="10" value="1" /></div>
+    <div class="field"><label>${ev.peopleLabel ? pick(ev.peopleLabel) : I18n.t('evRegPeople')}</label><input id="ev-r-personas" type="number" min="1" max="10" value="1" /></div>
     ${activityHtml}
     <div class="field"><label>${I18n.t('evRegNotes')}</label><input id="ev-r-notas" type="text" maxlength="250" /></div>
-    <div class="order-summary"><div class="row total"><span>${I18n.t('totalLabel')}</span><span id="ev-r-total"></span></div></div>
+    ${ev.customPricing
+      ? `<p class="subt">💴 ${pick(ev.price)}</p>`
+      : `<div class="order-summary"><div class="row total"><span>${I18n.t('totalLabel')}</span><span id="ev-r-total"></span></div></div>`}
     <p class="subt">${I18n.t('evRegPayNote')}</p>
     <button class="primary-btn" id="ev-r-submit" type="button" style="width:100%;">${I18n.t('evRegSubmit')}</button>
     <button class="link-btn" id="ev-r-cancel" type="button" style="width:100%; margin-top:8px;">${I18n.t('cancelBtn')}</button>
@@ -110,12 +127,18 @@ function openRegistration(eventId, fecha) {
 
   const personasInp = document.getElementById('ev-r-personas');
   const totalEl = document.getElementById('ev-r-total');
-  const updateTotal = () => {
-    const n = Math.min(10, Math.max(1, parseInt(personasInp.value, 10) || 1));
-    totalEl.textContent = '¥' + (n * ART_PRICE).toLocaleString('ja-JP');
-  };
-  personasInp.addEventListener('input', updateTotal);
-  updateTotal();
+  if (!ev.customPricing) {
+    // Estimado simple (personas × tarifa fija) para eventos de precio único,
+    // como la actividad de arte. El precio real por edades de un evento como
+    // el Kids Halloween Party no encaja en esta cuenta, así que esos eventos
+    // muestran el desglose de precios en texto (ver ev.customPricing arriba).
+    const updateTotal = () => {
+      const n = Math.min(10, Math.max(1, parseInt(personasInp.value, 10) || 1));
+      totalEl.textContent = '¥' + (n * ART_PRICE).toLocaleString('ja-JP');
+    };
+    personasInp.addEventListener('input', updateTotal);
+    updateTotal();
+  }
   document.getElementById('ev-r-cancel').onclick = () => evModal.classList.remove('open');
 
   document.getElementById('ev-r-submit').onclick = async () => {
@@ -142,7 +165,9 @@ function openRegistration(eventId, fecha) {
         </div>
         <div class="order-summary">
           <div class="row"><span>${pick(ev.title)}</span><span>${fmtDate(fecha)}</span></div>
-          <div class="row total"><span>${I18n.t('totalLabel')}</span><span>¥${res.total.toLocaleString('ja-JP')}</span></div>
+          ${ev.customPricing
+            ? `<div class="row"><span>💴</span><span>${pick(ev.price)}</span></div>`
+            : `<div class="row total"><span>${I18n.t('totalLabel')}</span><span>¥${res.total.toLocaleString('ja-JP')}</span></div>`}
         </div>
         <p class="subt">${I18n.t('evRegPayNote')}</p>
         <button class="primary-btn" id="ev-r-done" type="button" style="width:100%;">${I18n.t('doneBtn')}</button>`;
