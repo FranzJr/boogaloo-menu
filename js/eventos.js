@@ -52,18 +52,18 @@ function renderEvents() {
       const menuHtml = ev.menuImg
         ? `<details class="ev-menu-toggle">
             <summary>${I18n.t('evSpecialMenuBtn')}</summary>
-            <img class="ev-menu-img" src="${ev.menuImg.src}" alt="${pick(ev.menuImg.alt)}" loading="lazy" />
+            <img class="ev-menu-img" src="${ev.menuImg.src}" alt="${pick(ev.menuImg.alt)}" loading="lazy" data-lightbox-src="${ev.menuImg.src}" />
           </details>`
         : '';
       const galleryHtml = ev.gallery && ev.gallery.length
         ? `<div class="ev-gallery">${ev.gallery
-            .map((g) => `<img src="${g.src}" alt="${pick(g.alt)}" loading="lazy" />`)
+            .map((g) => `<img src="${g.src}" alt="${pick(g.alt)}" loading="lazy" data-lightbox-src="${g.src}" />`)
             .join('')}</div>`
         : '';
 
       return `
     <article class="ev-card${ev.img ? ' ev-has-photo' : ''}">
-      ${ev.img ? `<img class="ev-photo" src="${ev.img}" alt="${pick(ev.title)}" loading="lazy" />` : ''}
+      ${ev.img ? `<img class="ev-photo" src="${ev.img}" alt="${pick(ev.title)}" loading="lazy" data-lightbox-src="${ev.img}" />` : ''}
       <div class="ev-badge"><span>${b.month}</span><b>${b.day}</b></div>
       <div class="ev-body">
         <span class="ev-tag">${pick(ev.tag)}</span>
@@ -94,6 +94,27 @@ evModal.addEventListener('click', (e) => {
 document.getElementById('ev-list').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-reg-event]');
   if (btn) openRegistration(btn.dataset.regEvent, btn.dataset.regDate);
+  const photo = e.target.closest('[data-lightbox-src]');
+  if (photo) openLightbox(photo.dataset.lightboxSrc, photo.alt);
+});
+
+// ---------------- Lightbox (agrandar fotos) ----------------
+
+const evLightbox = document.getElementById('ev-lightbox');
+const evLightboxImg = document.getElementById('ev-lightbox-img');
+function openLightbox(src, alt) {
+  evLightboxImg.src = src;
+  evLightboxImg.alt = alt || '';
+  evLightbox.classList.add('open');
+}
+function closeLightbox() {
+  evLightbox.classList.remove('open');
+  evLightboxImg.src = '';
+}
+evLightbox.addEventListener('click', closeLightbox);
+document.getElementById('ev-lightbox-close').addEventListener('click', closeLightbox);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && evLightbox.classList.contains('open')) closeLightbox();
 });
 
 function openRegistration(eventId, fecha) {

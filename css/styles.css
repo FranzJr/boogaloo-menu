@@ -1949,6 +1949,35 @@ body.js-ready .ab-cta.ab-visible .ab-steam:nth-child(3) { animation-delay: 1.2s;
 .ev-gallery img { width: 100%; height: 90px; object-fit: cover; border-radius: 10px; }
 @media (max-width: 420px) { .ev-gallery { grid-template-columns: repeat(3, 1fr); gap: 4px; } .ev-gallery img { height: 70px; } }
 
+/* Fotos ampliables: la de portada, el menú y la galería abren en grande al
+   tocarlas (ver .ev-lightbox más abajo). */
+.ev-photo, .ev-menu-img, .ev-gallery img { cursor: zoom-in; transition: opacity 0.15s ease; }
+.ev-photo:hover, .ev-menu-img:hover, .ev-gallery img:hover { opacity: 0.88; }
+
+.ev-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(10, 8, 6, 0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 18px;
+}
+.ev-lightbox.open { display: flex; }
+.ev-lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; cursor: zoom-out; }
+.ev-lightbox-close {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1.1rem;
+}
+
 /* ---------- Menú único: estados y fila de admin ---------- */
 .staff-subnav-inner { flex-wrap: wrap; }
 .staff-subnav-inner a[aria-current="page"] { opacity: 1; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }

@@ -82,6 +82,9 @@ const EVENTS_DATA = [
       { src: 'img/eventos/halloween-kids-ambiente.jpg', alt: evL('Monster Milkshakes de Halloween', 'Halloween Monster Milkshakes', 'ハロウィンのモンスターミルクシェイク', 'Monster Milkshakes de Halloween') },
       { src: 'img/eventos/halloween-kids-osito.jpg', alt: evL('Rincón infantil decorado para Halloween', 'Kids corner decorated for Halloween', 'ハロウィン仕様のキッズコーナー', 'Cantinho infantil decorado para o Halloween') },
       { src: 'img/eventos/halloween-kids-sombreros.jpg', alt: evL('El local de Boogaloo decorado para Halloween', 'Boogaloo decorated for Halloween', 'ハロウィン仕様に飾り付けられた店内', 'O espaço do Boogaloo decorado para o Halloween') },
+      { src: 'img/eventos/halloween-kids-decoracion.jpg', alt: evL('Mesa decorada con calabazas y fantasmas', 'Table decorated with pumpkins and ghosts', 'かぼちゃとお化けで飾られたテーブル', 'Mesa decorada com abóboras e fantasmas') },
+      { src: 'img/eventos/halloween-kids-salon.jpg', alt: evL('El salón de Boogaloo decorado para Halloween', "Boogaloo's dining room decorated for Halloween", 'ハロウィン仕様に飾り付けられた店内', 'O salão do Boogaloo decorado para o Halloween') },
+      { src: 'img/eventos/halloween-kids-ventana.jpg', alt: evL('Ventana decorada con sombreros de bruja y murciélagos', 'Window decorated with witch hats and bats', '魔女帽子とコウモリで飾られた窓', 'Janela decorada com chapéus de bruxa e morcegos') },
     ],
   },
 ];
