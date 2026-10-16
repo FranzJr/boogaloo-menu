@@ -69,23 +69,6 @@ const FzCart = {
 
 FzCart.load();
 
-// Hasta 3 productos marcados con "Comparar" (no se persiste: es una ayuda
-// puntual mientras se navega el catálogo, no parte del pedido).
-const FzCompare = {
-  ids: [],
-  has(id) { return this.ids.indexOf(id) !== -1; },
-  toggle(id) {
-    const i = this.ids.indexOf(id);
-    if (i !== -1) {
-      this.ids.splice(i, 1);
-      return true;
-    }
-    if (this.ids.length >= 3) return false;
-    this.ids.push(id);
-    return true;
-  },
-};
-
 let fzReheatOpen = {}; // { [productId]: bool } — estado de los acordeones "Cómo recalentar"
 let fzCheckoutStep = 1; // 1 revisión, 2 datos de envío, 3 confirmación, 4 éxito
 let fzShippingData = { nombre: '', telefono: '', postal: '', prefectura: '', direccion: '', fecha: '', notas: '' };
@@ -192,8 +175,9 @@ function renderCatalog() {
   grid.innerHTML = ENVIOS_PRODUCTS.map((p) => {
     const qty = FzCart.qty(p.id);
     const reheatOpen = !!fzReheatOpen[p.id];
+    const stripeLink = ENVIOS_CONFIG.stripePaymentLinks && ENVIOS_CONFIG.stripePaymentLinks[p.id];
     return `
-      <article class="fz-card" data-id="${p.id}">
+      <article class="fz-card${p.canvasCard ? ' fz-card-canvas' : ''}" data-id="${p.id}">
         <div class="fz-card-img-wrap">
           <img src="${p.img}" alt="${ei(p.nombre)}" />
           ${p.badge ? `<span class="fz-badge">${fzBadgeLabel(p.badge)}</span>` : ''}
@@ -206,12 +190,9 @@ function renderCatalog() {
             ${p.prepMinutos ? `<span>${I18n.t('fzPrepTime', p.prepMinutos)}</span>` : ''}
           </div>
           <p class="fz-card-desc">${ei(p.desc)}</p>
+          <p class="fz-card-ideal">${ei(p.idealPara)}</p>
           <button type="button" class="fz-reheat-toggle" data-reheat="${p.id}">${I18n.t('fzReheatTitle')}</button>
           <p class="fz-reheat-text${reheatOpen ? ' show' : ''}" id="fz-reheat-${p.id}">${ei(p.recalentado)}</p>
-          <label class="fz-compare-check">
-            <input type="checkbox" data-compare="${p.id}" ${FzCompare.has(p.id) ? 'checked' : ''} />
-            ${I18n.t('fzCompareLabel')}
-          </label>
           <div class="fz-card-footer">
             <span class="fz-price">${fmtY(p.precio)}</span>
             ${qty > 0 ? `
@@ -222,6 +203,10 @@ function renderCatalog() {
               </div>
             ` : `<button type="button" class="ghost-btn" data-add="${p.id}">${I18n.t('fzAddToBox')}</button>`}
           </div>
+          ${stripeLink ? `
+            <a class="primary-btn fz-pay-card-btn" href="${stripeLink}" target="_blank" rel="noopener">${I18n.t('fzPayCardBtn')}</a>
+            <p class="fz-pay-card-note">${I18n.t('fzPayCardNote')}</p>
+          ` : ''}
         </div>
       </article>
     `;
@@ -254,14 +239,6 @@ function renderCatalog() {
       document.getElementById('fz-reheat-' + id).classList.toggle('show', fzReheatOpen[id]);
     });
   });
-  grid.querySelectorAll('[data-compare]').forEach((input) => {
-    input.addEventListener('change', () => {
-      const id = input.getAttribute('data-compare');
-      const ok = FzCompare.toggle(id);
-      if (!ok) input.checked = false;
-      updateCompareBar();
-    });
-  });
 }
 
 function onFzCartChange() {
@@ -269,61 +246,6 @@ function onFzCartChange() {
   updateFzMascot();
   updateFzBoxBar();
   if (document.getElementById('fz-drawer').classList.contains('open')) renderFzDrawer();
-}
-
-// ---------------- Comparar ----------------
-
-function updateCompareBar() {
-  const bar = document.getElementById('fz-compare-bar');
-  if (FzCompare.ids.length >= 2) {
-    bar.classList.add('show');
-    document.getElementById('fz-compare-bar-label').textContent = FzCompare.ids.length + ' / 3';
-  } else {
-    bar.classList.remove('show');
-  }
-}
-
-function openCompareModal() {
-  const body = document.getElementById('fz-compare-modal-body');
-  const items = FzCompare.ids.map((id) => ENVIOS_INDEX[id]).filter(Boolean);
-  const rows = [
-    ['fzCompareColServings', (p) => I18n.t('fzServings', p.porciones)],
-    ['fzCompareColWeight', (p) => p.peso],
-    ['fzCompareColTime', (p) => (p.prepMinutos ? I18n.t('fzPrepTime', p.prepMinutos) : '—')],
-    ['fzCompareColPrice', (p) => fmtY(p.precio)],
-    ['fzCompareColIdeal', (p) => ei(p.idealPara)],
-  ];
-  body.innerHTML = `
-    <h2>${I18n.t('fzCompareTitle')}</h2>
-    <p class="subt">${I18n.t('fzCompareSubtitle')}</p>
-    ${items.length < 2 ? `<p class="subt">${I18n.t('fzCompareEmpty')}</p>` : `
-      <div style="overflow-x:auto;">
-        <table class="fz-compare-table">
-          <thead>
-            <tr>
-              <th>${I18n.t('fzCompareColProduct')}</th>
-              ${items.map((p) => `<th>${ei(p.nombre)}</th>`).join('')}
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(([labelKey, getVal]) => `
-              <tr>
-                <th>${I18n.t(labelKey)}</th>
-                ${items.map((p) => `<td>${getVal(p)}</td>`).join('')}
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    `}
-    <button class="ghost-btn" id="fz-compare-close" style="width:100%; margin-top:14px;">${I18n.t('closeBtn')}</button>
-  `;
-  document.getElementById('fz-compare-close').addEventListener('click', closeCompareModal);
-  document.getElementById('fz-compare-modal').classList.add('open');
-}
-
-function closeCompareModal() {
-  document.getElementById('fz-compare-modal').classList.remove('open');
 }
 
 // ---------------- Barra flotante + drawer "tu caja" ----------------
@@ -589,6 +511,7 @@ function submitFzOrder() {
   }
   orders.push(order);
   localStorage.setItem(FZ_ORDERS_KEY, JSON.stringify(orders));
+  if (window.Track) Track.event('envio_pedido');
 
   FzCart.clear();
   updateFzMascot();
@@ -633,6 +556,19 @@ function applyStaticI18n() {
   document.getElementById('fz-trust-box').textContent = I18n.t('fzTrustBox');
   document.getElementById('fz-trust-courier').textContent = I18n.t('fzTrustCourier');
 
+  document.getElementById('fz-story-eyebrow').textContent = I18n.t('fzStoryEyebrow');
+  document.getElementById('fz-story-title').textContent = I18n.t('fzStoryTitle');
+  document.getElementById('fz-story-body').textContent = I18n.t('fzStoryBody');
+  document.getElementById('fz-story-cta').textContent = I18n.t('fzSectionCtaLabel');
+
+  document.getElementById('fz-pain-title').textContent = I18n.t('fzPainTitle');
+  document.getElementById('fz-pain-body').textContent = I18n.t('fzPainBody');
+  document.getElementById('fz-pain-cta').textContent = I18n.t('fzSectionCtaLabel');
+
+  document.getElementById('fz-process-title').textContent = I18n.t('fzProcessTitle');
+  document.getElementById('fz-process-body').textContent = I18n.t('fzProcessBody');
+  document.getElementById('fz-process-cta').textContent = I18n.t('fzSectionCtaLabel');
+
   document.getElementById('fz-how-title').textContent = I18n.t('fzHowTitle');
   document.getElementById('fz-how1-title').textContent = I18n.t('fzHowStep1Title');
   document.getElementById('fz-how1-text').textContent = I18n.t('fzHowStep1Text');
@@ -645,8 +581,6 @@ function applyStaticI18n() {
   document.getElementById('fz-catalog-subtitle').textContent = I18n.t('fzCatalogSubtitle');
   document.getElementById('fz-faq-title').textContent = I18n.t('fzFaqTitle');
 
-  document.getElementById('fz-compare-bar-btn').textContent = I18n.t('fzCompareTitle');
-
   updateFzMascot();
   renderCatalog();
   renderFaq();
@@ -657,7 +591,6 @@ function onLangChange() {
   applyStaticI18n();
   if (document.getElementById('fz-drawer').classList.contains('open')) renderFzDrawer();
   if (document.getElementById('fz-checkout-modal').classList.contains('open')) renderCheckoutModal();
-  if (document.getElementById('fz-compare-modal').classList.contains('open')) openCompareModal();
 }
 
 // ---------------- Init ----------------
@@ -670,10 +603,6 @@ applyStaticI18n();
 document.getElementById('fz-drawer-close').addEventListener('click', closeFzDrawer);
 document.getElementById('fz-drawer-overlay').addEventListener('click', closeFzDrawer);
 document.getElementById('fz-box-bar').addEventListener('click', openFzDrawer);
-document.getElementById('fz-compare-bar-btn').addEventListener('click', openCompareModal);
-document.getElementById('fz-compare-modal').addEventListener('click', (e) => {
-  if (e.target.id === 'fz-compare-modal') closeCompareModal();
-});
 document.getElementById('fz-checkout-modal').addEventListener('click', (e) => {
   if (e.target.id === 'fz-checkout-modal') closeCheckoutModal();
 });
