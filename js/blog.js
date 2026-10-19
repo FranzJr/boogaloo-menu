@@ -315,6 +315,37 @@ const STORY9_PARRAFOS = {
   ],
 };
 
+const STORY10_PARRAFOS = {
+  es: [
+    'El tinto es, en su forma más simple, café negro en un pocillo pequeño. Sin leche, sin espuma, sin nombre largo. En Colombia nadie pide “un café negro”: se pide “un tinto”, y quien lo sirve ya sabe todo lo demás. Se toma caliente, a sorbos cortos, y muchas veces de pie.',
+    'Lo que lo hace especial no es el grano, sino el gesto. En las calles de las ciudades colombianas, los vendedores de tinto caminan con un termo en una mano y una pila de vasitos en la otra, y sirven por unas pocas monedas. En las oficinas y en las casas pasa lo mismo: llega una visita y lo primero que se oye es “¿le provoca un tintico?”. Es la forma colombiana de decir “bienvenido, quédese un rato”. Y en el campo, como en la foto, el café se sirve de una jarra de metal en un pocillo, entre las matas, a mitad de la jornada.',
+    'En Japón existe una pausa que nace del mismo gesto. En casi cualquier esquina hay una máquina expendedora de café enlatado -- lo caliente se marca en rojo y lo frío en azul --, y en 1969 la empresa UCC lanzó allá su café con leche en lata, uno de los primeros del mundo. Y en Nagoya, donde está Boogaloo, la pausa tiene nombre propio: el モーニング (“mōningu”), la costumbre de que el café de la mañana llegue acompañado de tostada y huevo en las cafeterías de barrio, los kissaten.',
+    'Son dos países muy distintos que llegaron a la misma idea: que el café no tiene que ser un evento. Basta con que sea una pausa corta, a la mano, ofrecida sin ceremonia, que le dice a quien la recibe que por cinco minutos no tiene que hacer nada más. En los dos casos, lo que se comparte no es el café: es el rato.',
+    'En Boogaloo el tinto se sirve así: negro, caliente, sin más ceremonia que sentarse. Si algún día extraña su lata caliente de la máquina o su モーニング de la esquina, venga a tomarse un tinto con nosotros: no es el mismo café, pero es la misma pausa. Lo esperamos en Boogaloo.',
+  ],
+  en: [
+    "A tinto is, in its simplest form, black coffee in a small cup. No milk, no foam, no long name. In Colombia nobody orders “a black coffee”: you ask for “a tinto,” and whoever pours it already knows everything else. It's drunk hot, in short sips, and often standing up.",
+    "What makes it special isn't the bean, it's the gesture. On the streets of Colombian cities, tinto sellers walk around with a thermos in one hand and a stack of tiny cups in the other, and pour for a few coins. In offices and homes it's the same: a visitor arrives and the first thing you hear is “¿le provoca un tintico?” -- “would you like a little tinto?” It's the Colombian way of saying “welcome, stay a while.” And in the countryside, as in the photo, coffee is poured from a metal jug into a small cup, among the coffee plants, halfway through the workday.",
+    "Japan has a pause born from the same gesture. On almost every corner there is a vending machine selling canned coffee -- hot is marked in red, cold in blue -- and in 1969 the company UCC launched its canned coffee with milk there, one of the first in the world. And in Nagoya, where Boogaloo is, the pause has its own name: モーニング (“mōningu”), the custom of morning coffee arriving with toast and an egg at neighborhood coffee shops, the kissaten.",
+    "Two very different countries arrived at the same idea: that coffee doesn't have to be an event. It's enough for it to be a short pause, close at hand, offered without ceremony, telling whoever receives it that for five minutes there's nothing else to do. In both cases, what gets shared isn't the coffee: it's the moment.",
+    "At Boogaloo, tinto is served just like that: black, hot, with no ceremony other than sitting down. If you ever miss the hot can from the machine or the モーニング from the corner, come have a tinto with us: it's not the same coffee, but it's the same pause. We're waiting for you at Boogaloo.",
+  ],
+  ja: [
+    'ティント（tinto）は、いちばんシンプルに言えば、小さなカップに入ったブラックコーヒーです。ミルクも泡も、長い名前もありません。コロンビアでは「ブラックコーヒーをください」とは言いません。「ティントをひとつ」と言えば、注ぐ人はそれだけで全部わかります。熱いものを、短いひと口ずつ、立ったまま飲むことも多いのです。',
+    'ティントを特別にしているのは、豆ではなく、その仕草です。コロンビアの街角では、ティント売りが片手に魔法瓶、もう片手に小さなカップの束を持って歩き、わずかな小銭でコーヒーを注いでくれます。会社でも家でも同じで、お客さんが来ると最初に聞こえるのは「¿le provoca un tintico?（ティントでもいかがですか？）」。「ようこそ、ゆっくりしていってください」を伝えるコロンビア流の言い方です。そして写真のように、田舎ではコーヒーの木々の間で、仕事の合間に金属の水差しから小さなカップへコーヒーを注ぎます。',
+    '日本にも、同じ仕草から生まれた休憩があります。ほとんどどの街角にも缶コーヒーの自動販売機があり ―― 温かいものは赤、冷たいものは青で示されます ―― 1969年には、UCCが日本でミルク入りの缶コーヒーを発売しました。世界でも最初期の缶コーヒーのひとつです。そしてBoogalooのある名古屋では、この休憩に名前があります。「モーニング」。朝のコーヒーに、トーストとゆで卵がついてくる、町の喫茶店の習慣です。',
+    '二つの国は、まったく違うのに、同じ考えにたどり着きました。コーヒーは、特別な出来事でなくていい、ということ。手の届くところにある短い休憩で、仰々しさなしに差し出されるもの。受け取った人に「この5分は、ほかに何もしなくていいよ」と伝えるものです。どちらの国でも、分かち合っているのはコーヒーではなく、その時間なのです。',
+    'Boogalooのティントも、そのまま。黒くて、熱くて、座ること以外に特別な儀式はありません。自動販売機の温かい缶や、近所のモーニングが恋しくなったら、ぜひティントを飲みにいらしてください。同じコーヒーではないけれど、同じ休憩です。Boogalooでお待ちしています。',
+  ],
+  pt: [
+    'O tinto é, na sua forma mais simples, café preto numa xícara pequena. Sem leite, sem espuma, sem nome comprido. Na Colômbia ninguém pede “um café preto”: pede-se “um tinto”, e quem serve já sabe todo o resto. Toma-se quente, em goles curtos, e muitas vezes em pé.',
+    'O que o torna especial não é o grão, e sim o gesto. Nas ruas das cidades colombianas, os vendedores de tinto andam com uma garrafa térmica numa mão e uma pilha de copinhos na outra, e servem por poucas moedas. Nos escritórios e nas casas é igual: chega uma visita e a primeira coisa que se ouve é “¿le provoca un tintico?” -- “quer um tintinho?”. É o jeito colombiano de dizer “seja bem-vindo, fique mais um pouco”. E no campo, como na foto, o café é servido de uma jarra de metal numa caneca, entre os pés de café, no meio da jornada.',
+    'O Japão tem uma pausa que nasce do mesmo gesto. Em quase toda esquina há uma máquina de venda de café em lata -- o quente é marcado em vermelho e o frio em azul --, e em 1969 a empresa UCC lançou lá seu café com leite em lata, um dos primeiros do mundo. E em Nagoia, onde fica o Boogaloo, a pausa tem nome próprio: o モーニング (“mōningu”), o costume de o café da manhã vir acompanhado de torrada e ovo nas cafeterias de bairro, os kissaten.',
+    'São dois países muito diferentes que chegaram à mesma ideia: que o café não precisa ser um evento. Basta que seja uma pausa curta, à mão, oferecida sem cerimônia, que diz a quem a recebe que, por cinco minutos, não precisa fazer mais nada. Nos dois casos, o que se divide não é o café: é o momento.',
+    'No Boogaloo o tinto é servido assim: preto, quente, sem outra cerimônia além de se sentar. Se um dia sentir falta da lata quente da máquina ou do モーニング da esquina, venha tomar um tinto com a gente: não é o mesmo café, mas é a mesma pausa. Esperamos você no Boogaloo.',
+  ],
+};
+
 const STORIES = [
   {
     key: 'story1',
@@ -405,6 +436,15 @@ const STORIES = [
     image: 'img/blog/raquira-ceramica.jpg',
     imageAlt: 'Manos de un artesano moldeando barro en un torno, Ráquira, Boyacá, Colombia',
     credit: { name: 'Daniela Quintana', url: 'https://www.pexels.com/@daniela-quintana-75707103/', source: 'Pexels' },
+  },  {
+    key: 'story10',
+    date: '2026-10-19',
+    parrafos: STORY10_PARRAFOS,
+    titleKey: 'blogStory10Title',
+    color: 'red',
+    image: 'img/blog/caicedonia-cafe.jpg',
+    imageAlt: 'Un cafetero sirve café de una jarra de metal en un pocillo, entre las matas de café, Caicedonia, Valle del Cauca, Colombia',
+    credit: { name: 'Loguista_', url: 'https://www.pexels.com/@loguista_-47134893/', source: 'Pexels' },
   },
 ];
 

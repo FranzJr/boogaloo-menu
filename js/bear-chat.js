@@ -271,7 +271,7 @@ function bcFaqReply(kb, faq, lang, out) {
 
 // ---------------- Interfaz ----------------
 
-const BC_AVATAR = '../img/logo/favicon-512.png';
+const BC_AVATAR = window.HALLOWEEN ? '../img/oso/oso-vampiro.jpg' : '../img/logo/favicon-512.png';
 const BC_CHIPS = ['chatChip1', 'chatChip2', 'chatChip3', 'chatChip4', 'chatChip5'];
 
 function bcAvatar() {

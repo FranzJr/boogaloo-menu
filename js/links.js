@@ -53,6 +53,12 @@ document.getElementById('lk-links').addEventListener('click', (e) => {
 // ---------------- El oso habla ----------------
 
 const LK_PHRASES = ['lkBubble1', 'lkBubble2', 'lkBubble3', 'lkBubble4'];
+if (window.HALLOWEEN) {
+  LK_PHRASES.splice(1, 0, 'lkBubbleHw');
+  const bearImg = document.getElementById('lk-bear-img');
+  bearImg.src = '../img/oso/oso-vampiro.jpg';
+  bearImg.classList.add('lk-bear-hw');
+}
 let lkIndex = 0;
 let lkTyping = null;
 const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -2058,3 +2058,48 @@ body.lk-body { padding-bottom: 0; background: linear-gradient(180deg, #fff3d6 0%
 .bc-jump.show { display: inline-flex; }
 .bc-up { top: 10px; }
 .bc-down { bottom: 10px; }
+
+/* ---------- Tema de Halloween (js/theme.js: octubre, o ?halloween=1) ---------- */
+html.halloween {
+  --co-blue: #5b21b6;
+  --accent: #e8590c;
+  --accent-soft: #ffedd5;
+  --bg: #fff7ec;
+  --border: #f1dfc9;
+}
+/* La franja de la bandera de Colombia conserva sus colores. */
+html.halloween .flag-stripe { background: linear-gradient(to right, #ffcd00 0%, #ffcd00 50%, #003893 50%, #003893 75%, #ce1126 75%, #ce1126 100%); }
+html.halloween body.menu-page .site-header { position: relative; }
+html.halloween .site-header { border-bottom: 3px solid #f97316; background: linear-gradient(180deg, #fff1de 0%, var(--bg) 100%); }
+html.halloween .site-footer { position: relative; background: #2b1636; color: #f3e8ff; border-top: 3px solid #f97316; }
+html.halloween .site-footer a { color: #fdba74; }
+html.halloween .site-footer .footer-copyright { color: #c4b5d6; }
+html.halloween .category-heading h2 { color: #5b21b6; }
+html.halloween .item-price { color: #e8590c; }
+html.halloween .staff-subnav { background: #2b1636; }
+html.halloween .admin-subnav { background: #7c2d12; }
+
+/* Decoración: telarañas en las esquinas y una araña colgando. Nunca tapa clics. */
+.hw-deco { position: absolute; pointer-events: none; z-index: 3; }
+.hw-deco svg { display: block; width: 100%; height: 100%; }
+.hw-web { top: 0; width: 92px; height: 92px; opacity: 0.6; }
+.hw-web svg path { fill: none; stroke: #8b7a99; stroke-width: 0.9; stroke-linecap: round; }
+.hw-web-l { left: 0; }
+.hw-web-r { right: 0; transform: scaleX(-1); }
+.hw-web-light svg path { stroke: #e9d5ff; }
+.hw-web-foot { opacity: 0.45; }
+.hw-spider { top: 0; left: 44%; width: 26px; height: 60px; transform-origin: 50% 0; animation: hwSwing 3.6s ease-in-out infinite; }
+@keyframes hwSwing { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+@media (max-width: 640px) { .hw-web { width: 62px; height: 62px; } .hw-spider { left: 40%; height: 46px; width: 20px; } }
+@media (prefers-reduced-motion: reduce) { .hw-spider { animation: none; } }
+@media print { .hw-deco { display: none !important; } }
+
+/* Página de enlaces y chat en modo Halloween */
+html.halloween body.lk-body { position: relative; background: linear-gradient(180deg, #ffd9a8 0%, var(--bg) 40%); }
+html.halloween .lk-btn-primary { box-shadow: 3px 3px 0 #f97316; }
+html.halloween .lk-bubble { box-shadow: 4px 4px 0 #f97316; }
+html.halloween .lk-bear-img.lk-bear-hw { width: 128px; height: 128px; object-fit: cover; border-radius: 50%; border: 3px solid var(--ink); background: #f97316; filter: none; box-shadow: 4px 4px 0 #5b21b6; }
+html.halloween .bc-chat { box-shadow: 4px 4px 0 #f97316; }
+html.halloween .bc-head { background: #f97316; }
+html.halloween .bc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+html.halloween .bc-jump { background: #f97316; }
