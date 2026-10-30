@@ -48,6 +48,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="primary-btn" id="hub-eventos-btn" type="button" style="width:100%; margin-bottom:10px;">Eventos</button>
     <button class="primary-btn" id="hub-inventario-btn" type="button" style="width:100%; margin-bottom:10px;">Inventario</button>
     <button class="primary-btn" id="hub-analytics-btn" type="button" style="width:100%; margin-bottom:10px;">Analítica</button>
+    <button class="primary-btn" id="hub-higiene-btn" type="button" style="width:100%; margin-bottom:10px;">Control sanitario</button>
     <span class="who" id="hub-who-label" style="display:block; margin-top:14px;"></span>
     <button class="link-btn" id="hub-logout-btn" type="button">Cerrar sesión</button>
   </div>
@@ -243,8 +244,50 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
+  <!-- Vista de control sanitario (maqueta: datos en localStorage, sin backend) -->
+  <div class="admin-shell" id="hygiene-view" style="display:none;">
+    <div class="admin-sticky-top">
+      <div class="admin-topbar">
+        <h1 id="hygiene-title">Control sanitario</h1>
+        <div>
+          <span id="hygiene-lang-slot"></span>
+          <button class="link-btn" id="hygiene-back-to-hub-btn" type="button">← Volver</button>
+          <span class="who" id="hygiene-who-label"></span>
+          <button class="link-btn" id="hygiene-logout-btn" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="hy-banner" id="hygiene-demo-banner"></p>
+
+    <div class="tn-month-nav">
+      <button class="ghost-btn" id="hy-prev" type="button">‹</button>
+      <h2 id="hy-month-label"></h2>
+      <button class="ghost-btn" id="hy-next" type="button">›</button>
+    </div>
+
+    <table class="tn-table hy-table" id="hy-table">
+      <thead>
+        <tr id="hy-table-head"></tr>
+      </thead>
+      <tbody id="hy-table-body"></tbody>
+    </table>
+
+    <div class="tn-list hy-list" id="hy-list"></div>
+
+    <div class="tn-legend" id="hy-legend"></div>
+  </div>
+
+  <!-- Modal: detalle/edición del registro de un día -->
+  <div class="modal-overlay" id="hy-modal">
+    <div class="modal-box">
+      <div id="hy-modal-body"></div>
+    </div>
+  </div>
+
   <script src="js/i18n.js"></script>
   <script src="js/menu-data.js"></script>
+  <script src="js/hygiene-data.js"></script>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
   <script src="js/session.js"></script>

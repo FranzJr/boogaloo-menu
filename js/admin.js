@@ -61,6 +61,7 @@ function hideAllViews() {
   document.getElementById('inscripciones-view').style.display = 'none';
   document.getElementById('inventario-view').style.display = 'none';
   document.getElementById('analytics-view').style.display = 'none';
+  document.getElementById('hygiene-view').style.display = 'none';
 }
 
 function showLogin(message) {
@@ -120,6 +121,13 @@ function showInventario() {
   document.getElementById('inventario-view').style.display = 'block';
   document.getElementById('inventario-who-label').textContent = identityLabel();
   fetchInsumos();
+}
+
+function showHygiene() {
+  hideAllViews();
+  document.getElementById('hygiene-view').style.display = 'block';
+  document.getElementById('hygiene-who-label').textContent = identityLabel();
+  renderHygieneCalendar();
 }
 
 // Configuración del sitio (solo admin): mostrar/ocultar el aviso de envíos en el home.
@@ -501,6 +509,7 @@ document.getElementById('logout-btn').addEventListener('click', doLogout);
 document.getElementById('reservas-logout-btn').addEventListener('click', doLogout);
 document.getElementById('menu-logout-btn').addEventListener('click', doLogout);
 document.getElementById('inventario-logout-btn').addEventListener('click', doLogout);
+document.getElementById('hygiene-logout-btn').addEventListener('click', doLogout);
 
 document.getElementById('hub-pedidos-btn').addEventListener('click', () => (location.hash = 'pedidos'));
 document.getElementById('hub-turnos-btn').addEventListener('click', () => {
@@ -513,11 +522,13 @@ document.getElementById('inscripciones-back-to-hub-btn').addEventListener('click
 document.getElementById('inscripciones-logout-btn').addEventListener('click', doLogout);
 document.getElementById('hub-inventario-btn').addEventListener('click', () => (location.hash = 'inventario'));
 document.getElementById('hub-analytics-btn').addEventListener('click', () => (location.hash = 'analitica'));
+document.getElementById('hub-higiene-btn').addEventListener('click', () => (location.hash = 'higiene'));
 document.getElementById('back-to-hub-btn').addEventListener('click', goHub);
 document.getElementById('reservas-back-to-hub-btn').addEventListener('click', goHub);
 document.getElementById('inventario-back-to-hub-btn').addEventListener('click', goHub);
 document.getElementById('menu-back-to-hub-btn').addEventListener('click', goHub);
 document.getElementById('analytics-back-to-hub-btn').addEventListener('click', goHub);
+document.getElementById('hygiene-back-to-hub-btn').addEventListener('click', goHub);
 document.getElementById('analytics-logout-btn').addEventListener('click', doLogout);
 document.getElementById('analytics-regenerate-btn').addEventListener('click', () => loadAnalytics(false));
 
@@ -1288,6 +1299,247 @@ document.getElementById('horario-body').addEventListener('click', async (e) => {
   btn.disabled = false;
 });
 
+// ---------------- Control sanitario (maqueta: localStorage, sin backend) ----------------
+// Ver js/hygiene-data.js para los datos de partida (HYGIENE_SEED_RECORDS) y la
+// nota sobre qué parte es demo y qué parte son los datos reales de la última semana.
+
+let currentHyMonth = new Date();
+
+function loadHygieneOverrides() {
+  try {
+    return JSON.parse(localStorage.getItem(HYGIENE_STORAGE_KEY) || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveHygieneOverride(fechaStr, record) {
+  const overrides = loadHygieneOverrides();
+  overrides[fechaStr] = record;
+  localStorage.setItem(HYGIENE_STORAGE_KEY, JSON.stringify(overrides));
+}
+
+function hyGetRecord(fechaStr) {
+  const overrides = loadHygieneOverrides();
+  if (overrides[fechaStr] !== undefined) return overrides[fechaStr];
+  return HYGIENE_SEED_RECORDS[fechaStr];
+}
+
+// Cumple la normativa si cada ítem diario está en orden: temperaturas dentro
+// del límite y los check obligatorios en true. El control de plagas (mensual)
+// no se exige todos los días, así que no afecta este resultado.
+function hyIsCompliant(record) {
+  if (!record || !record.items) return false;
+  return HYGIENE_ITEMS.every((it) => {
+    const val = record.items[it.id];
+    if (it.type === 'temp') return val !== undefined && val !== '' && !isNaN(Number(val)) && Number(val) <= it.max;
+    if (it.monthly) return true;
+    return val === true;
+  });
+}
+
+function hyComputeStatus(fechaStr, record) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (hyParseDate(fechaStr) > today) return 'future';
+  if (!record) return 'missing';
+  if (record.cerrado) return 'closed';
+  return hyIsCompliant(record) ? 'ok' : 'incomplete';
+}
+
+function hyStatusLabel(status) {
+  if (status === 'closed') return I18n.t('hyStatusClosed');
+  if (status === 'ok') return I18n.t('hyStatusOk');
+  if (status === 'incomplete') return I18n.t('hyStatusIncomplete');
+  if (status === 'missing') return I18n.t('hyStatusMissing');
+  return I18n.t('hyStatusFuture');
+}
+
+function hyBuildMonthMatrix(year, month) {
+  const first = new Date(year, month, 1);
+  const startWeekday = first.getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const weeks = [];
+  let week = new Array(startWeekday).fill(null);
+  for (let d = 1; d <= daysInMonth; d++) {
+    week.push(d);
+    if (week.length === 7) {
+      weeks.push(week);
+      week = [];
+    }
+  }
+  if (week.length) {
+    while (week.length < 7) week.push(null);
+    weeks.push(week);
+  }
+  return weeks;
+}
+
+function renderHygieneCalendar() {
+  const year = currentHyMonth.getFullYear();
+  const month = currentHyMonth.getMonth();
+  const weekdays = I18n.t('tnWeekdays');
+  const monthLabels = I18n.t('tnMonthLabels');
+
+  document.getElementById('hy-month-label').textContent = `${monthLabels[month]} ${year}`;
+  document.getElementById('hy-table-head').innerHTML = weekdays.map((w) => `<th>${w}</th>`).join('');
+
+  const weeks = hyBuildMonthMatrix(year, month);
+  document.getElementById('hy-table-body').innerHTML = weeks
+    .map(
+      (week) => `<tr>${week
+        .map((day) => {
+          if (!day) return '<td class="tn-empty"></td>';
+          const fechaStr = hyDateStr(new Date(year, month, day));
+          const status = hyComputeStatus(fechaStr, hyGetRecord(fechaStr));
+          const clickable = status !== 'future';
+          return `<td data-fecha="${fechaStr}" class="${clickable ? 'hy-clickable' : ''}">
+            <span class="n">${day}</span>
+            ${clickable ? `<span class="hy-chip hy-${status}">${hyStatusLabel(status)}</span>` : ''}
+          </td>`;
+        })
+        .join('')}</tr>`
+    )
+    .join('');
+
+  document.getElementById('hy-list').innerHTML = weeks
+    .reduce((flat, week) => flat.concat(week), [])
+    .filter((day) => day)
+    .map((day) => {
+      const d = new Date(year, month, day);
+      const fechaStr = hyDateStr(d);
+      const status = hyComputeStatus(fechaStr, hyGetRecord(fechaStr));
+      const clickable = status !== 'future';
+      return `<div class="tn-li" ${clickable ? `data-fecha="${fechaStr}"` : 'style="cursor:default; opacity:0.55;"'}>
+        <span class="d">${day}</span>
+        <span class="w">${weekdays[d.getDay()]}</span>
+        <span class="p">${hyStatusLabel(status)}</span>
+        <span class="tn-dot hy-dot-${status}"></span>
+      </div>`;
+    })
+    .join('');
+
+  renderHygieneLegend();
+}
+
+function renderHygieneLegend() {
+  document.getElementById('hy-legend').innerHTML = ['ok', 'incomplete', 'missing', 'closed', 'future']
+    .map((status) => `<div class="tn-lg"><span class="tn-dot hy-dot-${status}"></span><div><b>${hyStatusLabel(status)}</b></div></div>`)
+    .join('');
+}
+
+document.getElementById('hy-prev').addEventListener('click', () => {
+  currentHyMonth = new Date(currentHyMonth.getFullYear(), currentHyMonth.getMonth() - 1, 1);
+  renderHygieneCalendar();
+});
+document.getElementById('hy-next').addEventListener('click', () => {
+  currentHyMonth = new Date(currentHyMonth.getFullYear(), currentHyMonth.getMonth() + 1, 1);
+  renderHygieneCalendar();
+});
+
+document.getElementById('hy-table-body').addEventListener('click', (e) => {
+  const td = e.target.closest('td[data-fecha]');
+  if (td) openHygieneModal(td.dataset.fecha);
+});
+document.getElementById('hy-list').addEventListener('click', (e) => {
+  const row = e.target.closest('[data-fecha]');
+  if (row) openHygieneModal(row.dataset.fecha);
+});
+
+// ---------------- Modal de detalle / edición de un día ----------------
+
+const hyModal = document.getElementById('hy-modal');
+const hyModalBody = document.getElementById('hy-modal-body');
+let hyModalFecha = null;
+
+function closeHygieneModal() {
+  hyModal.classList.remove('open');
+}
+hyModal.addEventListener('click', (e) => {
+  if (e.target === hyModal) closeHygieneModal();
+});
+
+function hygieneItemGroupHtml(groupKey, titleKey, items) {
+  const rows = HYGIENE_ITEMS.filter((it) => it.group === groupKey)
+    .map((it) => {
+      if (it.type === 'temp') {
+        const val = items[it.id] !== undefined ? items[it.id] : '';
+        return `
+        <div class="hy-item-row">
+          <span class="hy-item-label">${it.es} / ${it.ja}</span>
+          <input type="number" class="hy-item-input" data-item="${it.id}" value="${val}" />
+        </div>`;
+      }
+      const checked = items[it.id] === true;
+      const tag = it.monthly ? ` ${I18n.t('hyMonthlyTag')}` : '';
+      return `
+        <div class="hy-item-row">
+          <label class="hy-item-check">
+            <input type="checkbox" data-item="${it.id}" ${checked ? 'checked' : ''} />
+            <span>${it.es} / ${it.ja}${tag}</span>
+          </label>
+        </div>`;
+    })
+    .join('');
+  return `<div class="hy-group"><h3>${I18n.t(titleKey)}</h3>${rows}</div>`;
+}
+
+function hygieneModalBodyHtml(fechaStr) {
+  const record = hyGetRecord(fechaStr);
+  const status = hyComputeStatus(fechaStr, record);
+  const d = hyParseDate(fechaStr);
+  const dateLabel = `${d.getDate()} ${I18n.t('tnMonthLabels')[d.getMonth()]} ${d.getFullYear()} (${I18n.t('tnWeekdays')[d.getDay()]})`;
+
+  if (status === 'closed') {
+    return `
+      <h2>${I18n.t('hyDayDetailTitle', dateLabel)}</h2>
+      <p class="subt">${I18n.t('hyClosedDayNote')}</p>
+      <button class="ghost-btn" id="hy-modal-close" type="button" style="width:100%;">${I18n.t('closeBtn')}</button>
+    `;
+  }
+
+  const items = (record && record.items) || {};
+  const firma = (record && record.firma) || '';
+  const notas = (record && record.notas) || '';
+
+  return `
+    <h2>${I18n.t('hyDayDetailTitle', dateLabel)}</h2>
+    ${status === 'missing' ? `<p class="subt">${I18n.t('hyNoRecordNote')}</p>` : ''}
+    ${hygieneItemGroupHtml('general', 'hyGeneralGroup', items)}
+    ${hygieneItemGroupHtml('importante', 'hyImportanteGroup', items)}
+    <div class="field"><label>${I18n.t('hySignatureLabel')}</label><input type="text" id="hy-modal-firma" value="${firma}" /></div>
+    <div class="field"><label>${I18n.t('hyNotesLabel')}</label><textarea id="hy-modal-notas" rows="2">${notas}</textarea></div>
+    <button class="primary-btn" id="hy-modal-save" type="button" style="width:100%;">${I18n.t('hySaveBtn')}</button>
+    <button class="ghost-btn" id="hy-modal-close" type="button" style="width:100%; margin-top:8px;">${I18n.t('closeBtn')}</button>
+  `;
+}
+
+function openHygieneModal(fechaStr) {
+  hyModalFecha = fechaStr;
+  hyModalBody.innerHTML = hygieneModalBodyHtml(fechaStr);
+  hyModal.classList.add('open');
+  const closeBtn = document.getElementById('hy-modal-close');
+  if (closeBtn) closeBtn.addEventListener('click', closeHygieneModal);
+  const saveBtn = document.getElementById('hy-modal-save');
+  if (saveBtn) saveBtn.addEventListener('click', saveHygieneDay);
+}
+
+function saveHygieneDay() {
+  const fechaStr = hyModalFecha;
+  const items = {};
+  HYGIENE_ITEMS.forEach((it) => {
+    const el = hyModalBody.querySelector(`[data-item="${it.id}"]`);
+    if (!el) return;
+    items[it.id] = it.type === 'temp' ? Number(el.value) : el.checked;
+  });
+  const firma = document.getElementById('hy-modal-firma').value.trim();
+  const notas = document.getElementById('hy-modal-notas').value.trim();
+  saveHygieneOverride(fechaStr, { fecha: fechaStr, cerrado: false, items, firma, notas });
+  closeHygieneModal();
+  renderHygieneCalendar();
+  alert(I18n.t('hySavedOk'));
+}
+
 // ---------------- Idioma ----------------
 
 function applyStaticI18n() {
@@ -1349,6 +1601,11 @@ function applyStaticI18n() {
   document.getElementById('an-languages-title').textContent = I18n.t('anLanguagesTitle');
   document.getElementById('an-recommendations-title').textContent = I18n.t('anRecommendationsTitle');
   document.getElementById('an-visitors-title').textContent = I18n.t('anVisitorsTodayTitle');
+  document.getElementById('hub-higiene-btn').textContent = I18n.t('hubHigieneBtn');
+  document.getElementById('hygiene-title').textContent = I18n.t('hubHigieneBtn');
+  document.getElementById('hygiene-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
+  document.getElementById('hygiene-logout-btn').textContent = I18n.t('logoutBtn');
+  document.getElementById('hygiene-demo-banner').textContent = I18n.t('hyDemoBanner');
 }
 
 function onLangChange() {
@@ -1362,6 +1619,7 @@ function onLangChange() {
   if (document.getElementById('inventario-view').style.display !== 'none') renderInsumos();
   if (document.getElementById('analytics-view').style.display !== 'none' && anData) renderAnalytics();
   if (document.getElementById('inscripciones-view').style.display !== 'none') renderInscripciones();
+  if (document.getElementById('hygiene-view').style.display !== 'none') renderHygieneCalendar();
 }
 
 renderLangSelect(document.getElementById('admin-lang-slot'));
@@ -1372,6 +1630,7 @@ renderLangSelect(document.getElementById('analytics-lang-slot'));
 renderLangSelect(document.getElementById('menu-lang-slot'));
 renderLangSelect(document.getElementById('inscripciones-lang-slot'));
 renderLangSelect(document.getElementById('inventario-lang-slot'));
+renderLangSelect(document.getElementById('hygiene-lang-slot'));
 
 // ---------------- Rutas (admin.html#pedidos, #reservas, #menu...) ----------------
 // El menú único del sitio enlaza a estas secciones; cada una se abre por su hash.
@@ -1383,6 +1642,7 @@ const ROUTES = {
   inventario: showInventario,
   eventos: showInscripciones,
   analitica: showAnalytics,
+  higiene: showHygiene,
   config: () => {
     showMenuAdmin();
     setTimeout(() => document.getElementById('site-config').scrollIntoView({ behavior: 'smooth', block: 'center' }), 400);

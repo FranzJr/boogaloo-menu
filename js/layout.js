@@ -53,6 +53,7 @@ const NAV_STAFF = [
   { id: 'inventario', href: 'admin.html#inventario', key: 'hubInventarioBtn' },
   { id: 'inscripciones', href: 'admin.html#eventos', key: 'navInscripciones' },
   { id: 'nomina', href: 'nomina.html', key: 'hubNominaBtn' },
+  { id: 'higiene', href: 'admin.html#higiene', key: 'hubHigieneBtn' },
 ];
 const NAV_ADMIN = [
   { id: 'analitica', href: 'admin.html#analitica', key: 'anHubBtn' },
