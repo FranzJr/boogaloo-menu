@@ -1260,6 +1260,84 @@ footer.site-footer {
   .tn-list { display: block; }
 }
 
+/* ============ Control sanitario / Higiene (maqueta, admin.html) ============ */
+:root {
+  --hy-ok: #1f9d55;
+  --hy-incomplete: #c0392b;
+  --hy-missing: #b5750f;
+  --hy-closed: #a79e8c;
+  --hy-future: #cfcac2;
+}
+
+.hy-banner {
+  background: #eef6ff;
+  color: var(--ink);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+
+.hy-chip {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 7px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+}
+.hy-chip.hy-ok { background: var(--hy-ok); }
+.hy-chip.hy-incomplete { background: var(--hy-incomplete); }
+.hy-chip.hy-missing { background: var(--hy-missing); }
+.hy-chip.hy-closed { background: var(--hy-closed); }
+
+.hy-clickable { cursor: pointer; }
+
+.tn-dot.hy-dot-ok { background: var(--hy-ok); }
+.tn-dot.hy-dot-incomplete { background: var(--hy-incomplete); }
+.tn-dot.hy-dot-missing { background: var(--hy-missing); }
+.tn-dot.hy-dot-closed { background: var(--hy-closed); }
+.tn-dot.hy-dot-future { background: var(--hy-future); }
+
+.hy-group { margin-bottom: 14px; }
+.hy-group h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+}
+
+.hy-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.hy-item-row:last-child { border-bottom: none; }
+.hy-item-label { flex: 1; min-width: 0; }
+.hy-item-input {
+  width: 72px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font: inherit;
+}
+.hy-item-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+.hy-item-check input[type="checkbox"] { width: 18px; height: 18px; flex: none; }
+.hy-item-check span { flex: 1; min-width: 0; }
+
 /* ---------------- Nuestra historia (about.html) ---------------- */
 
 .ab-wrap {
