@@ -2181,3 +2181,44 @@ html.halloween .bc-chat { box-shadow: 4px 4px 0 #f97316; }
 html.halloween .bc-head { background: #f97316; }
 html.halloween .bc-avatar img { width: 100%; height: 100%; object-fit: cover; }
 html.halloween .bc-jump { background: #f97316; }
+
+/* ---------------- Recibo / factura (recibo.html y modal del panel) ---------------- */
+.rc-wrap { max-width: 720px; margin: 0 auto; padding: 22px 16px 40px; }
+.rc-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.rc-row label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--ink-soft); }
+.rc-row .rc-grow { flex: 1 1 180px; }
+.rc-hint { font-size: 12.5px; color: var(--ink-soft); margin: 8px 0 14px; min-height: 1em; }
+.rc-doc-wrap { overflow-x: auto; }
+.rc-doc {
+  background: #fff; color: #1d1a18; border: 1px solid #ddd3c4; border-radius: 6px;
+  padding: 28px 26px; max-width: 640px; margin: 0 auto; font-size: 14px; line-height: 1.5;
+}
+.rc-title { text-align: center; font-size: 26px; letter-spacing: 6px; margin: 0 0 14px; border-bottom: 2px solid #1d1a18; padding-bottom: 8px; }
+.rc-title small { font-size: 15px; letter-spacing: 2px; font-weight: 500; margin-left: 6px; }
+.rc-meta { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; color: #4a423d; flex-wrap: wrap; }
+.rc-meta span { color: #7a6f66; margin-right: 4px; }
+.rc-to { font-size: 20px; margin: 16px 0 12px; border-bottom: 1px solid #1d1a18; padding-bottom: 4px; min-height: 30px; }
+.rc-blank { display: inline-block; min-width: 200px; }
+.rc-amount { display: flex; justify-content: space-between; align-items: baseline; background: #f4efe6; padding: 10px 14px; border-radius: 4px; margin-bottom: 10px; }
+.rc-amount strong { font-size: 26px; }
+.rc-purpose { font-size: 13.5px; margin-bottom: 6px; }
+.rc-note { font-size: 13px; margin: 0 0 14px; }
+.rc-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rc-table th { border-bottom: 1px solid #1d1a18; text-align: left; padding: 6px 4px; font-weight: 600; }
+.rc-table td { padding: 5px 4px; border-bottom: 1px solid #eee6d8; vertical-align: top; }
+.rc-table th:not(:first-child), .rc-table td:not(:first-child) { text-align: right; white-space: nowrap; }
+.rc-table tfoot td { border-bottom: none; }
+.rc-table tfoot .rc-total td { font-weight: 700; border-top: 1px solid #1d1a18; }
+.rc-fine { font-size: 11.5px; color: #6b6058; margin: 6px 0 0; }
+.rc-issuer { margin-top: 22px; text-align: right; font-size: 12.5px; }
+.rc-issuer strong { font-size: 15px; }
+.rc-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 18px; }
+.rc-actions button { width: auto; padding: 10px 20px; }
+.rc-share-box { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+.rc-share-box input { flex: 1 1 220px; font-size: 12.5px; }
+.rc-share-box button { width: auto; padding: 8px 14px; }
+@media print {
+  body * { visibility: hidden; }
+  #rc-doc, #rc-doc * { visibility: visible; }
+  #rc-doc { position: absolute; left: 0; top: 0; width: 100%; border: none; }
+}

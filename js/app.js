@@ -807,6 +807,7 @@ function renderOrdersModal() {
           </div>
           ${p.Items.map((i) => `<div class="row"><span>${i.cantidad}x ${i.nombre}${i.entregado ? ' ✓' : ''}</span><span>${fmt(i.subtotal)}</span></div>`).join('')}
           <div class="row total"><span>${I18n.t('totalLabel')}</span><span>${fmt(p.Total)}</span></div>
+          ${p.ReciboToken ? `<a class="ghost-btn" href="recibo.html?t=${encodeURIComponent(p.ReciboToken)}" target="_blank" rel="noopener" style="display:inline-block; margin-top:8px; text-decoration:none;">🧾 ${I18n.t('rcMyReceiptBtn')}</a>` : ''}
         </div>`
         )
         .join('')}

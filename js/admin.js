@@ -640,6 +640,7 @@ function renderOrders() {
             <button class="btn-paid ${pagado ? 'done' : ''}" data-pagar="${p.ID}" data-valor="${!pagado}" type="button">
               ${pagado ? I18n.t('paidDoneBtn') : I18n.t('markPaidBtn')}
             </button>
+            <button class="ghost-btn" data-recibo="${p.ID}" type="button">${p.ReciboToken ? '🧾 ' : ''}${I18n.t('rcAdminBtn')}</button>
             <button class="ghost-btn" data-eliminar="${p.ID}" type="button">${I18n.t('deleteBtn')}</button>
           </div>
         </div>
@@ -654,6 +655,12 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
   const eliminarBtn = e.target.closest('[data-eliminar]');
   const quitarBtn = e.target.closest('[data-quitar-pedido]');
   const agregarBtn = e.target.closest('[data-agregar-item]');
+  const reciboBtn = e.target.closest('[data-recibo]');
+
+  if (reciboBtn) {
+    openReceiptModal(reciboBtn.dataset.recibo);
+    return;
+  }
 
   if (quitarBtn) {
     if (!confirm(I18n.t('confirmRemoveItem'))) return;
@@ -1731,4 +1738,182 @@ if (identity) {
   routeFromHash();
 } else {
   showLogin(null);
+}
+
+
+// ---------------- Recibos / facturas de un pedido ----------------
+// Emite un recibo (領収書) o factura (請求書) con una URL pública (recibo.html?t=TOKEN)
+// que el cliente puede abrir y descargar sin cuenta. Ver generarRecibo en el backend.
+
+const rcModal = document.getElementById('rc-modal');
+const rcModalBody = document.getElementById('rc-modal-body');
+let rcNegocio = null;
+
+rcModal.addEventListener('click', (e) => {
+  if (e.target === rcModal) rcModal.classList.remove('open');
+});
+
+function reciboUrl(token) {
+  return new URL('recibo.html?t=' + encodeURIComponent(token), location.href).href;
+}
+
+function escAttr(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+async function openReceiptModal(pedidoId) {
+  const p = ordersCache.find((x) => x.ID === pedidoId);
+  if (!p) return;
+  rcModal.classList.add('open');
+  rcModalBody.innerHTML = `<p>${I18n.t('loadingText')}</p>`;
+  try {
+    if (!rcNegocio) rcNegocio = (await apiCall('datosNegocioRecibo', authParams())).negocio;
+  } catch (err) {
+    rcNegocio = rcNegocio || { nombre: 'Boogaloo', direccion: '', telefono: '', registro: '' };
+  }
+  renderReceiptModal(p);
+}
+
+function renderReceiptModal(p) {
+  const pagado = p.Pagado === 'Si' || p.Pagado === true;
+  let previo = {};
+  try { previo = JSON.parse(p.ReciboDatos || '{}') || {}; } catch (e) { previo = {}; }
+  const tipo = previo.tipo || (pagado ? 'recibo' : 'factura');
+  const consumo = previo.consumo || 'local';
+  const sel = (v, cur) => (v === cur ? ' selected' : '');
+  const url = p.ReciboToken ? reciboUrl(p.ReciboToken) : '';
+  const n = rcNegocio;
+
+  rcModalBody.innerHTML = `
+    <h2>${I18n.t('rcModalTitle')}</h2>
+    <p class="subt">${escAttr(p.ID)} · ${escAttr(p.Cliente)} · ${fmt(p.Total)}</p>
+    ${pagado ? '' : `<p class="rc-hint">${I18n.t('rcUnpaidReceipt')}</p>`}
+    <div class="rc-row" style="margin-bottom:10px;">
+      <label>${I18n.t('rcTypeLabel')}
+        <select id="rcm-tipo">
+          <option value="recibo"${sel('recibo', tipo)}${pagado ? '' : ' disabled'}>${I18n.t('rcReceipt')} 領収書</option>
+          <option value="factura"${sel('factura', tipo)}>${I18n.t('rcInvoice')} 請求書</option>
+        </select>
+      </label>
+      <label>${I18n.t('rcConsumoLabel')}
+        <select id="rcm-consumo">
+          <option value="local"${sel('local', consumo)}>${I18n.t('rcDineIn')}</option>
+          <option value="llevar"${sel('llevar', consumo)}>${I18n.t('rcTakeout')}</option>
+        </select>
+      </label>
+    </div>
+    <div class="rc-row" style="margin-bottom:10px;">
+      <label class="rc-grow">${I18n.t('rcRecipientLabel')}
+        <input type="text" id="rcm-dest" maxlength="60" value="${escAttr(previo.destinatario || '')}" placeholder="${escAttr(I18n.t('rcRecipientPh'))}" />
+      </label>
+      <label class="rc-grow">${I18n.t('rcPurposeLabel')}
+        <input type="text" id="rcm-concepto" maxlength="80" value="${escAttr(previo.concepto || '')}" placeholder="${escAttr(I18n.t('rcPurposeDefault'))}" />
+      </label>
+    </div>
+    <button class="primary-btn" id="rcm-issue" type="button">${I18n.t(url ? 'rcReissueBtn' : 'rcIssueBtn')}</button>
+    <div class="form-error" id="rcm-error"></div>
+    ${url ? `
+      <label style="display:block; margin-top:14px; font-size:13px; color:var(--ink-soft);">${I18n.t('rcLinkLabel')}</label>
+      <div class="rc-share-box">
+        <input type="text" id="rcm-url" readonly value="${escAttr(url)}" />
+        <button class="ghost-btn" id="rcm-copy" type="button">${I18n.t('rcCopyLink')}</button>
+        ${navigator.share ? `<button class="ghost-btn" id="rcm-share" type="button">${I18n.t('rcShareBtn')}</button>` : ''}
+        <a class="ghost-btn" href="${escAttr(url)}" target="_blank" rel="noopener" style="text-decoration:none;">${I18n.t('rcOpenBtn')}</a>
+        ${identity.esAdmin ? `<button class="ghost-btn" id="rcm-revoke" type="button">${I18n.t('rcRevokeBtn')}</button>` : ''}
+      </div>` : ''}
+    ${identity.esAdmin ? `
+      <details style="margin-top:14px;">
+        <summary style="cursor:pointer;">${I18n.t('rcBizTitle')}</summary>
+        <div class="rc-row" style="margin-top:8px;">
+          <label class="rc-grow">${I18n.t('rcBizName')}<input type="text" id="rcb-nombre" maxlength="60" value="${escAttr(n.nombre)}" /></label>
+          <label class="rc-grow">${I18n.t('rcBizPhone')}<input type="text" id="rcb-telefono" maxlength="30" value="${escAttr(n.telefono)}" /></label>
+        </div>
+        <div class="rc-row" style="margin-top:8px;">
+          <label class="rc-grow">${I18n.t('rcBizAddr')}<input type="text" id="rcb-direccion" maxlength="120" value="${escAttr(n.direccion)}" /></label>
+          <label class="rc-grow">${I18n.t('rcBizReg')}<input type="text" id="rcb-registro" maxlength="14" value="${escAttr(n.registro)}" placeholder="T1234567890123" /></label>
+        </div>
+        <button class="ghost-btn" id="rcb-save" type="button" style="margin-top:8px;">${I18n.t('rcBizSave')}</button>
+      </details>` : ''}
+    <button class="ghost-btn" id="rcm-close" type="button" style="margin-top:12px;">${I18n.t('closeBtn')}</button>`;
+
+  const err = (m) => {
+    const el = document.getElementById('rcm-error');
+    el.textContent = m;
+    el.classList.toggle('show', !!m);
+  };
+  document.getElementById('rcm-close').onclick = () => rcModal.classList.remove('open');
+
+  document.getElementById('rcm-issue').onclick = async (ev) => {
+    const btn = ev.currentTarget;
+    btn.disabled = true;
+    err('');
+    const datos = {
+      tipo: document.getElementById('rcm-tipo').value,
+      consumo: document.getElementById('rcm-consumo').value,
+      destinatario: document.getElementById('rcm-dest').value.trim(),
+      concepto: document.getElementById('rcm-concepto').value.trim(),
+    };
+    try {
+      const res = await apiCall('generarRecibo', { ...authParams(), pedidoId: p.ID, ...datos });
+      p.ReciboToken = res.token;
+      p.ReciboDatos = JSON.stringify(datos);
+      renderOrders();
+      renderReceiptModal(p);
+    } catch (e) {
+      err(e.message);
+      btn.disabled = false;
+    }
+  };
+
+  if (url) {
+    document.getElementById('rcm-copy').onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+        alert(I18n.t('rcCopied'));
+      } catch (e) {
+        document.getElementById('rcm-url').select();
+      }
+    };
+    const shareBtn = document.getElementById('rcm-share');
+    if (shareBtn) shareBtn.onclick = () => navigator.share({ title: 'Boogaloo', url }).catch(() => {});
+    const revoke = document.getElementById('rcm-revoke');
+    if (revoke) {
+      revoke.onclick = async () => {
+        if (!confirm(I18n.t('rcRevokeConfirm'))) return;
+        try {
+          await apiCall('revocarRecibo', { ...authParams(), pedidoId: p.ID });
+          p.ReciboToken = '';
+          p.ReciboDatos = '';
+          renderOrders();
+          renderReceiptModal(p);
+        } catch (e) {
+          err(e.message);
+        }
+      };
+    }
+  }
+
+  const bizSave = document.getElementById('rcb-save');
+  if (bizSave) {
+    bizSave.onclick = async () => {
+      bizSave.disabled = true;
+      err('');
+      try {
+        const res = await apiCall('guardarDatosNegocioRecibo', {
+          ...authParams(),
+          negocio: {
+            nombre: document.getElementById('rcb-nombre').value,
+            telefono: document.getElementById('rcb-telefono').value,
+            direccion: document.getElementById('rcb-direccion').value,
+            registro: document.getElementById('rcb-registro').value,
+          },
+        });
+        rcNegocio = res.negocio;
+        alert(I18n.t('rcBizSaved'));
+      } catch (e) {
+        err(e.message);
+      }
+      bizSave.disabled = false;
+    };
+  }
 }
