@@ -127,7 +127,6 @@ function showHygiene() {
   hideAllViews();
   document.getElementById('hygiene-view').style.display = 'block';
   document.getElementById('hygiene-who-label').textContent = identityLabel();
-  document.getElementById('hy-import-row').style.display = identity.esAdmin ? 'block' : 'none';
   renderHygieneCalendar();
   loadHygieneClosedDays().then(loadHygieneMonth);
 }
@@ -658,7 +657,7 @@ document.getElementById('orders-list').addEventListener('click', async (e) => {
   const reciboBtn = e.target.closest('[data-recibo]');
 
   if (reciboBtn) {
-    openReceiptModal(reciboBtn.dataset.recibo);
+    openReceiptModal(reciboBtn.dataset.recibo, 'pedido');
     return;
   }
 
@@ -1112,6 +1111,7 @@ function renderInscripciones() {
             <span class="order-total">${fmt(r.Total)}</span>
             <div class="order-actions">
               ${r.Estado !== 'Pagado' && r.Estado !== 'Cancelado' ? `<button class="btn-paid" data-insc="${r.ID}" data-estado="Pagado" type="button">${I18n.t('evMarkPaid')}</button>` : ''}
+              ${r.Estado !== 'Cancelado' ? `<button class="ghost-btn" data-insc-recibo="${r.ID}" type="button">${r.ReciboToken ? '🧾 ' : ''}${I18n.t('rcAdminBtn')}</button>` : ''}
               ${r.Estado !== 'Cancelado' ? `<button class="ghost-btn" data-insc="${r.ID}" data-estado="Cancelado" type="button">${I18n.t('evCancelReg')}</button>` : ''}
             </div>
           </div>
@@ -1124,6 +1124,11 @@ function renderInscripciones() {
 }
 
 document.getElementById('inscripciones-list').addEventListener('click', async (e) => {
+  const reciboBtn = e.target.closest('[data-insc-recibo]');
+  if (reciboBtn) {
+    openReceiptModal(reciboBtn.dataset.inscRecibo, 'inscripcion');
+    return;
+  }
   const btn = e.target.closest('[data-insc]');
   if (!btn) return;
   btn.disabled = true;
@@ -1364,14 +1369,16 @@ async function loadHygieneClosedDays() {
 // Cumple la normativa si cada ítem diario está en orden: temperaturas dentro
 // del límite y los check obligatorios en true. El control de plagas (mensual)
 // no se exige todos los días, así que no afecta este resultado.
+function hyItemOk(it, items) {
+  const val = items[it.id];
+  if (it.type === 'temp') return val !== undefined && val !== '' && !isNaN(Number(val)) && Number(val) <= it.max;
+  if (it.monthly) return true;
+  return val === true;
+}
+
 function hyIsCompliant(record) {
   if (!record || !record.items) return false;
-  return HYGIENE_ITEMS.every((it) => {
-    const val = record.items[it.id];
-    if (it.type === 'temp') return val !== undefined && val !== '' && !isNaN(Number(val)) && Number(val) <= it.max;
-    if (it.monthly) return true;
-    return val === true;
-  });
+  return HYGIENE_ITEMS.every((it) => hyItemOk(it, record.items));
 }
 
 function hyComputeStatus(fechaStr, record) {
@@ -1475,20 +1482,6 @@ document.getElementById('hy-next').addEventListener('click', () => {
   loadHygieneMonth();
 });
 
-// Solo admin: carga UNA vez los registros que ya estaban llenos en papel (23-30 oct).
-document.getElementById('hy-import-btn').addEventListener('click', async () => {
-  if (!confirm(I18n.t('hyImportConfirm'))) return;
-  const btn = document.getElementById('hy-import-btn');
-  btn.disabled = true;
-  try {
-    const res = await apiCall('importarHigiene', { ...authParams(), registros: Object.values(HYGIENE_REAL_RECORDS) });
-    alert(I18n.t('hyImportDone', res.importados, res.omitidos));
-    await loadHygieneMonth();
-  } catch (err) {
-    alert(I18n.t('couldNotUpdatePrefix') + err.message);
-  }
-  btn.disabled = false;
-});
 
 document.getElementById('hy-table-body').addEventListener('click', (e) => {
   const td = e.target.closest('td[data-fecha]');
@@ -1557,10 +1550,15 @@ function hygieneModalBodyHtml(fechaStr) {
   const quien = record && record.registradoPor
     ? `<p class="subt">${I18n.t('hySavedBy', record.registradoPor, record.actualizado ? new Date(record.actualizado).toLocaleString('ja-JP') : '')}</p>`
     : '';
-
+  // Si el día se guardó pero falta algo para quedar completo, dice qué.
+  const faltan = record && record.items ? HYGIENE_ITEMS.filter((it) => !hyItemOk(it, record.items)) : [];
+  const faltanHtml = faltan.length
+    ? `<p class="rc-hint">${I18n.t('hyMissingPrefix')}${faltan.map((it) => (I18n.lang === 'ja' ? it.ja : it.es)).join(', ')}</p>`
+    : '';
   return `
     <h2>${I18n.t('hyDayDetailTitle', dateLabel)}</h2>
     ${quien}
+    ${faltanHtml}
     ${status === 'missing' ? `<p class="subt">${I18n.t('hyNoRecordNote')}</p>` : ''}
     ${hygieneItemGroupHtml('general', 'hyGeneralGroup', items)}
     ${hygieneItemGroupHtml('importante', 'hyImportanteGroup', items)}
@@ -1597,7 +1595,8 @@ async function saveHygieneDay() {
     await apiCall('guardarHigiene', { ...authParams(), fecha: fechaStr, items, firma, notas });
     closeHygieneModal();
     await loadHygieneMonth();
-    alert(I18n.t('hySavedOk'));
+    // Verifica que el día quedó leíble: si no aparece, no se da por guardado.
+    alert(I18n.t(hygieneCache[fechaStr] ? 'hySavedOk' : 'hySaveNotVisible'));
   } catch (err) {
     alert(I18n.t('couldNotUpdatePrefix') + err.message);
     saveBtn.disabled = false;
@@ -1670,7 +1669,6 @@ function applyStaticI18n() {
   document.getElementById('hygiene-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
   document.getElementById('hygiene-logout-btn').textContent = I18n.t('logoutBtn');
   document.getElementById('hygiene-demo-banner').textContent = I18n.t('hyDemoBanner');
-  document.getElementById('hy-import-btn').textContent = I18n.t('hyImportBtn');
 }
 
 function onLangChange() {
@@ -1761,8 +1759,31 @@ function escAttr(s) {
   return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
-async function openReceiptModal(pedidoId) {
-  const p = ordersCache.find((x) => x.ID === pedidoId);
+// Un recibo se emite para un pedido o para una inscripción a un evento; ambos
+// se manejan igual en el modal. receiptDoc() los normaliza.
+function receiptDoc(kind, id) {
+  if (kind === 'inscripcion') {
+    const r = inscripcionesCache.find((x) => x.ID === id);
+    if (!r) return null;
+    return {
+      kind, row: r, id: r.ID, payloadKey: 'inscripcionId',
+      label: `${r.ID} · ${r.Nombre} · ${r.Evento} · ${fmt(r.Total)}`,
+      pagado: r.Estado === 'Pagado', defaultDest: r.Nombre || '',
+      refresh: renderInscripciones,
+    };
+  }
+  const p = ordersCache.find((x) => x.ID === id);
+  if (!p) return null;
+  return {
+    kind, row: p, id: p.ID, payloadKey: 'pedidoId',
+    label: `${p.ID} · ${p.Cliente} · ${fmt(p.Total)}`,
+    pagado: p.Pagado === 'Si' || p.Pagado === true, defaultDest: '',
+    refresh: renderOrders,
+  };
+}
+
+async function openReceiptModal(id, kind) {
+  const p = receiptDoc(kind, id);
   if (!p) return;
   rcModal.classList.add('open');
   rcModalBody.innerHTML = `<p>${I18n.t('loadingText')}</p>`;
@@ -1775,18 +1796,19 @@ async function openReceiptModal(pedidoId) {
 }
 
 function renderReceiptModal(p) {
-  const pagado = p.Pagado === 'Si' || p.Pagado === true;
+  const pagado = p.pagado;
+  const row = p.row;
   let previo = {};
-  try { previo = JSON.parse(p.ReciboDatos || '{}') || {}; } catch (e) { previo = {}; }
+  try { previo = JSON.parse(row.ReciboDatos || '{}') || {}; } catch (e) { previo = {}; }
   const tipo = previo.tipo || (pagado ? 'recibo' : 'factura');
   const consumo = previo.consumo || 'local';
   const sel = (v, cur) => (v === cur ? ' selected' : '');
-  const url = p.ReciboToken ? reciboUrl(p.ReciboToken) : '';
+  const url = row.ReciboToken ? reciboUrl(row.ReciboToken) : '';
   const n = rcNegocio;
 
   rcModalBody.innerHTML = `
     <h2>${I18n.t('rcModalTitle')}</h2>
-    <p class="subt">${escAttr(p.ID)} · ${escAttr(p.Cliente)} · ${fmt(p.Total)}</p>
+    <p class="subt">${escAttr(p.label)}</p>
     ${pagado ? '' : `<p class="rc-hint">${I18n.t('rcUnpaidReceipt')}</p>`}
     <div class="rc-row" style="margin-bottom:10px;">
       <label>${I18n.t('rcTypeLabel')}
@@ -1804,7 +1826,7 @@ function renderReceiptModal(p) {
     </div>
     <div class="rc-row" style="margin-bottom:10px;">
       <label class="rc-grow">${I18n.t('rcRecipientLabel')}
-        <input type="text" id="rcm-dest" maxlength="60" value="${escAttr(previo.destinatario || '')}" placeholder="${escAttr(I18n.t('rcRecipientPh'))}" />
+        <input type="text" id="rcm-dest" maxlength="60" value="${escAttr(previo.destinatario || p.defaultDest)}" placeholder="${escAttr(I18n.t('rcRecipientPh'))}" />
       </label>
       <label class="rc-grow">${I18n.t('rcPurposeLabel')}
         <input type="text" id="rcm-concepto" maxlength="80" value="${escAttr(previo.concepto || '')}" placeholder="${escAttr(I18n.t('rcPurposeDefault'))}" />
@@ -1822,7 +1844,7 @@ function renderReceiptModal(p) {
         ${identity.esAdmin ? `<button class="ghost-btn" id="rcm-revoke" type="button">${I18n.t('rcRevokeBtn')}</button>` : ''}
       </div>` : ''}
     ${identity.esAdmin ? `
-      <details style="margin-top:14px;">
+      <details open style="margin-top:14px;">
         <summary style="cursor:pointer;">${I18n.t('rcBizTitle')}</summary>
         <div class="rc-row" style="margin-top:8px;">
           <label class="rc-grow">${I18n.t('rcBizName')}<input type="text" id="rcb-nombre" maxlength="60" value="${escAttr(n.nombre)}" /></label>
@@ -1853,11 +1875,22 @@ function renderReceiptModal(p) {
       destinatario: document.getElementById('rcm-dest').value.trim(),
       concepto: document.getElementById('rcm-concepto').value.trim(),
     };
+    // El admin puede corregir los datos del negocio justo al emitir: se aplican a este
+    // documento y quedan guardados para los siguientes.
+    const negocio = identity.esAdmin
+      ? {
+          nombre: document.getElementById('rcb-nombre').value,
+          telefono: document.getElementById('rcb-telefono').value,
+          direccion: document.getElementById('rcb-direccion').value,
+          registro: document.getElementById('rcb-registro').value,
+        }
+      : undefined;
     try {
-      const res = await apiCall('generarRecibo', { ...authParams(), pedidoId: p.ID, ...datos });
-      p.ReciboToken = res.token;
-      p.ReciboDatos = JSON.stringify(datos);
-      renderOrders();
+      const res = await apiCall('generarRecibo', { ...authParams(), [p.payloadKey]: p.id, ...datos, negocio });
+      row.ReciboToken = res.token;
+      row.ReciboDatos = JSON.stringify(datos);
+      if (res.negocio) rcNegocio = res.negocio;
+      p.refresh();
       renderReceiptModal(p);
     } catch (e) {
       err(e.message);
@@ -1881,10 +1914,10 @@ function renderReceiptModal(p) {
       revoke.onclick = async () => {
         if (!confirm(I18n.t('rcRevokeConfirm'))) return;
         try {
-          await apiCall('revocarRecibo', { ...authParams(), pedidoId: p.ID });
-          p.ReciboToken = '';
-          p.ReciboDatos = '';
-          renderOrders();
+          await apiCall('revocarRecibo', { ...authParams(), [p.payloadKey]: p.id });
+          row.ReciboToken = '';
+          row.ReciboDatos = '';
+          p.refresh();
           renderReceiptModal(p);
         } catch (e) {
           err(e.message);

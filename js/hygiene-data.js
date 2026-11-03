@@ -9,10 +9,9 @@
 
    Los registros viven en el backend (hoja "Higiene" del spreadsheet, acciones
    listarHigiene / guardarHigiene). Aquí NO hay datos de ejemplo: un día sin
-   registro se muestra como "sin registro". HYGIENE_REAL_RECORDS son solo los
-   registros que ya se llenaron a mano en papel (23-30 oct 2026): el admin los
-   puede cargar al sistema UNA vez con el botón de importar, después de
-   revisarlos, y nunca pisan un día que ya tenga registro guardado. */
+   registro se muestra como "sin registro". Los registros que ya estaban llenos
+   a mano en papel (23-30 oct 2026) los carga el propio backend una sola vez
+   (sembrarHigienePapel en Code.gs) y nunca pisan un día que ya tenga registro. */
 
 // Días cerrados (getDay(): 0=dom...6=sáb). Valor de respaldo; admin.js lo
 // reemplaza con el horario real del negocio (hoja Horario) al cargar.
@@ -57,38 +56,3 @@ function hyParseDate(fecha) {
 function hyIsClosed(fecha) {
   return HYGIENE_CLOSED_WEEKDAYS.indexOf(hyParseDate(fecha).getDay()) !== -1;
 }
-
-// Datos REALES del 23 al 30 de octubre de 2026, transcritos de la hoja en
-// papel ya llenada a mano (食品衛生監視指導票 №02 de Nakagawa). Revisa y
-// corrige cualquier celda desde la pantalla si la transcripción no coincide
-// con lo que anotaste en papel.
-const HYGIENE_REAL_RECORDS = {
-  '2026-10-23': {
-    fecha: '2026-10-23', cerrado: false, firma: 'F.R.',
-    items: { insumos: true, nevera: 4, congelador: -25, contaminacion: true, utensilios: true, bano: true, salud: true, manos: true, plagas: true, g1: true, g2a: true, g2b: true, g3a: true, g3b: true },
-    notas: 'Visita del Centro de Salud de Nakagawa. Inicio del registro según el plan de gestión higiénica.',
-  },
-  '2026-10-24': {
-    fecha: '2026-10-24', cerrado: false, firma: 'F.R.',
-    items: { insumos: true, nevera: 3, congelador: -17, contaminacion: true, utensilios: true, bano: true, salud: true, manos: true, plagas: false, g1: true, g2a: true, g2b: true, g3a: true, g3b: true },
-    notas: '',
-  },
-  '2026-10-25': {
-    fecha: '2026-10-25', cerrado: false, firma: 'F.R.',
-    items: { insumos: true, nevera: 4, congelador: -20, contaminacion: true, utensilios: true, bano: true, salud: true, manos: true, plagas: false, g1: true, g2a: true, g2b: true, g3a: true, g3b: true },
-    notas: '',
-  },
-  '2026-10-26': { fecha: '2026-10-26', cerrado: true },
-  '2026-10-27': { fecha: '2026-10-27', cerrado: true },
-  '2026-10-28': { fecha: '2026-10-28', cerrado: true },
-  '2026-10-29': {
-    fecha: '2026-10-29', cerrado: false, firma: 'F.R.',
-    items: { insumos: true, nevera: 4, congelador: -18, contaminacion: true, utensilios: true, bano: true, salud: true, manos: true, plagas: false, g1: true, g2a: true, g2b: true, g3a: true, g3b: true },
-    notas: '',
-  },
-  '2026-10-30': {
-    fecha: '2026-10-30', cerrado: false, firma: 'F.R.',
-    items: { insumos: true, nevera: 4, congelador: -25, contaminacion: true, utensilios: true, bano: true, salud: true, manos: true, plagas: false, g1: true, g2a: true, g2b: true, g3a: true, g3b: true },
-    notas: 'Del 23 al 29 de octubre se registró el 30 según confirmación del responsable (formulario nuevo). Nevera ≤10°C y congelador entre -17 y -25°C, sin anomalías en el periodo.',
-  },
-};

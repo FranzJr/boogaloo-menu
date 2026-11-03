@@ -13,6 +13,9 @@ const RC_LIBS = {
 
 let recibo = null;
 let rcTipo = 'recibo';
+// Concepto por defecto: inscripción si el documento es de un evento, comida y bebida si no.
+const defaultPurpose = () =>
+  I18n.t(recibo && recibo.items.some((it) => typeof EVENTS_DATA !== 'undefined' && EVENTS_DATA.some((e) => e.id === it.sku)) ? 'rcPurposeEvent' : 'rcPurposeDefault');
 let purposeIsDefault = false; // el concepto por defecto sigue el idioma hasta que alguien lo edite
 
 function esc(s) {
@@ -37,11 +40,17 @@ function fechaTexto(iso) {
   return new Date(y, mo - 1, d).toLocaleDateString(I18n.lang === 'pt' ? 'pt-BR' : I18n.lang === 'en' ? 'en-US' : 'es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-// El nombre del item se guarda en español; se traduce por sku con el menú. Si
-// traía una nota entre paréntesis (ej. "sin azúcar") se conserva.
+// El nombre del item se guarda en español; se traduce por sku con el menú (o con
+// el evento, si es una inscripción). Si traía una nota entre paréntesis (ej.
+// "sin azúcar") se conserva; los eventos llevan además la fecha del evento.
 function nombreItem(it) {
+  const ev = typeof EVENTS_DATA !== 'undefined' && EVENTS_DATA.find((e) => e.id === it.sku);
+  if (ev) {
+    const titulo = (ev.title[I18n.lang] || ev.title.es).replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF\uFE0F]/gu, '').trim();
+    return it.detalle ? titulo + ' (' + it.detalle + ')' : titulo;
+  }
   const def = typeof MENU_INDEX !== 'undefined' && MENU_INDEX[it.sku];
-  if (!def) return it.nombre;
+  if (!def) return it.detalle ? it.nombre + ' (' + it.detalle + ')' : it.nombre;
   const base = def.nombre.es;
   const nota = String(it.nombre).indexOf(base) === 0 ? String(it.nombre).slice(base.length) : '';
   return (def.nombre[I18n.lang] || base) + nota;
@@ -119,7 +128,7 @@ function fillStaticText() {
 
 function refresh() {
   if (!recibo) return;
-  if (purposeIsDefault) document.getElementById('rc-purpose').value = I18n.t('rcPurposeDefault');
+  if (purposeIsDefault) document.getElementById('rc-purpose').value = defaultPurpose();
   fillStaticText();
   renderDoc();
 }
@@ -234,7 +243,7 @@ async function load() {
     rcTipo = recibo.tipo;
     status.style.display = 'none';
     purposeIsDefault = !recibo.concepto;
-    document.getElementById('rc-purpose').value = recibo.concepto || I18n.t('rcPurposeDefault');
+    document.getElementById('rc-purpose').value = recibo.concepto || defaultPurpose();
     document.getElementById('rc-recipient').value = recibo.destinatario || '';
     document.getElementById('rc-controls').style.display = '';
     document.getElementById('rc-doc').style.display = '';
