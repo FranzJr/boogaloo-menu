@@ -2193,6 +2193,8 @@ html.halloween .bc-jump { background: #f97316; }
   background: #fff; color: #1d1a18; border: 1px solid #ddd3c4; border-radius: 6px;
   padding: 28px 26px; max-width: 640px; margin: 0 auto; font-size: 14px; line-height: 1.5;
 }
+.rc-logo { text-align: center; margin: 0 0 10px; }
+.rc-logo img { width: 62%; max-width: 330px; height: auto; display: inline-block; }
 .rc-title { text-align: center; font-size: 26px; letter-spacing: 6px; margin: 0 0 14px; border-bottom: 2px solid #1d1a18; padding-bottom: 8px; }
 .rc-title small { font-size: 15px; letter-spacing: 2px; font-weight: 500; margin-left: 6px; }
 .rc-meta { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; color: #4a423d; flex-wrap: wrap; }

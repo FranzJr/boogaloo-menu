@@ -77,6 +77,7 @@ function renderDoc() {
   const nota = rcTipo === 'factura' ? I18n.t('rcInvoiceNote') : I18n.t('rcReceivedNote');
 
   doc.innerHTML = `
+    <div class="rc-logo"><img src="img/logo/logo-web.png" alt="Boogaloo" /></div>
     <h2 class="rc-title">${tituloDoc()}</h2>
     <div class="rc-meta">
       <div><span>${I18n.t('rcNo')}</span> ${esc(r.numero)}</div>

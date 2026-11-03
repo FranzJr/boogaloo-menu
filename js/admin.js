@@ -1376,6 +1376,13 @@ function hyItemOk(it, items) {
   return val === true;
 }
 
+// Nevera ≤10°C y congelador ≤-15°C: si la nevera está por debajo del congelador
+// casi seguro se escribieron al revés.
+function hySwapped(items) {
+  const n = Number(items.nevera), c = Number(items.congelador);
+  return items.nevera !== '' && items.congelador !== '' && !isNaN(n) && !isNaN(c) && n < c;
+}
+
 function hyIsCompliant(record) {
   if (!record || !record.items) return false;
   return HYGIENE_ITEMS.every((it) => hyItemOk(it, record.items));
@@ -1553,7 +1560,11 @@ function hygieneModalBodyHtml(fechaStr) {
   // Si el día se guardó pero falta algo para quedar completo, dice qué.
   const faltan = record && record.items ? HYGIENE_ITEMS.filter((it) => !hyItemOk(it, record.items)) : [];
   const faltanHtml = faltan.length
-    ? `<p class="rc-hint">${I18n.t('hyMissingPrefix')}${faltan.map((it) => (I18n.lang === 'ja' ? it.ja : it.es)).join(', ')}</p>`
+    ? `<p class="rc-hint">${I18n.t('hyMissingPrefix')}${faltan.map((it) => {
+      const name = I18n.lang === 'ja' ? it.ja : it.es;
+      const v = items[it.id];
+      return it.type === 'temp' && v !== undefined && v !== '' ? `${name} (${v}°C, ≤${it.max}°C)` : name;
+    }).join(', ')}</p>${hySwapped(items) ? `<p class="rc-hint">${I18n.t('hySwapHint')}</p>` : ''}`
     : '';
   return `
     <h2>${I18n.t('hyDayDetailTitle', dateLabel)}</h2>
