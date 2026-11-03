@@ -1,38 +1,25 @@
-/* Control sanitario / 衛生管理記録 — datos de la MAQUETA (ver nota abajo).
+/* Control sanitario / 衛生管理記録 — definición del formulario.
 
    Esta hoja reproduce el "記録表（一般的衛生管理・重要管理）" que exige el
    Centro de Salud de Nakagawa (Nagoya) a partir de la visita del
    23/oct/2026 (ver 食品衛生監視指導票 №02). Las filas y su orden son las
    mismas del formulario real, por eso los nombres de cada ítem van en
    español + japonés tal como aparecen ahí — no se traducen a otros idiomas
-   porque son el texto exacto que pide la inspección, no contenido del sitio.
+   porque son el texto exacto que pide la inspección.
 
-   MAQUETA: desde el 1 de agosto de 2026 hasta el 22 de octubre no existía
-   todavía este formulario (la inspección y el inicio de registro fueron el
-   23/oct/2026), así que esos días son datos de EJEMPLO generados para
-   mostrar cómo se vería la herramienta usada desde esa fecha — no son
-   registros reales. Del 23 al 30 de octubre sí son los datos reales,
-   transcritos de la hoja en papel que ya se llenó a mano (revísalos: una
-   transcripción desde una foto puede tener algún error puntual, y se
-   corrige fácilmente editando ese día desde la propia pantalla).
+   Los registros viven en el backend (hoja "Higiene" del spreadsheet, acciones
+   listarHigiene / guardarHigiene). Aquí NO hay datos de ejemplo: un día sin
+   registro se muestra como "sin registro". HYGIENE_REAL_RECORDS son solo los
+   registros que ya se llenaron a mano en papel (23-30 oct 2026): el admin los
+   puede cargar al sistema UNA vez con el botón de importar, después de
+   revisarlos, y nunca pisan un día que ya tenga registro guardado. */
 
-   Todavía no hay backend: lo que se genera aquí es el punto de partida, y
-   cualquier día que el admin o un colaborador guarde desde la pantalla se
-   queda en localStorage del navegador (ver HYGIENE_STORAGE_KEY en
-   admin.js). Cuando se apruebe la maqueta, ese guardado se reemplaza por
-   una acción real del Apps Script que escriba en la hoja de cálculo. */
-
-const HYGIENE_STORAGE_KEY = 'boogaloo_hygiene_records_v1';
-
-// Boogaloo cierra lunes, martes y miércoles (getDay(): 0=dom...6=sáb).
-const HYGIENE_CLOSED_WEEKDAYS = [1, 2, 3];
+// Días cerrados (getDay(): 0=dom...6=sáb). Valor de respaldo; admin.js lo
+// reemplaza con el horario real del negocio (hoja Horario) al cargar.
+let HYGIENE_CLOSED_WEEKDAYS = [1, 2, 3];
 
 const HYGIENE_WEEKDAYS_ES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 const HYGIENE_WEEKDAYS_JA = ['日', '月', '火', '水', '木', '金', '土'];
-
-// Último día con datos de la maqueta (hoy). Más allá de esta fecha un día
-// simplemente no tiene registro todavía (es futuro).
-const HYGIENE_TODAY_STR = '2026-10-30';
 
 const HYGIENE_ITEMS = [
   { id: 'insumos', group: 'general', code: '①', type: 'check', es: 'Recepción de insumos', ja: '原材料の受入確認' },
@@ -71,39 +58,6 @@ function hyIsClosed(fecha) {
   return HYGIENE_CLOSED_WEEKDAYS.indexOf(hyParseDate(fecha).getDay()) !== -1;
 }
 
-// PRNG determinístico (mismo patrón que js/analytics-data.js) para que la
-// muestra generada no cambie en cada carga, aunque sea solo de ejemplo.
-function hySeededRandom(seedStr) {
-  let h = 0;
-  for (let i = 0; i < seedStr.length; i++) h = (Math.imul(31, h) + seedStr.charCodeAt(i)) | 0;
-  return function () {
-    h = (h + 0x6d2b79f5) | 0;
-    let t = Math.imul(h ^ (h >>> 15), 1 | h);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-// Genera un día de EJEMPLO cumpliendo la normativa (nevera ≤10°C, congelador
-// ≤-15°C, todo marcado como hecho). El control de plagas solo se marca una
-// vez al mes, como indicó el inspector ("虫の駆除を毎月行う").
-function hyGenerateDay(fecha) {
-  if (hyIsClosed(fecha)) return { fecha, cerrado: true };
-  const rng = hySeededRandom(fecha);
-  const day = Number(fecha.slice(8, 10));
-  const items = {};
-  HYGIENE_ITEMS.forEach((it) => {
-    if (it.type === 'temp') {
-      items[it.id] = it.id === 'nevera' ? Math.round(2 + rng() * 6) : -Math.round(17 + rng() * 8);
-    } else if (it.monthly) {
-      items[it.id] = day <= 7; // se revisa en la primera semana del mes
-    } else {
-      items[it.id] = true;
-    }
-  });
-  return { fecha, cerrado: false, items, firma: 'F.R.', notas: '' };
-}
-
 // Datos REALES del 23 al 30 de octubre de 2026, transcritos de la hoja en
 // papel ya llenada a mano (食品衛生監視指導票 №02 de Nakagawa). Revisa y
 // corrige cualquier celda desde la pantalla si la transcripción no coincide
@@ -138,19 +92,3 @@ const HYGIENE_REAL_RECORDS = {
     notas: 'Del 23 al 29 de octubre se registró el 30 según confirmación del responsable (formulario nuevo). Nevera ≤10°C y congelador entre -17 y -25°C, sin anomalías en el periodo.',
   },
 };
-
-// Construye todo el rango 1-ago-2026 → HYGIENE_TODAY_STR: genera cada día de
-// ejemplo y encima pisa con los datos reales de la última semana.
-function hyBuildSeedRecords() {
-  const records = {};
-  const start = hyParseDate('2026-08-01');
-  const end = hyParseDate(HYGIENE_TODAY_STR);
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-    const fecha = hyDateStr(d);
-    records[fecha] = hyGenerateDay(fecha);
-  }
-  Object.assign(records, HYGIENE_REAL_RECORDS);
-  return records;
-}
-
-const HYGIENE_SEED_RECORDS = hyBuildSeedRecords();

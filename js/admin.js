@@ -127,7 +127,9 @@ function showHygiene() {
   hideAllViews();
   document.getElementById('hygiene-view').style.display = 'block';
   document.getElementById('hygiene-who-label').textContent = identityLabel();
+  document.getElementById('hy-import-row').style.display = identity.esAdmin ? 'block' : 'none';
   renderHygieneCalendar();
+  loadHygieneClosedDays().then(loadHygieneMonth);
 }
 
 // Configuración del sitio (solo admin): mostrar/ocultar el aviso de envíos en el home.
@@ -1299,30 +1301,57 @@ document.getElementById('horario-body').addEventListener('click', async (e) => {
   btn.disabled = false;
 });
 
-// ---------------- Control sanitario (maqueta: localStorage, sin backend) ----------------
-// Ver js/hygiene-data.js para los datos de partida (HYGIENE_SEED_RECORDS) y la
-// nota sobre qué parte es demo y qué parte son los datos reales de la última semana.
+// ---------------- Control sanitario (backend: hoja Higiene) ----------------
+// Definición del formulario en js/hygiene-data.js. Los registros se guardan en el
+// spreadsheet (acciones listarHigiene / guardarHigiene); no hay datos de ejemplo.
 
 let currentHyMonth = new Date();
-
-function loadHygieneOverrides() {
-  try {
-    return JSON.parse(localStorage.getItem(HYGIENE_STORAGE_KEY) || '{}');
-  } catch (e) {
-    return {};
-  }
-}
-
-function saveHygieneOverride(fechaStr, record) {
-  const overrides = loadHygieneOverrides();
-  overrides[fechaStr] = record;
-  localStorage.setItem(HYGIENE_STORAGE_KEY, JSON.stringify(overrides));
-}
+let hygieneCache = {}; // fecha -> registro guardado
+let hygieneLoading = false;
 
 function hyGetRecord(fechaStr) {
-  const overrides = loadHygieneOverrides();
-  if (overrides[fechaStr] !== undefined) return overrides[fechaStr];
-  return HYGIENE_SEED_RECORDS[fechaStr];
+  if (hygieneCache[fechaStr]) return hygieneCache[fechaStr];
+  if (hyIsClosed(fechaStr)) return { fecha: fechaStr, cerrado: true };
+  return undefined;
+}
+
+async function loadHygieneMonth() {
+  const year = currentHyMonth.getFullYear();
+  const month = currentHyMonth.getMonth();
+  const desde = hyDateStr(new Date(year, month, 1));
+  const hasta = hyDateStr(new Date(year, month + 1, 0));
+  const note = document.getElementById('hygiene-demo-banner');
+  hygieneLoading = true;
+  note.textContent = I18n.t('loadingText');
+  try {
+    const res = await apiCall('listarHigiene', { ...authParams(), desde, hasta });
+    Object.keys(hygieneCache).forEach((f) => { if (f >= desde && f <= hasta) delete hygieneCache[f]; });
+    res.registros.forEach((r) => (hygieneCache[r.fecha] = r));
+    note.textContent = I18n.t('hyDemoBanner');
+  } catch (err) {
+    if (err.codigo === 'noAutorizado' || err.codigo === 'sesionExpirada') {
+      identity = null;
+      clearAdminSession();
+      Session.clear();
+      showLogin(I18n.t('sessionExpiredMsg'));
+      return;
+    }
+    note.textContent = I18n.t('errorLoadingPrefix') + err.message;
+  }
+  hygieneLoading = false;
+  renderHygieneCalendar();
+}
+
+// Los días cerrados salen del horario real del negocio (hoja Horario).
+async function loadHygieneClosedDays() {
+  try {
+    const res = await apiCall('configTurnos', {});
+    const semana = res.horarioSemanal || {};
+    const cerrados = [0, 1, 2, 3, 4, 5, 6].filter((d) => semana[d] && semana[d].abierto === false);
+    if (cerrados.length) HYGIENE_CLOSED_WEEKDAYS = cerrados;
+  } catch (err) {
+    // usa el valor de respaldo
+  }
 }
 
 // Cumple la normativa si cada ítem diario está en orden: temperaturas dentro
@@ -1431,10 +1460,27 @@ function renderHygieneLegend() {
 document.getElementById('hy-prev').addEventListener('click', () => {
   currentHyMonth = new Date(currentHyMonth.getFullYear(), currentHyMonth.getMonth() - 1, 1);
   renderHygieneCalendar();
+  loadHygieneMonth();
 });
 document.getElementById('hy-next').addEventListener('click', () => {
   currentHyMonth = new Date(currentHyMonth.getFullYear(), currentHyMonth.getMonth() + 1, 1);
   renderHygieneCalendar();
+  loadHygieneMonth();
+});
+
+// Solo admin: carga UNA vez los registros que ya estaban llenos en papel (23-30 oct).
+document.getElementById('hy-import-btn').addEventListener('click', async () => {
+  if (!confirm(I18n.t('hyImportConfirm'))) return;
+  const btn = document.getElementById('hy-import-btn');
+  btn.disabled = true;
+  try {
+    const res = await apiCall('importarHigiene', { ...authParams(), registros: Object.values(HYGIENE_REAL_RECORDS) });
+    alert(I18n.t('hyImportDone', res.importados, res.omitidos));
+    await loadHygieneMonth();
+  } catch (err) {
+    alert(I18n.t('couldNotUpdatePrefix') + err.message);
+  }
+  btn.disabled = false;
 });
 
 document.getElementById('hy-table-body').addEventListener('click', (e) => {
@@ -1501,14 +1547,18 @@ function hygieneModalBodyHtml(fechaStr) {
   const items = (record && record.items) || {};
   const firma = (record && record.firma) || '';
   const notas = (record && record.notas) || '';
+  const quien = record && record.registradoPor
+    ? `<p class="subt">${I18n.t('hySavedBy', record.registradoPor, record.actualizado ? new Date(record.actualizado).toLocaleString('ja-JP') : '')}</p>`
+    : '';
 
   return `
     <h2>${I18n.t('hyDayDetailTitle', dateLabel)}</h2>
+    ${quien}
     ${status === 'missing' ? `<p class="subt">${I18n.t('hyNoRecordNote')}</p>` : ''}
     ${hygieneItemGroupHtml('general', 'hyGeneralGroup', items)}
     ${hygieneItemGroupHtml('importante', 'hyImportanteGroup', items)}
-    <div class="field"><label>${I18n.t('hySignatureLabel')}</label><input type="text" id="hy-modal-firma" value="${firma}" /></div>
-    <div class="field"><label>${I18n.t('hyNotesLabel')}</label><textarea id="hy-modal-notas" rows="2">${notas}</textarea></div>
+    <div class="field"><label>${I18n.t('hySignatureLabel')}</label><input type="text" id="hy-modal-firma" maxlength="20" value="${String(firma).replace(/"/g, '&quot;')}" /></div>
+    <div class="field"><label>${I18n.t('hyNotesLabel')}</label><textarea id="hy-modal-notas" rows="2" maxlength="500">${String(notas).replace(/</g, '&lt;')}</textarea></div>
     <button class="primary-btn" id="hy-modal-save" type="button" style="width:100%;">${I18n.t('hySaveBtn')}</button>
     <button class="ghost-btn" id="hy-modal-close" type="button" style="width:100%; margin-top:8px;">${I18n.t('closeBtn')}</button>
   `;
@@ -1524,20 +1574,27 @@ function openHygieneModal(fechaStr) {
   if (saveBtn) saveBtn.addEventListener('click', saveHygieneDay);
 }
 
-function saveHygieneDay() {
+async function saveHygieneDay() {
   const fechaStr = hyModalFecha;
   const items = {};
   HYGIENE_ITEMS.forEach((it) => {
     const el = hyModalBody.querySelector(`[data-item="${it.id}"]`);
     if (!el) return;
-    items[it.id] = it.type === 'temp' ? Number(el.value) : el.checked;
+    items[it.id] = it.type === 'temp' ? (el.value === '' ? '' : Number(el.value)) : el.checked;
   });
   const firma = document.getElementById('hy-modal-firma').value.trim();
   const notas = document.getElementById('hy-modal-notas').value.trim();
-  saveHygieneOverride(fechaStr, { fecha: fechaStr, cerrado: false, items, firma, notas });
-  closeHygieneModal();
-  renderHygieneCalendar();
-  alert(I18n.t('hySavedOk'));
+  const saveBtn = document.getElementById('hy-modal-save');
+  saveBtn.disabled = true;
+  try {
+    await apiCall('guardarHigiene', { ...authParams(), fecha: fechaStr, items, firma, notas });
+    closeHygieneModal();
+    await loadHygieneMonth();
+    alert(I18n.t('hySavedOk'));
+  } catch (err) {
+    alert(I18n.t('couldNotUpdatePrefix') + err.message);
+    saveBtn.disabled = false;
+  }
 }
 
 // ---------------- Idioma ----------------
@@ -1606,6 +1663,7 @@ function applyStaticI18n() {
   document.getElementById('hygiene-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
   document.getElementById('hygiene-logout-btn').textContent = I18n.t('logoutBtn');
   document.getElementById('hygiene-demo-banner').textContent = I18n.t('hyDemoBanner');
+  document.getElementById('hy-import-btn').textContent = I18n.t('hyImportBtn');
 }
 
 function onLangChange() {
