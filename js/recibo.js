@@ -72,7 +72,7 @@ function renderDoc() {
   const mark = reducido ? (I18n.lang === 'ja' ? ' ※' : ' *') : '';
   const nombre = document.getElementById('rc-recipient').value.trim();
   const concepto = document.getElementById('rc-purpose').value.trim();
-  const neg = r.negocio || {};
+  const neg = negocioConDefectos(r.negocio);
   const sama = I18n.lang === 'ja' ? ' 様' : '';
   const nota = rcTipo === 'factura' ? I18n.t('rcInvoiceNote') : I18n.t('rcReceivedNote');
 

@@ -603,6 +603,7 @@ const STRINGS = {
     fzFaqStorageA: 'Hasta 30 días en el congelador de tu casa (-18°C). Consúmelos apenas los descongeles.',
     // ---- Analítica (admin) ----
     anHubBtn: 'Analítica',
+    vtHubBtn: 'Ventas y clientes',
     anTitle: 'Analítica',
     anOnlineNow: 'En línea ahora',
     anVisitsToday: 'Visitas hoy',
@@ -1227,6 +1228,7 @@ const STRINGS = {
     fzFaqStorageA: 'Up to 30 days in your home freezer (-18°C). Eat them as soon as you thaw them.',
     // ---- Analytics (admin) ----
     anHubBtn: 'Analytics',
+    vtHubBtn: 'Sales & customers',
     anTitle: 'Analytics',
     anOnlineNow: 'Online now',
     anVisitsToday: 'Visits today',
@@ -1851,6 +1853,7 @@ const STRINGS = {
     fzFaqStorageA: 'ご家庭の冷凍庫（-18℃）で最大30日保存できます。解凍後はお早めにお召し上がりください。',
     // ---- アクセス解析（管理画面）----
     anHubBtn: 'アクセス解析',
+    vtHubBtn: '売上とお客様',
     anTitle: 'アクセス解析',
     anOnlineNow: '現在のアクセス数',
     anVisitsToday: '今日の訪問数',
@@ -2475,6 +2478,7 @@ const STRINGS = {
     fzFaqStorageA: 'Até 30 dias no freezer de casa (-18°C). Consuma assim que descongelar.',
     // ---- Analítica (admin) ----
     anHubBtn: 'Analítica',
+    vtHubBtn: 'Vendas e clientes',
     anTitle: 'Analítica',
     anOnlineNow: 'Online agora',
     anVisitsToday: 'Visitas hoje',

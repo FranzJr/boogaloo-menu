@@ -2187,6 +2187,17 @@ html.halloween .bc-jump { background: #f97316; }
 .rc-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
 .rc-row label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--ink-soft); }
 .rc-row .rc-grow { flex: 1 1 180px; }
+.rc-row input, .rc-row select {
+  width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--ink); font-size: 0.88rem; font-family: inherit;
+}
+.rc-row select {
+  appearance: none; -webkit-appearance: none; padding-right: 32px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237a6f66' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+}
+.rc-row input:focus, .rc-row select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rc-row > label:not(.rc-grow) { flex: 0 1 auto; min-width: 150px; }
 .rc-hint { font-size: 12.5px; color: var(--ink-soft); margin: 8px 0 14px; min-height: 1em; }
 .rc-doc-wrap { overflow-x: auto; }
 .rc-doc {
@@ -2224,3 +2235,20 @@ html.halloween .bc-jump { background: #f97316; }
   #rc-doc, #rc-doc * { visibility: visible; }
   #rc-doc { position: absolute; left: 0; top: 0; width: 100%; border: none; }
 }
+
+/* Ventas y buyer persona */
+.vt-h2 { font-size: 1.05rem; margin: 26px 0 12px; }
+.vt-persona { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow); }
+.vt-persona-head { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
+.vt-persona-head h3 { margin: 0 0 2px; font-size: 1rem; }
+.vt-persona-head .subt { margin: 0; }
+.vt-persona-avatar { font-size: 2rem; width: 56px; height: 56px; border-radius: 50%; background: var(--bg); display: grid; place-items: center; flex: none; }
+.vt-facts { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
+.vt-facts div { border-top: 1px solid var(--border); padding-top: 8px; }
+.vt-facts dt { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); margin-bottom: 2px; }
+.vt-facts dd { margin: 0; font-size: 0.86rem; }
+@media (max-width: 640px) { .vt-facts { grid-template-columns: 1fr; } }
+.vt-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.vt-table th { text-align: left; color: var(--ink-soft); font-weight: 600; padding: 4px 6px; border-bottom: 1px solid var(--border); }
+.vt-table td { padding: 6px; border-bottom: 1px solid var(--border); }
+.vt-table tr:last-child td { border-bottom: none; }

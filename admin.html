@@ -48,6 +48,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="primary-btn" id="hub-eventos-btn" type="button" style="width:100%; margin-bottom:10px;">Eventos</button>
     <button class="primary-btn" id="hub-inventario-btn" type="button" style="width:100%; margin-bottom:10px;">Inventario</button>
     <button class="primary-btn" id="hub-analytics-btn" type="button" style="width:100%; margin-bottom:10px;">Analítica</button>
+    <button class="primary-btn" id="hub-ventas-btn" type="button" style="width:100%; margin-bottom:10px;">Ventas</button>
     <button class="primary-btn" id="hub-higiene-btn" type="button" style="width:100%; margin-bottom:10px;">Control sanitario</button>
     <span class="who" id="hub-who-label" style="display:block; margin-top:14px;"></span>
     <button class="link-btn" id="hub-logout-btn" type="button">Cerrar sesión</button>
@@ -181,6 +182,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="reservas-list"></div>
   </div>
 
+  <!-- Vista de Ventas y Buyer persona (solo admin) -->
+  <div class="admin-shell" id="ventas-view" style="display:none;">
+    <div class="admin-sticky-top">
+      <div class="admin-topbar">
+        <h1><span id="vt-title">Ventas</span></h1>
+        <div>
+          <span id="vt-lang-slot"></span>
+          <button class="link-btn" id="vt-back-btn" type="button">← Volver</button>
+          <span class="who" id="vt-who-label"></span>
+          <button class="link-btn" id="vt-logout-btn" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+    <p class="subt" id="vt-status"></p>
+    <button class="ghost-btn" id="vt-refresh-btn" type="button" style="margin-bottom:18px;"></button>
+    <div id="vt-content"></div>
+  </div>
+
   <!-- Vista de Analítica — datos reales de la hoja Visitas (ver js/track.js) -->
   <div class="admin-shell" id="analytics-view" style="display:none;">
     <div class="admin-sticky-top">
@@ -300,6 +319,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="js/session.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/analytics-data.js"></script>
+  <script src="js/ventas.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>

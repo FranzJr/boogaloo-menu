@@ -62,6 +62,7 @@ function hideAllViews() {
   document.getElementById('inventario-view').style.display = 'none';
   document.getElementById('analytics-view').style.display = 'none';
   document.getElementById('hygiene-view').style.display = 'none';
+  document.getElementById('ventas-view').style.display = 'none';
 }
 
 function showLogin(message) {
@@ -82,6 +83,7 @@ function showHub() {
   document.getElementById('hub-who-label').textContent = identityLabel();
   // La analítica (tráfico del sitio) queda reservada al admin, igual que nómina.
   document.getElementById('hub-analytics-btn').style.display = identity.esAdmin ? '' : 'none';
+  document.getElementById('hub-ventas-btn').style.display = identity.esAdmin ? '' : 'none';
 }
 
 function showPanel() {
@@ -523,6 +525,10 @@ document.getElementById('inscripciones-back-to-hub-btn').addEventListener('click
 document.getElementById('inscripciones-logout-btn').addEventListener('click', doLogout);
 document.getElementById('hub-inventario-btn').addEventListener('click', () => (location.hash = 'inventario'));
 document.getElementById('hub-analytics-btn').addEventListener('click', () => (location.hash = 'analitica'));
+document.getElementById('hub-ventas-btn').addEventListener('click', () => (location.hash = 'ventas'));
+document.getElementById('vt-back-btn').addEventListener('click', goHub);
+document.getElementById('vt-logout-btn').addEventListener('click', doLogout);
+document.getElementById('vt-refresh-btn').addEventListener('click', () => loadVentas(false));
 document.getElementById('hub-higiene-btn').addEventListener('click', () => (location.hash = 'higiene'));
 document.getElementById('back-to-hub-btn').addEventListener('click', goHub);
 document.getElementById('reservas-back-to-hub-btn').addEventListener('click', goHub);
@@ -1680,6 +1686,7 @@ function applyStaticI18n() {
   document.getElementById('hygiene-back-to-hub-btn').textContent = I18n.t('backToHubBtn');
   document.getElementById('hygiene-logout-btn').textContent = I18n.t('logoutBtn');
   document.getElementById('hygiene-demo-banner').textContent = I18n.t('hyDemoBanner');
+  vtApplyStatic();
 }
 
 function onLangChange() {
@@ -1694,6 +1701,7 @@ function onLangChange() {
   if (document.getElementById('analytics-view').style.display !== 'none' && anData) renderAnalytics();
   if (document.getElementById('inscripciones-view').style.display !== 'none') renderInscripciones();
   if (document.getElementById('hygiene-view').style.display !== 'none') renderHygieneCalendar();
+  if (document.getElementById('ventas-view').style.display !== 'none' && vtData) renderVentas();
 }
 
 renderLangSelect(document.getElementById('admin-lang-slot'));
@@ -1701,6 +1709,7 @@ renderLangSelect(document.getElementById('hub-lang-slot'));
 renderLangSelect(document.getElementById('panel-lang-slot'));
 renderLangSelect(document.getElementById('reservas-lang-slot'));
 renderLangSelect(document.getElementById('analytics-lang-slot'));
+renderLangSelect(document.getElementById('vt-lang-slot'));
 renderLangSelect(document.getElementById('menu-lang-slot'));
 renderLangSelect(document.getElementById('inscripciones-lang-slot'));
 renderLangSelect(document.getElementById('inventario-lang-slot'));
@@ -1716,13 +1725,14 @@ const ROUTES = {
   inventario: showInventario,
   eventos: showInscripciones,
   analitica: showAnalytics,
+  ventas: showVentas,
   higiene: showHygiene,
   config: () => {
     showMenuAdmin();
     setTimeout(() => document.getElementById('site-config').scrollIntoView({ behavior: 'smooth', block: 'center' }), 400);
   },
 };
-const ADMIN_ONLY_ROUTES = ['analitica', 'config'];
+const ADMIN_ONLY_ROUTES = ['analitica', 'ventas', 'config'];
 
 function routeFromHash() {
   if (!identity) return;
@@ -1801,8 +1811,9 @@ async function openReceiptModal(id, kind) {
   try {
     if (!rcNegocio) rcNegocio = (await apiCall('datosNegocioRecibo', authParams())).negocio;
   } catch (err) {
-    rcNegocio = rcNegocio || { nombre: 'Boogaloo', direccion: '', telefono: '', registro: '' };
+    rcNegocio = rcNegocio || {};
   }
+  rcNegocio = negocioConDefectos(rcNegocio);
   renderReceiptModal(p);
 }
 
@@ -1900,7 +1911,7 @@ function renderReceiptModal(p) {
       const res = await apiCall('generarRecibo', { ...authParams(), [p.payloadKey]: p.id, ...datos, negocio });
       row.ReciboToken = res.token;
       row.ReciboDatos = JSON.stringify(datos);
-      if (res.negocio) rcNegocio = res.negocio;
+      if (res.negocio) rcNegocio = negocioConDefectos(res.negocio);
       p.refresh();
       renderReceiptModal(p);
     } catch (e) {
@@ -1952,7 +1963,7 @@ function renderReceiptModal(p) {
             registro: document.getElementById('rcb-registro').value,
           },
         });
-        rcNegocio = res.negocio;
+        rcNegocio = negocioConDefectos(res.negocio);
         alert(I18n.t('rcBizSaved'));
       } catch (e) {
         err(e.message);

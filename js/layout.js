@@ -57,6 +57,7 @@ const NAV_STAFF = [
 ];
 const NAV_ADMIN = [
   { id: 'analitica', href: 'admin.html#analitica', key: 'anHubBtn' },
+  { id: 'ventas', href: 'admin.html#ventas', key: 'vtHubBtn' },
   { id: 'colaboradores', href: 'turnos.html', key: 'navColabsRates' },
   { id: 'config', href: 'admin.html#config', key: 'navSiteConfig' },
 ];
