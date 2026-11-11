@@ -346,6 +346,37 @@ const STORY10_PARRAFOS = {
   ],
 };
 
+const STORY11_PARRAFOS = {
+  es: [
+    'A comienzos de los años veinte, un joven que estudiaba español en Tokio, Yuzo Takeshima, se encontró con una novela colombiana del siglo XIX: “María”, de Jorge Isaacs, publicada en 1867 y ambientada en las haciendas del valle del río Cauca. La leyó, la tradujo al japonés, y esa traducción terminó siendo parte de su hoja de vida cuando una compañía de emigración de Fukuoka buscó a alguien que conociera el idioma y el país.',
+    'En 1926 esa compañía lo mandó a Colombia en un viaje de exploración. Recorrió el Valle del Cauca y llegó hasta la Hacienda El Paraíso, en El Cerrito, la casa que Isaacs usó como escenario de su novela. Su informe fue lo bastante convincente como para que la compañía decidiera fundar una colonia agrícola. La tierra del Valle resultó demasiado cara, así que se compró una finca un poco más al sur, en el departamento del Cauca: El Jagual, en el municipio de Corinto.',
+    'El 16 de noviembre de 1929 el barco Rakuyo Maru atracó en Buenaventura con las primeras cinco familias -- Emura, Kuratomi, Nakamura, Nikaido y Yoshioka --, veinticinco personas en total. Uno de los requisitos del programa era que el jefe de cada familia fuera agricultor. Hasta 1935 llegaron otras familias, hasta completar unas veinte en El Jagual, donde sembraron fríjol. No eran viajeros: venían a quedarse y a trabajar la tierra.',
+    'La Segunda Guerra Mundial les cambió el rumbo. Cuando Colombia rompió relaciones con los países del Eje, varios inmigrantes japoneses fueron detenidos, y el Hotel Sabaneta de Fusagasugá se convirtió en un centro de reclusión para ciudadanos japoneses, alemanes e italianos. Los japoneses fueron los últimos en salir, el 6 de septiembre de 1945. Después, la colonia de El Jagual se dispersó: las familias se repartieron por Santander de Quilichao, Palmira, Florida, Miranda y Cartago -- el pueblo de la foto, con su camino rural y la cordillera al fondo --, donde siguieron sembrando fríjol, maíz, sorgo y soya. Hoy hay asociaciones colombo-japonesas en Cali, Bogotá y Barranquilla, y en 2007 el director Carlos Palau contó esta historia en la película “El sueño del paraíso”.',
+    'Lo que trajo a esas familias no fue una campaña ni una ruta comercial: fue un libro que describía un valle verde, y la decisión de ir a sembrarlo. Boogaloo hace el camino al revés: trae a Nagoya la cocina de ese mismo lado de Colombia, con arepas hechas a mano y café de ladera. Si quiere probar lo que se come en la tierra que enamoró a Takeshima, lo esperamos en Boogaloo.',
+  ],
+  en: [
+    "In the early 1920s, a young man studying Spanish in Tokyo, Yuzo Takeshima, came across a 19th-century Colombian novel: “María,” by Jorge Isaacs, published in 1867 and set on the haciendas of the Cauca River valley. He read it, translated it into Japanese, and that translation ended up on his résumé when an emigration company in Fukuoka went looking for someone who knew the language and the country.",
+    "In 1926 the company sent him to Colombia on a scouting trip. He traveled through the Valle del Cauca and reached the Hacienda El Paraíso in El Cerrito, the house Isaacs used as the setting for his novel. His report was convincing enough for the company to decide to found a farming colony. Land in the Valle turned out to be too expensive, so it bought a farm a little farther south, in the department of Cauca: El Jagual, in the municipality of Corinto.",
+    "On November 16, 1929, the ship Rakuyo Maru docked in Buenaventura with the first five families -- Emura, Kuratomi, Nakamura, Nikaido and Yoshioka -- twenty-five people in all. One of the program's requirements was that the head of each family be a farmer. More families arrived until 1935, bringing the total at El Jagual to about twenty, and there they planted beans. They weren't travelers: they came to stay and work the land.",
+    "World War II changed their course. When Colombia broke relations with the Axis powers, several Japanese immigrants were detained, and the Hotel Sabaneta in Fusagasugá was turned into an internment center for Japanese, German and Italian citizens. The Japanese were the last to be released, on September 6, 1945. Afterwards the El Jagual colony scattered: the families spread out to Santander de Quilichao, Palmira, Florida, Miranda and Cartago -- the town in the photo, with its rural road and the mountains behind it -- where they kept planting beans, corn, sorghum and soy. Today there are Colombian-Japanese associations in Cali, Bogotá and Barranquilla, and in 2007 director Carlos Palau told this story in the film “El sueño del paraíso.”",
+    "What brought those families wasn't an ad campaign or a trade route: it was a book describing a green valley, and the decision to go and farm it. Boogaloo makes the trip in reverse: it brings the cooking of that same side of Colombia to Nagoya, with handmade arepas and hillside coffee. If you want to taste what people eat in the land that won Takeshima over, we're waiting for you at Boogaloo.",
+  ],
+  ja: [
+    '1920年代のはじめ、東京でスペイン語を学んでいた青年、ユウゾウ・タケシマは、19世紀のコロンビア小説に出会いました。ホルヘ・イサークスの『マリア』。1867年に出版され、カウカ川流域の農園を舞台にした作品です。彼はそれを読み、日本語に翻訳しました。その翻訳が、のちに福岡の移民会社が言葉と国を知る人物を探したとき、彼の経歴の一部になりました。',
+    '1926年、その会社は彼を視察のためにコロンビアへ送り出します。タケシマはバジェ・デル・カウカを巡り、エル・セリートにあるアシエンダ・エル・パライソ ―― イサークスが小説の舞台に使った屋敷 ―― にまでたどり着きました。彼の報告は、会社が農業移住地をつくると決めるのに十分な説得力を持っていました。ところがバジェの土地は高すぎたため、少し南のカウカ県コリント市にある農園、エル・ハグアルが購入されました。',
+    '1929年11月16日、楽洋丸がブエナベントゥラ港に着きました。乗っていたのは最初の5家族 ―― エムラ、クラトミ、ナカムラ、ニカイドウ、ヨシオカ ―― 合わせて25人です。移住の条件のひとつは、家長が農業者であることでした。その後1935年までに家族が加わり、エル・ハグアルにはおよそ20家族が暮らすようになり、インゲン豆（フリホール）を育てました。彼らは旅人ではなく、根を下ろして土地を耕すために来たのです。',
+    '第二次世界大戦が、その歩みを変えました。コロンビアが枢軸国と国交を断つと、日本人移民の何人かが拘束され、フサガスガのサバネタ・ホテルは日本人・ドイツ人・イタリア人の収容施設になりました。日本人が最後に解放されたのは1945年9月6日のことです。その後、エル・ハグアルの移住地は散り散りになり、家族たちはサンタンデール・デ・キリチャオ、パルミラ、フロリダ、ミランダ、そしてカルタゴ ―― 写真の町、山並みを背にした田舎道のある町です ―― へと移り住み、インゲン豆、トウモロコシ、ソルガム、大豆を育て続けました。今ではカリ、ボゴタ、バランキージャに日系コロンビア人の協会があり、2007年にはカルロス・パラウ監督がこの歴史を映画『El sueño del paraíso（楽園の夢）』で描いています。',
+    'その家族たちを連れてきたのは、広告でも交易路でもありませんでした。緑の谷を描いた一冊の本と、そこを耕しに行くという決心でした。Boogalooは、その道を逆向きにたどっています。コロンビアの同じ地方の料理 ―― 手づくりのアレパや山の斜面で育ったコーヒー ―― を名古屋に届けているのです。タケシマを魅了した土地で食べられている味を、ぜひBoogalooで。',
+  ],
+  pt: [
+    'No começo dos anos vinte, um jovem que estudava espanhol em Tóquio, Yuzo Takeshima, encontrou um romance colombiano do século XIX: “María”, de Jorge Isaacs, publicado em 1867 e ambientado nas fazendas do vale do rio Cauca. Ele o leu, traduziu-o para o japonês, e essa tradução acabou entrando no seu currículo quando uma companhia de emigração de Fukuoka procurou alguém que conhecesse a língua e o país.',
+    'Em 1926 a companhia o mandou à Colômbia numa viagem de exploração. Ele percorreu o Valle del Cauca e chegou à Hacienda El Paraíso, em El Cerrito, a casa que Isaacs usou como cenário do romance. Seu relatório foi convincente o bastante para que a companhia decidisse fundar uma colônia agrícola. A terra do Valle saiu cara demais, então compraram uma fazenda um pouco mais ao sul, no departamento do Cauca: El Jagual, no município de Corinto.',
+    'Em 16 de novembro de 1929 o navio Rakuyo Maru atracou em Buenaventura com as cinco primeiras famílias -- Emura, Kuratomi, Nakamura, Nikaido e Yoshioka --, vinte e cinco pessoas ao todo. Um dos requisitos do programa era que o chefe de cada família fosse agricultor. Até 1935 chegaram outras famílias, até somar cerca de vinte em El Jagual, onde plantaram feijão. Não eram viajantes: vinham para ficar e trabalhar a terra.',
+    'A Segunda Guerra Mundial mudou o rumo delas. Quando a Colômbia rompeu relações com os países do Eixo, vários imigrantes japoneses foram detidos, e o Hotel Sabaneta, em Fusagasugá, virou um centro de reclusão para cidadãos japoneses, alemães e italianos. Os japoneses foram os últimos a sair, em 6 de setembro de 1945. Depois, a colônia de El Jagual se dispersou: as famílias se espalharam por Santander de Quilichao, Palmira, Florida, Miranda e Cartago -- a cidade da foto, com sua estrada de terra e a cordilheira ao fundo --, onde continuaram plantando feijão, milho, sorgo e soja. Hoje há associações colombo-japonesas em Cali, Bogotá e Barranquilla, e em 2007 o diretor Carlos Palau contou essa história no filme “El sueño del paraíso”.',
+    'O que trouxe aquelas famílias não foi uma campanha nem uma rota comercial: foi um livro que descrevia um vale verde, e a decisão de ir cultivá-lo. O Boogaloo faz o caminho inverso: traz para Nagoia a cozinha desse mesmo lado da Colômbia, com arepas feitas à mão e café de encosta. Se quiser provar o que se come na terra que encantou Takeshima, esperamos você no Boogaloo.',
+  ],
+};
+
 const STORIES = [
   {
     key: 'story1',
@@ -445,6 +476,16 @@ const STORIES = [
     image: 'img/blog/caicedonia-cafe.jpg',
     imageAlt: 'Un cafetero sirve café de una jarra de metal en un pocillo, entre las matas de café, Caicedonia, Valle del Cauca, Colombia',
     credit: { name: 'Loguista_', url: 'https://www.pexels.com/@loguista_-47134893/', source: 'Pexels' },
+  },
+  {
+    key: 'story11',
+    date: '2026-11-12',
+    parrafos: STORY11_PARRAFOS,
+    titleKey: 'blogStory11Title',
+    color: 'blue',
+    image: 'img/blog/cartago-camino-rural.jpg',
+    imageAlt: 'Camino rural junto a un campo en Cartago, Valle del Cauca, Colombia, con la cordillera al fondo',
+    credit: { name: 'Stroessner', url: 'https://www.pexels.com/@edgares26/', source: 'Pexels' },
   },
 ];
 
