@@ -63,6 +63,7 @@ function hideAllViews() {
   document.getElementById('analytics-view').style.display = 'none';
   document.getElementById('hygiene-view').style.display = 'none';
   document.getElementById('ventas-view').style.display = 'none';
+  document.getElementById('recibos-view').style.display = 'none';
 }
 
 function showLogin(message) {
@@ -526,6 +527,10 @@ document.getElementById('inscripciones-logout-btn').addEventListener('click', do
 document.getElementById('hub-inventario-btn').addEventListener('click', () => (location.hash = 'inventario'));
 document.getElementById('hub-analytics-btn').addEventListener('click', () => (location.hash = 'analitica'));
 document.getElementById('hub-ventas-btn').addEventListener('click', () => (location.hash = 'ventas'));
+document.getElementById('hub-recibos-btn').addEventListener('click', () => (location.hash = 'recibos'));
+document.getElementById('rcl-back-btn').addEventListener('click', goHub);
+document.getElementById('rcl-logout-btn').addEventListener('click', doLogout);
+document.getElementById('rcl-refresh-btn').addEventListener('click', () => loadRecibos(false));
 document.getElementById('vt-back-btn').addEventListener('click', goHub);
 document.getElementById('vt-logout-btn').addEventListener('click', doLogout);
 document.getElementById('vt-refresh-btn').addEventListener('click', () => loadVentas(false));
@@ -1687,6 +1692,7 @@ function applyStaticI18n() {
   document.getElementById('hygiene-logout-btn').textContent = I18n.t('logoutBtn');
   document.getElementById('hygiene-demo-banner').textContent = I18n.t('hyDemoBanner');
   vtApplyStatic();
+  rclApplyStatic();
 }
 
 function onLangChange() {
@@ -1702,6 +1708,7 @@ function onLangChange() {
   if (document.getElementById('inscripciones-view').style.display !== 'none') renderInscripciones();
   if (document.getElementById('hygiene-view').style.display !== 'none') renderHygieneCalendar();
   if (document.getElementById('ventas-view').style.display !== 'none' && vtData) renderVentas();
+  if (document.getElementById('recibos-view').style.display !== 'none') renderRecibos();
 }
 
 renderLangSelect(document.getElementById('admin-lang-slot'));
@@ -1710,6 +1717,7 @@ renderLangSelect(document.getElementById('panel-lang-slot'));
 renderLangSelect(document.getElementById('reservas-lang-slot'));
 renderLangSelect(document.getElementById('analytics-lang-slot'));
 renderLangSelect(document.getElementById('vt-lang-slot'));
+renderLangSelect(document.getElementById('rcl-lang-slot'));
 renderLangSelect(document.getElementById('menu-lang-slot'));
 renderLangSelect(document.getElementById('inscripciones-lang-slot'));
 renderLangSelect(document.getElementById('inventario-lang-slot'));
@@ -1726,6 +1734,7 @@ const ROUTES = {
   eventos: showInscripciones,
   analitica: showAnalytics,
   ventas: showVentas,
+  recibos: showRecibos,
   higiene: showHygiene,
   config: () => {
     showMenuAdmin();
@@ -1864,7 +1873,8 @@ function renderReceiptModal(p) {
         ${navigator.share ? `<button class="ghost-btn" id="rcm-share" type="button">${I18n.t('rcShareBtn')}</button>` : ''}
         <a class="ghost-btn" href="${escAttr(url)}" target="_blank" rel="noopener" style="text-decoration:none;">${I18n.t('rcOpenBtn')}</a>
         ${identity.esAdmin ? `<button class="ghost-btn" id="rcm-revoke" type="button">${I18n.t('rcRevokeBtn')}</button>` : ''}
-      </div>` : ''}
+      </div>
+      <p class="rc-hint">${rclStatusLine(row)}</p>` : ''}
     ${identity.esAdmin ? `
       <details open style="margin-top:14px;">
         <summary style="cursor:pointer;">${I18n.t('rcBizTitle')}</summary>

@@ -605,6 +605,7 @@ const STRINGS = {
     // ---- Analítica (admin) ----
     anHubBtn: 'Analítica',
     vtHubBtn: 'Ventas y clientes',
+    rclHubBtn: 'Recibos',
     anTitle: 'Analítica',
     anOnlineNow: 'En línea ahora',
     anVisitsToday: 'Visitas hoy',
@@ -1231,6 +1232,7 @@ const STRINGS = {
     // ---- Analytics (admin) ----
     anHubBtn: 'Analytics',
     vtHubBtn: 'Sales & customers',
+    rclHubBtn: 'Receipts',
     anTitle: 'Analytics',
     anOnlineNow: 'Online now',
     anVisitsToday: 'Visits today',
@@ -1857,6 +1859,7 @@ const STRINGS = {
     // ---- アクセス解析（管理画面）----
     anHubBtn: 'アクセス解析',
     vtHubBtn: '売上とお客様',
+    rclHubBtn: '領収書',
     anTitle: 'アクセス解析',
     anOnlineNow: '現在のアクセス数',
     anVisitsToday: '今日の訪問数',
@@ -2483,6 +2486,7 @@ const STRINGS = {
     // ---- Analítica (admin) ----
     anHubBtn: 'Analítica',
     vtHubBtn: 'Vendas e clientes',
+    rclHubBtn: 'Recibos',
     anTitle: 'Analítica',
     anOnlineNow: 'Online agora',
     anVisitsToday: 'Visitas hoje',

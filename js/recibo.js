@@ -181,6 +181,18 @@ async function runDownload(btnId, fn) {
   btn.disabled = false;
 }
 
+// Seguimiento para el staff: primera apertura y cada descarga del PDF. No cuenta si quien
+// abre es del staff (admin o colaborador identificado en este navegador). Un fallo aquí
+// nunca debe molestar al cliente ni impedir la descarga.
+function rcTrack(evento) {
+  try {
+    if (detectStaffIdentity()) return;
+    apiCall('registrarEventoRecibo', { token: RC_TOKEN, evento }).catch(() => {});
+  } catch (e) {
+    // ignora
+  }
+}
+
 document.getElementById('rc-png').addEventListener('click', () =>
   runDownload('rc-png', async () => {
     const canvas = await capture();
@@ -203,6 +215,7 @@ document.getElementById('rc-pdf').addEventListener('click', () =>
     const h = (canvas.height * w) / canvas.width;
     pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margen, margen, w, Math.min(h, 297 - margen * 2), undefined, 'FAST');
     pdf.save(fileBase() + '.pdf');
+    rcTrack('descarga');
   })
 );
 
@@ -250,6 +263,7 @@ async function load() {
     document.getElementById('rc-doc').style.display = '';
     document.getElementById('rc-actions').style.display = '';
     refresh();
+    rcTrack('visto');
   } catch (err) {
     status.dataset.err = '1';
     status.textContent = err.codigo === 'reciboNoEncontrado' ? I18n.t('rcNotFound') : err.message;
