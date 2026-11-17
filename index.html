@@ -29,6 +29,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <span class="ship-banner-cta" id="ship-banner-cta"></span>
   </a>
 
+  <!-- Banner de bienvenida: no bloquea el menú, solo ofrece atajos -->
+  <div class="welcome-banner" id="gate-banner">
+    <img class="welcome-banner-bear" src="img/oso/oso-saludando.png" alt="" />
+    <div class="welcome-banner-body">
+      <h2 id="gate-title">Bienvenido a Boogaloo</h2>
+      <p class="subt" id="gate-subtitle">¿Qué quieres hacer?</p>
+      <div class="welcome-banner-actions">
+        <button class="primary-btn" id="gate-dine-in-btn" type="button">Pedir a la mesa</button>
+        <button class="ghost-btn" id="gate-reserve-btn" type="button">Hacer una reserva</button>
+      </div>
+    </div>
+    <button class="welcome-banner-close" id="gate-close-btn" type="button" aria-label="Cerrar">✕</button>
+  </div>
+
   <main id="menu-content"></main>
 
   <div id="site-footer-mount"></div>
@@ -55,16 +69,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button class="primary-btn" id="checkout-btn" type="button">Continuar pedido</button>
     </div>
   </aside>
-
-  <!-- Gate de bienvenida: ¿está en el restaurante o quiere reservar? -->
-  <div class="modal-overlay" id="gate-modal">
-    <div class="modal-box">
-      <h2 id="gate-title">Bienvenido a Boogaloo</h2>
-      <p class="subt" id="gate-subtitle">¿Qué quieres hacer?</p>
-      <button class="primary-btn" id="gate-dine-in-btn" type="button" style="width:100%; margin-bottom:10px;">Estoy en el restaurante</button>
-      <button class="ghost-btn" id="gate-reserve-btn" type="button" style="width:100%;">Hacer una reserva</button>
-    </div>
-  </div>
 
   <!-- Modal de cuenta / checkout -->
   <div class="modal-overlay" id="account-modal">

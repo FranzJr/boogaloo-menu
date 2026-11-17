@@ -18,21 +18,32 @@ renderSiteFooter();
 
 const fmt = (n) => '¥' + Number(n || 0).toLocaleString('ja-JP');
 
-// ---------------- Gate de bienvenida (restaurante vs reserva) ----------------
+// ---------------- Banner de bienvenida (restaurante vs reserva) ----------------
+// A diferencia del gate anterior, este banner no bloquea el menú: se puede
+// seguir viendo y pidiendo sin elegir nada, para no inflar el rebote de
+// quien solo quiere mirar la carta.
 
 const GATE_KEY = 'boogaloo_entry_choice_v1';
-const gateModal = document.getElementById('gate-modal');
+const gateBanner = document.getElementById('gate-banner');
+
+function closeGateBanner() {
+  gateBanner.classList.add('hidden');
+}
 
 document.getElementById('gate-dine-in-btn').addEventListener('click', () => {
   sessionStorage.setItem(GATE_KEY, 'restaurante');
-  gateModal.classList.remove('open');
+  closeGateBanner();
 });
 document.getElementById('gate-reserve-btn').addEventListener('click', () => {
   sessionStorage.setItem(GATE_KEY, 'reserva');
   window.location.href = 'reserva.html';
 });
-if (!sessionStorage.getItem(GATE_KEY)) {
-  gateModal.classList.add('open');
+document.getElementById('gate-close-btn').addEventListener('click', () => {
+  sessionStorage.setItem(GATE_KEY, 'cerrado');
+  closeGateBanner();
+});
+if (sessionStorage.getItem(GATE_KEY)) {
+  closeGateBanner();
 }
 
 // ---------------- Render del menú ----------------
@@ -654,6 +665,59 @@ async function submitOrder() {
   }
 }
 
+// Aviso de reseña en Google: sale (a) justo al terminar de pedir y (b) cuando
+// un pedido rastreado queda en "Cobrado". Google ya muestra su propia página
+// en el idioma del celular de cada quien, así que aquí solo traducimos el
+// texto del aviso; el link es el mismo para todos los idiomas. Se guarda un
+// cooldown para no repetir el aviso en cada pedido.
+const REVIEW_PROMPT_KEY = 'boogaloo_review_prompt_v1';
+const REVIEW_PROMPT_COOLDOWN_DAYS = 30;
+
+function reviewPromptShouldShow() {
+  try {
+    const last = localStorage.getItem(REVIEW_PROMPT_KEY);
+    if (!last) return true;
+    const days = (Date.now() - new Date(last).getTime()) / 86400000;
+    return days > REVIEW_PROMPT_COOLDOWN_DAYS;
+  } catch (e) {
+    return true;
+  }
+}
+
+function markReviewPrompted() {
+  try {
+    localStorage.setItem(REVIEW_PROMPT_KEY, new Date().toISOString());
+  } catch (e) {}
+}
+
+function reviewPromptHtml() {
+  if (!reviewPromptShouldShow()) return '';
+  return `
+    <div class="chat-pref review-pref" id="review-pref">
+      <img class="chat-pref-avatar" src="img/oso/oso-bailando.png" alt="" />
+      <div class="chat-pref-bubble">
+        <p class="chat-pref-note">${I18n.t('reviewPromptNote')}</p>
+        <p class="chat-pref-question">${I18n.t('reviewPromptQuestion')}</p>
+        <div class="chat-pref-actions">
+          <a class="chat-pref-btn" href="${GOOGLE_MAPS_URL}" target="_blank" rel="noopener" id="review-pref-go">${I18n.t('reviewPromptBtn')}</a>
+          <button type="button" class="chat-pref-btn" id="review-pref-later">${I18n.t('reviewPromptLater')}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function bindReviewPrompt() {
+  const el = document.getElementById('review-pref');
+  if (!el) return;
+  const goBtn = document.getElementById('review-pref-go');
+  const laterBtn = document.getElementById('review-pref-later');
+  if (goBtn) goBtn.addEventListener('click', markReviewPrompted);
+  if (laterBtn) laterBtn.addEventListener('click', () => {
+    markReviewPrompted();
+    el.remove();
+  });
+}
+
 // Le pregunta al cliente, justo después de pedir, si quiere que el staff le
 // converse o prefiere que sea breve -- con un toque simpático que además le
 // avisa en qué idioma estamos practicando (según el idioma del sitio).
@@ -699,9 +763,11 @@ function renderSuccessStep() {
       <div class="row total"><span>${order.combinado ? I18n.t('orderTotalLabel') : I18n.t('totalLabel')}</span><span>${fmt(order.total)}</span></div>
     </div>
     ${chatPrefHtml()}
+    ${reviewPromptHtml()}
     <button class="primary-btn" id="success-close" type="button">${I18n.t('doneBtn')}</button>
   `;
   bindChatPref(order.pedidoId);
+  bindReviewPrompt();
   document.getElementById('success-close').onclick = () => {
     modalState = { purpose: 'manage', tab: 'invitado' };
     closeModal();
@@ -811,9 +877,11 @@ function renderOrdersModal() {
         </div>`
         )
         .join('')}
+      ${trackedOrdersData.some((p) => (p.Estado || '').toLowerCase() === 'cobrado') ? reviewPromptHtml() : ''}
       <button class="ghost-btn" id="orders-modal-close" type="button">${I18n.t('closeBtn')}</button>
     `;
   }
+  bindReviewPrompt();
   document.getElementById('orders-modal-close').onclick = closeOrdersModal;
 }
 
