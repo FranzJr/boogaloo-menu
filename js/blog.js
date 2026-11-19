@@ -377,6 +377,37 @@ const STORY11_PARRAFOS = {
   ],
 };
 
+const STORY12_PARRAFOS = {
+  es: [
+    'La masa se extiende fina, casi nada, y se hornea. Encima, otra capa igual de fina. Entre las dos, arequipe, apenas. Así hasta que ya no se cuentan las capas -- por eso el nombre, milhojas, mil hojas, aunque nadie las haya contado nunca una por una.',
+    'En Japón hay otra costumbre de contar sin contar: las mil grullas, senbazuru. Papel doblado, una grulla a la vez, muchas veces por muchas manos distintas a lo largo de semanas, hasta llegar a un número que tampoco se mira de cerca. Se hace por un deseo -- una salud que vuelve, una paz, un regreso. Kawabata tomó esa imagen, una vez, para el título de una de sus novelas: algo hecho de mil partes pequeñas y frágiles que, juntas, se vuelven una sola cosa que se puede ofrecer.',
+    'Ninguna hoja de masa, sola, sostiene nada. Ninguna grulla, sola, sostiene nada frente al viento. Pero mil, dobladas o apiladas una por una, sin prisa, sostienen algo: una ofrenda, un postre, una mesa.',
+    'El "mil" en los dos casos no es un número -- es una manera de decir "más de lo que se puede mirar y contar", hecho despacio, hoja por hoja, grulla por grulla, por una mano que no se apura.',
+    'En Boogaloo la milhojas de arequipe todavía se hace así, capa por capa, sin apurar el arequipe entre una y otra. La próxima vez que la pida, cuente cuántas capas se rompen antes de llegar al fondo. Lo esperamos en Boogaloo para que lo compruebe usted mismo.',
+  ],
+  en: [
+    'The dough is rolled out thin, almost nothing, and baked. On top, another layer just as thin. Between the two, arequipe, barely. This goes on until the layers are no longer counted -- which is where the name comes from, milhojas, a thousand leaves, though no one has ever counted them one by one.',
+    'Japan has another custom of counting without counting: the thousand cranes, senbazuru. Paper folded, one crane at a time, often by many different hands over the course of weeks, until reaching a number that is also never looked at too closely. It is done for a wish -- a health that returns, a peace, a homecoming. Kawabata once borrowed that image for the title of one of his novels: something made of a thousand small, fragile parts that, together, become a single thing that can be offered.',
+    'No single leaf of dough, alone, holds anything up. No single crane, alone, holds up against the wind. But a thousand, folded or stacked one at a time, without hurry, hold something: an offering, a dessert, a table.',
+    'The "thousand" in both cases is not a number -- it is a way of saying "more than can be looked at and counted," made slowly, leaf by leaf, crane by crane, by a hand that does not rush.',
+    "At Boogaloo the arequipe milhojas is still made this way, layer by layer, without rushing the arequipe between one and the next. Next time you order it, count how many layers break before you reach the bottom. We're waiting for you at Boogaloo, so you can find out for yourself.",
+  ],
+  ja: [
+    '生地は薄く、ほとんど何もないくらいに薄く伸ばされ、焼かれる。その上に、同じくらい薄い生地がもう一枚重なる。二枚の間には、ほんのわずかなアレキペ（コロンビア風キャラメルクリーム）。これが繰り返され、やがて層の数を数えなくなる――その名の由来も、ミルオハス、千の葉という意味だが、実際に一枚ずつ数えた人はいない。',
+    '日本にも、数えずに数える習慣がある。千羽鶴だ。紙を折る、一羽ずつ。何週間もかけて、何人もの違う手によって折られることも多く、やがて近くで見ることさえしない数に達する。願いのために折られる――治る健康、平和、無事な帰り。川端康成はかつて、その姿を自身の小説の題名に借りた。千の小さく脆いものが、集まって、ひとつの差し出せるものになる――そのイメージに惹かれたのだ。',
+    '一枚だけの生地は、何も支えられない。一羽だけの鶴は、風の前では何も支えられない。しかし千、折られたもの、あるいは重ねられたものが、急がずに積み重なれば、何かを支える――捧げもの、デザート、一つの卓を。',
+    'どちらの場合も「千」は数字ではない。「見て数えられる以上のもの」を言うための言い方であり、急がない手によって、一枚ずつ、一羽ずつ、ゆっくりと作られたものだ。',
+    'Boogalooのアレキペ・ミルオハスも、今もそうして作られている。一枚ずつ重ね、アレキペを急がずに広げながら。次に注文するときは、底に着くまでに何層が崩れるか数えてみてほしい。それを自分で確かめに、ぜひBoogalooへ。',
+  ],
+  pt: [
+    'A massa é esticada fina, quase nada, e assada. Por cima, outra camada igualmente fina. Entre as duas, arequipe, só um pouco. Isso se repete até que as camadas já não se contam -- daí o nome, milhojas, mil folhas, embora ninguém jamais as tenha contado uma por uma.',
+    'No Japão existe outro costume de contar sem contar: os mil grous de papel, senbazuru. Papel dobrado, um grou por vez, muitas vezes por mãos diferentes ao longo de semanas, até chegar a um número que também não se olha de perto. Faz-se por um desejo -- uma saúde que volta, uma paz, um retorno. Kawabata tomou essa imagem, uma vez, para o título de um de seus romances: algo feito de mil partes pequenas e frágeis que, juntas, se tornam uma única coisa que se pode oferecer.',
+    'Nenhuma folha de massa, sozinha, sustenta nada. Nenhum grou, sozinho, resiste ao vento. Mas mil, dobrados ou empilhados um a um, sem pressa, sustentam algo: uma oferenda, um doce, uma mesa.',
+    'O "mil", nos dois casos, não é um número -- é uma forma de dizer "mais do que se pode olhar e contar", feito devagar, folha por folha, grou por grou, por uma mão que não se apressa.',
+    'No Boogaloo, a milhojas de arequipe ainda é feita assim, camada por camada, sem apressar o arequipe entre uma e outra. Na próxima vez que pedir, conte quantas camadas se quebram antes de chegar ao fundo. Esperamos por você no Boogaloo, para que descubra por si mesmo.',
+  ],
+};
+
 const STORIES = [
   {
     key: 'story1',
@@ -486,6 +517,16 @@ const STORIES = [
     image: 'img/blog/cartago-camino-rural.jpg',
     imageAlt: 'Camino rural junto a un campo en Cartago, Valle del Cauca, Colombia, con la cordillera al fondo',
     credit: { name: 'Stroessner', url: 'https://www.pexels.com/@edgares26/', source: 'Pexels' },
+  },
+  {
+    key: 'story12',
+    date: '2026-11-19',
+    parrafos: STORY12_PARRAFOS,
+    titleKey: 'blogStory12Title',
+    color: 'gold',
+    image: 'img/platos/postre-milhojas.jpg',
+    imageAlt: 'Primer plano de la milhojas de arequipe de Boogaloo, capas de hojaldre y arequipe',
+    credit: null,
   },
 ];
 
